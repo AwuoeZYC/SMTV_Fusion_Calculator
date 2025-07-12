@@ -1,0 +1,972 @@
+{
+  "demons": [
+    {
+      "id": 7,
+      "name": "软泥怪",
+      "price": 436
+    },
+    {
+      "id": 9,
+      "name": "皮克希",
+      "price": 919
+    },
+    {
+      "id": 10,
+      "name": "饿鬼",
+      "price": 894
+    },
+    {
+      "id": 11,
+      "name": "阴摩罗鬼",
+      "price": 804
+    },
+    {
+      "id": 12,
+      "name": "葛雷姆林",
+      "price": 1224
+    },
+    {
+      "id": 13,
+      "name": "猫将军",
+      "price": 2071
+    },
+    {
+      "id": 14,
+      "name": "木灵",
+      "price": 1012
+    },
+    {
+      "id": 15,
+      "name": "曼陀罗",
+      "price": 1280
+    },
+    {
+      "id": 16,
+      "name": "睡魔",
+      "price": 1887
+    },
+    {
+      "id": 17,
+      "name": "皮亚雷",
+      "price": 1892
+    },
+    {
+      "id": 18,
+      "name": "猫妖精",
+      "price": 1132
+    },
+    {
+      "id": 19,
+      "name": "猪豚蛇",
+      "price": 1839
+    },
+    {
+      "id": 20,
+      "name": "磐石精灵",
+      "price": 15959
+    },
+    {
+      "id": 21,
+      "name": "阿珈席翁",
+      "price": 1842
+    },
+    {
+      "id": 22,
+      "name": "天使",
+      "price": 2806
+    },
+    {
+      "id": 23,
+      "name": "哈帕斯",
+      "price": 2376
+    },
+    {
+      "id": 24,
+      "name": "戴蒙",
+      "price": 1532
+    },
+    {
+      "id": 25,
+      "name": "安昙神",
+      "price": 1900
+    },
+    {
+      "id": 27,
+      "name": "吐鲁达克",
+      "price": 2380
+    },
+    {
+      "id": 28,
+      "name": "独角兽",
+      "price": 2363
+    },
+    {
+      "id": 29,
+      "name": "背背鬼",
+      "price": 3459
+    },
+    {
+      "id": 30,
+      "name": "美人鱼",
+      "price": 3475
+    },
+    {
+      "id": 31,
+      "name": "风精灵",
+      "price": 30479
+    },
+    {
+      "id": 32,
+      "name": "涯米涯米",
+      "price": 3461
+    },
+    {
+      "id": 33,
+      "name": "土蜘蛛",
+      "price": 3580
+    },
+    {
+      "id": 34,
+      "name": "双角兽",
+      "price": 3993
+    },
+    {
+      "id": 35,
+      "name": "鸩",
+      "price": 3815
+    },
+    {
+      "id": 36,
+      "name": "野槌",
+      "price": 4392
+    },
+    {
+      "id": 37,
+      "name": "水精灵",
+      "price": 28999
+    },
+    {
+      "id": 38,
+      "name": "福尔图娜",
+      "price": 4505
+    },
+    {
+      "id": 39,
+      "name": "莫考伊",
+      "price": 3223
+    },
+    {
+      "id": 40,
+      "name": "飞天",
+      "price": 4653
+    },
+    {
+      "id": 41,
+      "name": "鸡龙",
+      "price": 4818
+    },
+    {
+      "id": 42,
+      "name": "一本踏鞴",
+      "price": 6092
+    },
+    {
+      "id": 43,
+      "name": "拉南希",
+      "price": 5360
+    },
+    {
+      "id": 44,
+      "name": "山灵",
+      "price": 3887
+    },
+    {
+      "id": 45,
+      "name": "安德拉斯",
+      "price": 4645
+    },
+    {
+      "id": 46,
+      "name": "高等皮克希",
+      "price": 4900
+    },
+    {
+      "id": 47,
+      "name": "火精灵",
+      "price": 38599
+    },
+    {
+      "id": 48,
+      "name": "大天使",
+      "price": 5458
+    },
+    {
+      "id": 49,
+      "name": "恶灵军团",
+      "price": 3848
+    },
+    {
+      "id": 50,
+      "name": "建御名方",
+      "price": 5700
+    },
+    {
+      "id": 51,
+      "name": "狮爷",
+      "price": 5103
+    },
+    {
+      "id": 52,
+      "name": "薇薇尔",
+      "price": 6872
+    },
+    {
+      "id": 53,
+      "name": "罗刹",
+      "price": 7413
+    },
+    {
+      "id": 54,
+      "name": "杰克灯笼",
+      "price": 8904
+    },
+    {
+      "id": 55,
+      "name": "鹿屋野比卖",
+      "price": 8163
+    },
+    {
+      "id": 56,
+      "name": "真神",
+      "price": 7522
+    },
+    {
+      "id": 57,
+      "name": "男梦魔",
+      "price": 6000
+    },
+    {
+      "id": 58,
+      "name": "凤凰",
+      "price": 11110
+    },
+    {
+      "id": 59,
+      "name": "天钿女命",
+      "price": 8967
+    },
+    {
+      "id": 60,
+      "name": "鬼",
+      "price": 9824
+    },
+    {
+      "id": 61,
+      "name": "菊理媛",
+      "price": 9236
+    },
+    {
+      "id": 62,
+      "name": "巴古斯",
+      "price": 7882
+    },
+    {
+      "id": 63,
+      "name": "犬神",
+      "price": 7849
+    },
+    {
+      "id": 64,
+      "name": "骚灵",
+      "price": 14096
+    },
+    {
+      "id": 65,
+      "name": "马纳南加尔",
+      "price": 11705
+    },
+    {
+      "id": 66,
+      "name": "杰克霜精",
+      "price": 10800
+    },
+    {
+      "id": 67,
+      "name": "阿提斯",
+      "price": 11409
+    },
+    {
+      "id": 68,
+      "name": "哪吒太子",
+      "price": 11643
+    },
+    {
+      "id": 69,
+      "name": "帕尔瓦蒂",
+      "price": 26326
+    },
+    {
+      "id": 70,
+      "name": "莫索保",
+      "price": 30694
+    },
+    {
+      "id": 71,
+      "name": "义经",
+      "price": 29351
+    }
+  ],
+  "fusions": [
+    {
+      "resultId": 13,
+      "sourceA_Id": 7,
+      "sourceB_Id": 9
+    },
+    {
+      "resultId": 13,
+      "sourceA_Id": 9,
+      "sourceB_Id": 14
+    },
+    {
+      "resultId": 14,
+      "sourceA_Id": 7,
+      "sourceB_Id": 15
+    },
+    {
+      "resultId": 14,
+      "sourceA_Id": 9,
+      "sourceB_Id": 12
+    },
+    {
+      "resultId": 14,
+      "sourceA_Id": 10,
+      "sourceB_Id": 11
+    },
+    {
+      "resultId": 15,
+      "sourceA_Id": 7,
+      "sourceB_Id": 16
+    },
+    {
+      "resultId": 7,
+      "sourceA_Id": 47,
+      "sourceB_Id": 49
+    },
+    {
+      "resultId": 7,
+      "sourceA_Id": 31,
+      "sourceB_Id": 49
+    },
+    {
+      "resultId": 7,
+      "sourceA_Id": 20,
+      "sourceB_Id": 49
+    },
+    {
+      "resultId": 9,
+      "sourceA_Id": 46,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 9,
+      "sourceA_Id": 31,
+      "sourceB_Id": 46
+    },
+    {
+      "resultId": 9,
+      "sourceA_Id": 47,
+      "sourceB_Id": 54
+    },
+    {
+      "resultId": 9,
+      "sourceA_Id": 31,
+      "sourceB_Id": 54
+    },
+    {
+      "resultId": 10,
+      "sourceA_Id": 29,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 10,
+      "sourceA_Id": 29,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 10,
+      "sourceA_Id": 20,
+      "sourceB_Id": 29
+    },
+    {
+      "resultId": 11,
+      "sourceA_Id": 35,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 11,
+      "sourceA_Id": 20,
+      "sourceB_Id": 35
+    },
+    {
+      "resultId": 12,
+      "sourceA_Id": 27,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 12,
+      "sourceA_Id": 27,
+      "sourceB_Id": 31
+    },
+    {
+      "resultId": 14,
+      "sourceA_Id": 33,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 14,
+      "sourceA_Id": 33,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 15,
+      "sourceA_Id": 21,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 15,
+      "sourceA_Id": 20,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 13,
+      "sourceA_Id": 47,
+      "sourceB_Id": 68
+    },
+    {
+      "resultId": 13,
+      "sourceA_Id": 31,
+      "sourceB_Id": 68
+    },
+    {
+      "resultId": 13,
+      "sourceA_Id": 37,
+      "sourceB_Id": 68
+    },
+    {
+      "resultId": 24,
+      "sourceA_Id": 10,
+      "sourceB_Id": 15
+    },
+    {
+      "resultId": 24,
+      "sourceA_Id": 25,
+      "sourceB_Id": 31
+    },
+    {
+      "resultId": 24,
+      "sourceA_Id": 7,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 24,
+      "sourceA_Id": 7,
+      "sourceB_Id": 12
+    },
+    {
+      "resultId": 24,
+      "sourceA_Id": 12,
+      "sourceB_Id": 14
+    },
+    {
+      "resultId": 18,
+      "sourceA_Id": 37,
+      "sourceB_Id": 63
+    },
+    {
+      "resultId": 18,
+      "sourceA_Id": 20,
+      "sourceB_Id": 63
+    },
+    {
+      "resultId": 18,
+      "sourceA_Id": 7,
+      "sourceB_Id": 17
+    },
+    {
+      "resultId": 18,
+      "sourceA_Id": 11,
+      "sourceB_Id": 17
+    },
+    {
+      "resultId": 16,
+      "sourceA_Id": 9,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 16,
+      "sourceA_Id": 9,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 16,
+      "sourceA_Id": 39,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 16,
+      "sourceA_Id": 37,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 16,
+      "sourceA_Id": 20,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 7,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 10,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 31,
+      "sourceB_Id": 34
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 20,
+      "sourceB_Id": 34
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 7,
+      "sourceB_Id": 11
+    },
+    {
+      "resultId": 17,
+      "sourceA_Id": 11,
+      "sourceB_Id": 12
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 31,
+      "sourceB_Id": 41
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 37,
+      "sourceB_Id": 41
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 12,
+      "sourceB_Id": 17
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 10,
+      "sourceB_Id": 17
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 7,
+      "sourceB_Id": 29
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 7,
+      "sourceB_Id": 10
+    },
+    {
+      "resultId": 19,
+      "sourceA_Id": 12,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 39,
+      "sourceB_Id": 57
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 16,
+      "sourceB_Id": 57
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 16,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 18,
+      "sourceB_Id": 63
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 13,
+      "sourceB_Id": 71
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 68,
+      "sourceB_Id": 71
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 13,
+      "sourceB_Id": 68
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 33,
+      "sourceB_Id": 55
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 44,
+      "sourceB_Id": 55
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 14,
+      "sourceB_Id": 55
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 14,
+      "sourceB_Id": 33
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 33,
+      "sourceB_Id": 44
+    },
+    {
+      "resultId": 20,
+      "sourceA_Id": 14,
+      "sourceB_Id": 44
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 40,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 20,
+      "sourceB_Id": 40
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 15,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 15,
+      "sourceB_Id": 31
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 7,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 10,
+      "sourceB_Id": 16
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 14,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 21,
+      "sourceA_Id": 10,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 9,
+      "sourceB_Id": 40
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 9,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 16,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 11,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 9,
+      "sourceB_Id": 15
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 15,
+      "sourceB_Id": 16
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 11,
+      "sourceB_Id": 15
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 9,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 9,
+      "sourceB_Id": 16
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 31,
+      "sourceB_Id": 48
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 20,
+      "sourceB_Id": 48
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 7,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 11,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 11,
+      "sourceB_Id": 33
+    },
+    {
+      "resultId": 22,
+      "sourceA_Id": 11,
+      "sourceB_Id": 14
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 21,
+      "sourceB_Id": 22
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 15,
+      "sourceB_Id": 22
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 13,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 37,
+      "sourceB_Id": 45
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 20,
+      "sourceB_Id": 45
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 7,
+      "sourceB_Id": 48
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 7,
+      "sourceB_Id": 22
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 13,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 13,
+      "sourceB_Id": 25
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 13,
+      "sourceB_Id": 24
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 14,
+      "sourceB_Id": 22
+    },
+    {
+      "resultId": 23,
+      "sourceA_Id": 24,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 10,
+      "sourceB_Id": 40
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 10,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 15,
+      "sourceB_Id": 29
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 16,
+      "sourceB_Id": 17
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 16,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 16,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 19,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 12,
+      "sourceB_Id": 19
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 18,
+      "sourceB_Id": 22
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 24,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 24,
+      "sourceB_Id": 37
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 31,
+      "sourceB_Id": 42
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 20,
+      "sourceB_Id": 24
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 7,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 7,
+      "sourceB_Id": 43
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 10,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 14,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 25,
+      "sourceA_Id": 12,
+      "sourceB_Id": 33
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 21,
+      "sourceB_Id": 24
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 15,
+      "sourceB_Id": 25
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 15,
+      "sourceB_Id": 24
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 14,
+      "sourceB_Id": 19
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 24,
+      "sourceB_Id": 28
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 12,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 37,
+      "sourceB_Id": 53
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 31,
+      "sourceB_Id": 53
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 12,
+      "sourceB_Id": 20
+    },
+    {
+      "resultId": 27,
+      "sourceA_Id": 10,
+      "sourceB_Id": 22
+    }
+  ],
+  "nextDemonId": 72
+}
