@@ -91,8 +91,8 @@
         <div class="form-group">
             <label for="demon-level">基础等级 (Level)：</label><input type="number" id="demon-level">
             <div class="level-controls">
-                <button id="level-plus-btn">+1</button>
                 <button id="level-minus-btn">-1</button>
+                <button id="level-plus-btn">+1</button>
                 <button id="level-clear-btn">清空</button>
             </div>
         </div>
@@ -196,8 +196,8 @@ window.onload = async () => {
 function setupEventListeners() {
     document.getElementById('import-file').addEventListener('change', importDataFromFile);
     ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).addEventListener('change', updateCalculatorState));
-    document.getElementById('level-plus-btn').addEventListener('click', () => updateLevel(1));
     document.getElementById('level-minus-btn').addEventListener('click', () => updateLevel(-1));
+    document.getElementById('level-plus-btn').addEventListener('click', () => updateLevel(1));
     document.getElementById('level-clear-btn').addEventListener('click', () => updateLevel(0, true));
 }
 
