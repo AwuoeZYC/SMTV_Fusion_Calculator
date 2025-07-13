@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMTV:R - 算法合成器 v4.0 (最终版)</title>
+    <title>SMTV:R - 算法合成器 v5.1 (Final)</title>
     <style>
         :root {
             --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
@@ -54,7 +54,7 @@
 <body>
 
 <div class="container">
-    <h1>SMTV:R - 算法合成器 v4.0</h1>
+    <h1>SMTV:R - 算法合成器 v5.1 (Final)</h1>
     <div class="tabs">
         <button class="tab-button active" onclick="showTab('calculator')">合成计算器</button>
         <button class="tab-button" onclick="showTab('management')">数据管理</button>
@@ -82,7 +82,7 @@
         
         <h2 id="demon-form-title">仲魔管理</h2>
         <div class="form-group"><label for="demon-name">仲魔名称：</label><input type="text" id="demon-name"></div>
-        <div class="form-group"><label for="demon-race">种族 (Race)：</label><input type="text" id="demon-race" placeholder="例如: 妖精, 女神, アーシーズ..."></div>
+        <div class="form-group"><label for="demon-race">种族 (Race)：</label><input type="text" id="demon-race" placeholder="例如: 妖精, 女神, 火精灵..."></div>
         <div class="form-group"><label for="demon-level">基础等级 (Level)：</label><input type="number" id="demon-level"></div>
         <div class="form-group"><label for="demon-price">全书价格 (Macca)：</label><input type="number" id="demon-price"></div>
         <div class="form-actions">
@@ -105,190 +105,51 @@
 <script>
 // ====================================================================================
 // CORE FUSION LOGIC & DATA
-// (!!!) 您需要在这里填充所有规则数据 (!!!)
 // ====================================================================================
 
-/**
- * 精灵种族列表
- */
+// --- 规则数据 (硬编码部分) ---
 const ELEMENTAL_RACES = ['磐石精灵', '风精灵', '水精灵', '火精灵'];
-
-/**
- * 规则 1: 精灵合成规则 (二维精确版)
- * 结构: ELEMENTAL_RULES['常规种族']['精灵种族'] = 变化值;
- * +1 代表升阶 (△), -1 代表降阶 (▼)。
- */
 const ELEMENTAL_RULES = {
     '大天使': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '女神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    '魔神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '幻魔': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    '地母神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
-    '鬼神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
-    '国津神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    // '秘神': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    '灵鸟': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    '天使': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
-    '妖魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': +1, '火精灵': -1 },
-    '凶鸟': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
-    '军神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
-    '神兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    '圣兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '妖精': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    '魔兽': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
-    '地灵': { '磐石精灵': +1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    // '魔人': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    '妖兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
-    '破坏神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    '龙神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    '鬼女': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
-    '妖鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
-    '堕天使': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
-    '夜魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    '龙王': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
-    '邪龙': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '外道': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    // '珍兽': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    // '女魔': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    // '恶魔': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    // '原天使': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
-    '邪神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
-    '邪鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '魔王': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
-    '幽鬼': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
-    // ... 在此为每一个常规种族定义它与四个精灵的合成效果
+    '女神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '魔神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '幻魔': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '地母神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '鬼神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '国津神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    // '秘神': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    '灵鸟': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '天使': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '妖魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': +1, '火精灵': -1 },
+    '凶鸟': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '军神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '神兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '圣兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '妖精': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '魔兽': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '地灵': { '磐石精灵': +1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    // '魔人': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    '妖兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '破坏神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '龙神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '鬼女': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '妖鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '堕天使': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '夜魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '龙王': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '邪龙': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '外道': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    // '珍兽': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    // '女魔': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    // '恶魔': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    // '原天使': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    '邪神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '邪鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '魔王': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '幽鬼': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
 };
-
-/**
- * 规则 2: 常规种族合成表
- * 结构: RACE_CHART['种族A']['种族B'] = '结果种族' 或 '结果精灵缩写' 或 'N/A';
- */
-const RACE_CHART = {
-    // !!! 请根据您的图表 (image_114c0c.png) 完整填写 !!!
-    // 示例:
-    '女魔': {
-        '大天使': 'N/A',
-        '女神': 'N/A',
-        '魔神': 'N/A',
-        '幻魔': 'N/A',
-        '地母神': 'N/A',
-        '鬼神': 'N/A',
-        '国津神': 'N/A',
-        '秘神': 'N/A',
-        '灵鸟': 'N/A',
-        '天使': '魔王',
-        '妖魔': '魔王',
-        '凶鸟': '魔王',
-        '军神': 'N/A',
-        '神兽': 'N/A',
-        '圣兽': 'N/A',
-        '妖精': '魔王',
-        '魔兽': '魔王',
-        '地灵': '魔王',
-        '魔人': '魔王',
-        '妖兽': '魔王',
-        '破坏神': 'N/A',
-        '龙神': 'N/A',
-        '鬼女': '魔王',
-        '妖鬼': '魔王',
-        '堕天使': '魔王',
-        '夜魔': '魔王',
-        '龙王': '魔王',
-        '邪龙': '魔王',
-        '外道': '魔王',
-        '珍兽': '魔王',
-        '女魔': '魔王',
-        '邪神': '魔王',
-        '邪鬼': '魔王',
-        '魔王': 'N/A',
-        '幽鬼': '魔王',
-    },
-    '恶魔': {
-        '大天使': 'N/A',
-        '女神': 'N/A',
-        '魔神': 'N/A',
-        '幻魔': 'N/A',
-        '地母神': 'N/A',
-        '鬼神': 'N/A',
-        '国津神': 'N/A',
-        '秘神': 'N/A',
-        '灵鸟': 'N/A',
-        '天使': '魔王',
-        '妖魔': '魔王',
-        '凶鸟': '魔王',
-        '军神': 'N/A',
-        '神兽': 'N/A',
-        '圣兽': 'N/A',
-        '妖精': '魔王',
-        '魔兽': '魔王',
-        '地灵': '魔王',
-        '魔人': '魔王',
-        '妖兽': '魔王',
-        '破坏神': 'N/A',
-        '龙神': 'N/A',
-        '鬼女': '魔王',
-        '妖鬼': '魔王',
-        '堕天使': '魔王',
-        '夜魔': '魔王',
-        '龙王': '魔王',
-        '邪龙': '魔王',
-        '外道': '魔王',
-        '珍兽': '魔王',
-        '女魔': '魔王',
-        '恶魔': 'N/A',
-        '邪神': '魔王',
-        '邪鬼': '魔王',
-        '魔王': 'N/A',
-        '幽鬼': '魔王',
-    },
-    '原天使': {
-        '大天使': 'N/A',
-        '女神': '大天使',
-        '魔神': '大天使',
-        '幻魔': '大天使',
-        '地母神': '大天使',
-        '鬼神': '大天使',
-        '国津神': '大天使',
-        '秘神': '大天使',
-        '灵鸟': '大天使',
-        '天使': '大天使',
-        '妖魔': '大天使',
-        '凶鸟': 'N/A',
-        '军神': '大天使',
-        '神兽': '大天使',
-        '圣兽': '大天使',
-        '妖精': '大天使',
-        '魔兽': '大天使',
-        '地灵': '大天使',
-        '魔人': 'N/A',
-        '妖兽': 'N/A',
-        '破坏神': '大天使',
-        '龙神': '大天使',
-        '鬼女': '大天使',
-        '妖鬼': '大天使',
-        '堕天使': '大天使',
-        '夜魔': '大天使',
-        '龙王': '大天使',
-        '邪龙': 'N/A',
-        '外道': 'N/A',
-        '珍兽': '大天使',
-        '女魔': '大天使',
-        '恶魔': 'N/A',
-        '原天使': 'N/A',
-        '邪神': 'N/A',
-        '邪鬼': 'N/A',
-        '魔王': 'N/A',
-        '幽鬼': 'N/A',
-    },
-    '鬼女': {
-        '鬼神': '地霊',
-        '凶鸟': '天使'
-    },
-    '鬼神': {
-        '鬼神': 'アシ' // 同种族合成会产生精灵缩写
-    }
-    // ... 在此为所有种族组合定义结果
-};
+// --- 将从CSV加载的动态数据 ---
+let RACE_CHART = {};
 
 // ====================================================================================
 // GLOBAL STATE & DATABASE
@@ -296,36 +157,62 @@ const RACE_CHART = {
 
 let db = { demons: [], specialFusions: [], nextDemonId: 1 };
 let editState = { type: 'none', targetId: null };
-const DB_KEY = 'smtvFusionDB_v4_0';
+const DB_KEY = 'smtvFusionDB_v5_1';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
+const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/race_chart.csv';
 
 // ====================================================================================
 // INITIALIZATION & DATA HANDLING
 // ====================================================================================
 
 window.onload = async () => {
-    await loadDataFromSource();
+    await Promise.all([ loadDemonsFromSource(), loadRaceChartFromCSV() ]);
     renderAll();
     showTab('calculator');
     document.getElementById('import-file').addEventListener('change', importDataFromFile);
     ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).addEventListener('change', updateCalculatorState));
 };
 
-async function loadDataFromSource() {
+async function loadDemonsFromSource() {
     try {
         const response = await fetch(GITHUB_DB_URL);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        
         if (data.demons && data.specialFusions && data.nextDemonId) {
             db = data;
-            console.log("Successfully loaded database from GitHub.");
-        } else {
-            throw new Error("Invalid database format from GitHub.");
-        }
+            console.log("Successfully loaded demon database from GitHub.");
+        } else { throw new Error("Invalid demon database format from GitHub."); }
     } catch (error) {
-        console.warn("Could not load database from GitHub. Starting with an empty state.", error);
+        console.warn("Could not load demon database from GitHub. Starting with an empty state.", error);
         db = { demons: [], specialFusions: [], nextDemonId: 1 };
+    }
+}
+
+async function loadRaceChartFromCSV() {
+    try {
+        const response = await fetch(GITHUB_CHART_URL);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const csvText = await response.text();
+        const lines = csvText.trim().split(/\r?\n/);
+        const headers = lines[0].split(',').slice(1).map(h => h.trim());
+        const chart = {};
+        for (let i = 1; i < lines.length; i++) {
+            const cells = lines[i].split(',');
+            const rowRace = cells[0].trim();
+            if(!rowRace) continue;
+            chart[rowRace] = {};
+            for (let j = 1; j < cells.length; j++) {
+                const colRace = headers[j - 1];
+                const result = cells[j].trim();
+                if (result) { chart[rowRace][colRace] = result; }
+            }
+        }
+        RACE_CHART = chart;
+        console.log("Successfully parsed Race Chart from CSV.", RACE_CHART);
+    } catch (error) {
+        console.error("Failed to load or parse race_chart.csv.", error);
+        alert("警告：无法加载种族合成表 (race_chart.csv)。常规合成将不可用。");
+        RACE_CHART = {};
     }
 }
 
@@ -333,10 +220,6 @@ async function loadDataFromSource() {
 function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(db)); renderAll(); }
 function exportData() { const dataStr = JSON.stringify(db, null, 2); const dataBlob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(dataBlob); const link = document.createElement('a'); link.download = "smtv_db.json"; link.href = url; link.click(); URL.revokeObjectURL(url); alert('数据已导出为 smtv_db.json 文件！'); }
 function importDataFromFile(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const importedDb = JSON.parse(e.target.result); if (importedDb.demons && importedDb.specialFusions && importedDb.nextDemonId) { if (confirm('确定要用导入的数据覆盖现有数据吗？')) { db = importedDb; resetCalculator(); saveData(); alert('数据导入成功！'); } } else { alert('文件格式不正确！'); } } catch (error) { alert('导入失败！无效的JSON文件。'); console.error(error); } }; reader.readAsText(file); event.target.value = null; }
-
-// ====================================================================================
-// DEMON & FUSION MANAGEMENT (CRUD)
-// ====================================================================================
 
 // ... (此处省略未作修改的仲魔和特殊合成管理函数: processDemonForm, addDemon, deleteDemon, etc.) ...
 function processDemonForm(){ if (editState.type === 'demon') saveDemonChanges(); else addDemon(); }
@@ -348,10 +231,6 @@ function startEditDemon(demonId) { cancelEditMode(); const demon = getDemonById(
 function saveDemonChanges() { const demon = getDemonById(editState.targetId); if (!demon) return; const name = document.getElementById('demon-name').value.trim(); const race = document.getElementById('demon-race').value.trim(); const level = parseInt(document.getElementById('demon-level').value, 10); const price = parseInt(document.getElementById('demon-price').value, 10); if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入完整且有效的仲魔信息！'); if (db.demons.some(d => d.name === name && d.id !== demon.id)) return alert('该仲魔名称与其他仲魔重复！'); demon.name = name; demon.race = race; demon.level = level; demon.price = price; cancelEditMode(); saveData(); }
 function cancelEditMode() { editState = { type: 'none', targetId: null }; document.getElementById('demon-name').value = ''; document.getElementById('demon-race').value = ''; document.getElementById('demon-level').value = ''; document.getElementById('demon-price').value = ''; let btn = document.getElementById('demon-submit-btn'); btn.textContent = '添加仲魔'; document.getElementById('cancel-edit-btn').style.display = 'none'; }
 
-// ====================================================================================
-// RENDERING FUNCTIONS
-// ====================================================================================
-
 // ... (此处省略未作修改的 renderAll, renderManagementLists, renderCalculatorSelects 等渲染函数) ...
 function renderAll() { const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; return a.name.localeCompare(b.name, 'zh-CN'); }); renderManagementLists(sortedDemons); renderCalculatorSelects(sortedDemons); updateCalculatorResults(); }
 function renderManagementLists(sortedDemons) { document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - ${d.price.toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name}</option>`).join(''); ['source-a-select', 'source-b-select', 'result-select'].forEach(id => document.getElementById(id).innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions); document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { const sA = getDemonById(f.sourceA_Id), sB = getDemonById(f.sourceB_Id), res = getDemonById(f.resultId); return (sA && sB && res) ? `<li><span>${sA.name} + ${sB.name} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; }).join('') + '</ul>'; }
@@ -359,51 +238,49 @@ function renderCalculatorSelects(sortedDemons) { const placeholder = '<option va
 function renderResults(recipes, container, ancestry) { container.innerHTML = ""; recipes.sort((a, b) => a.cost - b.cost); const resultList = document.createElement('ul'); resultList.className = 'result-list'; recipes.forEach(recipe => { if (recipe.type === 'special' || recipe.type === 'normal') { const sA = getDemonById(recipe.sourceA_Id); const sB = getDemonById(recipe.sourceB_Id); const res = getDemonById(recipe.resultId); if (sA && sB && res) resultList.appendChild(createFusionElement(sA, sB, res, ancestry, recipe.type)); } else if (recipe.type === 'direct') { const demon = getDemonById(recipe.demonId); if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry)); } }); container.appendChild(resultList); }
 
 // ====================================================================================
-// CALCULATOR CORE LOGIC (V4.0 ALGORITHM)
+// CALCULATOR CORE LOGIC (V5.1 ALGORITHM)
 // ====================================================================================
 let calculatorState = { slot1: null, slot2: null, slot3: null };
 
 function updateCalculatorState() { calculatorState = { slot1: parseInt(document.getElementById('slot1').value) || null, slot2: parseInt(document.getElementById('slot2').value) || null, slot3: parseInt(document.getElementById('slot3').value) || null }; updateCalculatorResults(); }
 function resetCalculator() { ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).value = ""); updateCalculatorState(); }
 
+/**
+ * 查找合成结果的种族，自动处理对称性。
+ * @param {string} raceA 种族A
+ * @param {string} raceB 种族B
+ * @returns {string|null} 结果种族名或null
+ */
 function getResultRace(raceA, raceB) {
     if (RACE_CHART[raceA] && RACE_CHART[raceA][raceB]) return RACE_CHART[raceA][raceB];
     if (RACE_CHART[raceB] && RACE_CHART[raceB][raceA]) return RACE_CHART[raceB][raceA];
     return null;
 }
 
-/**
- * 核心合成计算函数
- * 按优先级处理全部三种合成规则
- */
 function calculateFusionResult(demonA, demonB) {
     if (!demonA || !demonB) return null;
 
     // --- 规则 1: 同种族合成 ---
     if (demonA.race === demonB.race) {
-        const resultAbbr = getResultRace(demonA.race, demonA.race);
-        if (resultAbbr && SAME_RACE_FUSION_MAP[resultAbbr]) {
-            const elementalRaceName = SAME_RACE_FUSION_MAP[resultAbbr];
-            return db.demons.find(d => d.race === elementalRaceName);
+        const resultRace = getResultRace(demonA.race, demonA.race);
+        // 如果结果本身也是一个精灵种族
+        if (resultRace && ELEMENTAL_RACES.includes(resultRace)) {
+            return db.demons.find(d => d.race === resultRace);
         }
         return null;
     }
 
-    // --- 规则 2: 精灵合成 (位阶变化) ---
+    // --- 规则 2: 精灵合成 ---
     const isElementalFusion = ELEMENTAL_RACES.includes(demonA.race) || ELEMENTAL_RACES.includes(demonB.race);
     if (isElementalFusion) {
         const elementalDemon = ELEMENTAL_RACES.includes(demonA.race) ? demonA : demonB;
         const normalDemon = elementalDemon === demonA ? demonB : demonA;
-
         if (ELEMENTAL_RACES.includes(normalDemon.race)) return null;
-
         const rankChange = ELEMENTAL_RULES[normalDemon.race] ? ELEMENTAL_RULES[normalDemon.race][elementalDemon.race] : undefined;
         if (rankChange === undefined) return null;
-
         const targetRaceDemons = db.demons.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
         const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
         if (currentIndex === -1) return null;
-
         const targetIndex = currentIndex + rankChange;
         if (targetIndex >= 0 && targetIndex < targetRaceDemons.length) {
             return targetRaceDemons[targetIndex];
@@ -411,10 +288,9 @@ function calculateFusionResult(demonA, demonB) {
         return null;
     }
 
-    // --- 规则 3: 常规种族合成 ---
+    // --- 规则 3: 常规合成 ---
     const resultRace = getResultRace(demonA.race, demonB.race);
     if (!resultRace || resultRace === 'N/A') return null;
-
     const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
     const possibleResults = db.demons
         .filter(d => d.race === resultRace && d.level >= targetLevel)
@@ -422,84 +298,9 @@ function calculateFusionResult(demonA, demonB) {
     return possibleResults.length > 0 ? possibleResults[0] : null;
 }
 
-function updateCalculatorResults() {
-    const { slot1, slot2, slot3 } = calculatorState;
-    let recipes = [];
+// ... (此处省略未作修改的 updateCalculatorResults 函数，其逻辑已是最终版) ...
+function updateCalculatorResults() { const { slot1, slot2, slot3 } = calculatorState; let recipes = []; const demonPool = db.demons; if (slot1 && slot2 && !slot3) { const demonA = getDemonById(slot1); const demonB = getDemonById(slot2); const specialResult = db.specialFusions.find(f => (f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)); if (specialResult) { recipes.push({ type: 'special', ...specialResult, cost: demonA.price + demonB.price }); } else { const result = calculateFusionResult(demonA, demonB); if (result) { recipes.push({ type: 'normal', sourceA_Id: slot1, sourceB_Id: slot2, resultId: result.id, cost: demonA.price + demonB.price }); } } } else { db.specialFusions.forEach(f => { if ((!slot3 || f.resultId === slot3) && (!slot1 || f.sourceA_Id === slot1 || f.sourceB_Id === slot1) && (!slot2 || f.sourceA_Id === slot2 || f.sourceB_Id === slot2) && !(slot1 && slot2 && !((f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)))) { recipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price }); } }); for (let i = 0; i < demonPool.length; i++) { if (slot1 && demonPool[i].id !== slot1) continue; for (let j = i + 1; j < demonPool.length; j++) { if (slot2 && demonPool[j].id !== slot2) continue; if (slot1 && slot2 && (demonPool[i].id !== slot1 || demonPool[j].id !== slot2)) continue; const d1 = demonPool[i]; const d2 = demonPool[j]; const result = calculateFusionResult(d1, d2); if (result) { if (!slot3 || result.id === slot3) { recipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: result.id, cost: d1.price + d2.price }); } } } } if (slot3 && !slot1 && !slot2) { const target = getDemonById(slot3); if (target) recipes.push({ type: 'direct', demonId: slot3, cost: target.price }); } } const uniqueRecipes = Array.from(new Map(recipes.map(r => [`${[r.sourceA_Id, r.sourceB_Id, r.resultId].sort().join('-')}`, r])).values()); renderResults(uniqueRecipes, document.getElementById('results-container'), new Set()); }
 
-    const demonPool = db.demons;
-
-    // Case 1: A + B = ? (最简单的计算)
-    if (slot1 && slot2 && !slot3) {
-        const demonA = getDemonById(slot1);
-        const demonB = getDemonById(slot2);
-
-        // 优先级 1: 检查特殊合成
-        const specialResult = db.specialFusions.find(f => 
-            (f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)
-        );
-        if (specialResult) {
-            recipes.push({ type: 'special', ...specialResult, cost: demonA.price + demonB.price });
-        } else {
-            // 优先级 2: 计算常规/精灵合成
-            const result = calculateFusionResult(demonA, demonB);
-            if (result) {
-                recipes.push({ type: 'normal', sourceA_Id: slot1, sourceB_Id: slot2, resultId: result.id, cost: demonA.price + demonB.price });
-            }
-        }
-    } 
-    // Case 2: 涉及任意项的复杂计算 (A + ? = C, ? + ? = C, etc.)
-    else {
-        // 查找特殊合成
-        db.specialFusions.forEach(f => {
-            if ((!slot3 || f.resultId === slot3) &&
-                (!slot1 || f.sourceA_Id === slot1 || f.sourceB_Id === slot1) &&
-                (!slot2 || f.sourceA_Id === slot2 || f.sourceB_Id === slot2) &&
-                !(slot1 && slot2 && !((f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)))) {
-                recipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price });
-            }
-        });
-        
-        // 查找常规/精灵合成
-        for (let i = 0; i < demonPool.length; i++) {
-            // 优化: 如果slot1已选，外层循环只需跑一次
-            if (slot1 && demonPool[i].id !== slot1) continue;
-            
-            for (let j = i + 1; j < demonPool.length; j++) {
-                // 优化: 如果slot2已选，内层循环只需跑一次
-                if (slot2 && demonPool[j].id !== slot2) continue;
-                
-                // 如果 slot1 和 slot2 都已选，则跳过不匹配的组合
-                if (slot1 && slot2 && (demonPool[i].id !== slot1 || demonPool[j].id !== slot2)) continue;
-
-
-                const d1 = demonPool[i];
-                const d2 = demonPool[j];
-
-                const result = calculateFusionResult(d1, d2);
-                if (result) {
-                    if (!slot3 || result.id === slot3) {
-                         recipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: result.id, cost: d1.price + d2.price });
-                    }
-                }
-            }
-        }
-        
-        // 添加直接购买选项 (仅当只选择了结果时)
-        if (slot3 && !slot1 && !slot2) {
-             const target = getDemonById(slot3);
-             if (target) recipes.push({ type: 'direct', demonId: slot3, cost: target.price });
-        }
-    }
-    
-    // 去重，因为特殊合成和普通合成可能结果相同
-    const uniqueRecipes = Array.from(new Map(recipes.map(r => [`${[r.sourceA_Id, r.sourceB_Id, r.resultId].sort().join('-')}`, r])).values());
-
-    renderResults(uniqueRecipes, document.getElementById('results-container'), new Set());
-}
-
-// ====================================================================================
-// UI ELEMENT CREATION & INTERACTION
-// ====================================================================================
 // ... (此处省略未作修改的 UI 创建和交互函数, createDemonSpan, toggleSubList, etc.) ...
 function createDemonSpan(demon, ancestry) { const span = document.createElement('span'); span.textContent = `Lv${demon.level} ${demon.name}`; if (ancestry.has(demon.id)) { span.className = 'demon-no-link'; span.title = '为防止无限循环，已禁止展开'; } else { span.className = 'demon-link'; span.onclick = (e) => { e.stopPropagation(); toggleSubList(e.currentTarget, demon, ancestry); }; } return span; }
 function toggleSubList(element, demon, ancestry) { const parentItem = element.closest('.result-item'); let subListContainer = parentItem.querySelector('.sub-list-container'); if (subListContainer) { subListContainer.remove(); return; } subListContainer = document.createElement('div'); subListContainer.className = 'sub-list-container'; parentItem.appendChild(subListContainer); const parentIds = getDemonIdsFromElement(parentItem); const newAncestry = new Set([...ancestry, ...parentIds]); let subRecipes = []; db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { subRecipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price }); }); for (let i = 0; i < db.demons.length; i++) { for (let j = i + 1; j < db.demons.length; j++) { const d1 = db.demons[i]; const d2 = db.demons[j]; const result = calculateFusionResult(d1, d2); if (result && result.id === demon.id) { subRecipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: demon.id, cost: d1.price + d2.price }); } } } subRecipes.push({ type: 'direct', demonId: demon.id, cost: demon.price }); const uniqueSubRecipes = Array.from(new Map(subRecipes.map(r => [`${[r.sourceA_Id, r.sourceB_Id, r.resultId].sort().join('-')}`, r])).values()); renderResults(uniqueSubRecipes, subListContainer, newAncestry); }
