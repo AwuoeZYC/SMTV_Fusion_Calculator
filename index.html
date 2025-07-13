@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMTV:R - 最优价格合成器 v2.5.2 (稳定版)</title>
+    <title>SMTV:R - 最优价格合成器 v2.5.3 (录入优化)</title>
     <style>
         :root {
             --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
@@ -53,13 +53,13 @@
 <body>
 
 <div class="container">
-    <h1>SMTV:R 最优价格合成器 v2.5.2</h1>
+    <h1>SMTV:R 最优价格合成器 v2.5.3</h1>
     <div class="tabs">
         <button class="tab-button active" onclick="showTab('calculator')">三槽计算器</button>
         <button class="tab-button" onclick="showTab('management')">数据管理</button>
     </div>
     <div id="calculator" class="tab-content active">
-        <h2>合成计算器 (稳定版)</h2>
+        <h2>合成计算器 (录入优化版)</h2>
         <div class="calculator-slots">
             <div class="slot"><select id="slot1"></select></div><div class="slot-op">+</div>
             <div class="slot"><select id="slot2"></select></div><div class="slot-op">=</div>
@@ -99,7 +99,7 @@
 let db = { demons: [], fusions: [], nextDemonId: 1 };
 let editState = { type: 'none', targetId: null };
 
-const DB_KEY = 'smtvFusionDB_v2_5_2';
+const DB_KEY = 'smtvFusionDB_v2_5_3';
 
 function initializeDefaultData() {
     if (!localStorage.getItem(DB_KEY)) {
@@ -182,11 +182,19 @@ function calculateAllCheapestCosts() {
 function dataChanged() { calculateAllCheapestCosts(); saveData(); }
 function processDemonForm(){ if (editState.type === 'demon') saveDemonChanges(); else addDemon(); }
 function addDemon() {
-    const name = document.getElementById('demon-name').value.trim(); const level = parseInt(document.getElementById('demon-level').value, 10); const price = parseInt(document.getElementById('demon-price').value, 10);
+    const nameInput = document.getElementById('demon-name');
+    const priceInput = document.getElementById('demon-price');
+    const name = nameInput.value.trim();
+    const level = parseInt(document.getElementById('demon-level').value, 10);
+    const price = parseInt(priceInput.value, 10);
     if (!name || isNaN(level) || level <=0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、等级和价格！');
     if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！');
     db.demons.push({ id: db.nextDemonId++, name, level, price });
-    document.getElementById('demon-name').value = ''; document.getElementById('demon-level').value = ''; document.getElementById('demon-price').value = '';
+    
+    // **FIX in V2.5.3**: Only clear name and price
+    nameInput.value = '';
+    priceInput.value = '';
+    
     dataChanged();
 }
 function deleteDemon(demonId) {
@@ -203,6 +211,8 @@ function addFusion() {
     const [sourceA_Id, sourceB_Id, resultId] = ids; const sortedSources = [sourceA_Id, sourceB_Id].sort((a, b) => a - b);
     if (db.fusions.some(f => f.resultId === resultId && f.sourceA_Id === sortedSources[0] && f.sourceB_Id === sortedSources[1])) return alert('这个合成公式已经存在了。');
     db.fusions.push({ resultId, sourceA_Id: sortedSources[0], sourceB_Id: sortedSources[1] });
+    
+    // **FIX in V2.5.3**: Don't clear fusion form, just re-calculate and save
     dataChanged();
 }
 function deleteFusion(index) {
@@ -381,7 +391,6 @@ window.onload = () => {
     initializeDefaultData(); 
     loadData();
     if (db.demons.length > 0 && db.demons[0].cheapestPrice === undefined) {
-        console.log("Old data format detected, calculating cheapest prices...");
         calculateAllCheapestCosts();
         saveData();
     } else {
