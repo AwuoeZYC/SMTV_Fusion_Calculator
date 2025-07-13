@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMTV:R - 算法合成器 v3.0</title>
+    <title>SMTV:R - 算法合成器 v4.0 (最终版)</title>
     <style>
         :root {
             --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
@@ -54,7 +54,7 @@
 <body>
 
 <div class="container">
-    <h1>SMTV:R - 算法合成器 v3.0</h1>
+    <h1>SMTV:R - 算法合成器 v4.0</h1>
     <div class="tabs">
         <button class="tab-button active" onclick="showTab('calculator')">合成计算器</button>
         <button class="tab-button" onclick="showTab('management')">数据管理</button>
@@ -82,7 +82,7 @@
         
         <h2 id="demon-form-title">仲魔管理</h2>
         <div class="form-group"><label for="demon-name">仲魔名称：</label><input type="text" id="demon-name"></div>
-        <div class="form-group"><label for="demon-race">种族 (Race)：</label><input type="text" id="demon-race" placeholder="例如: 妖精, 女神, 魔神..."></div>
+        <div class="form-group"><label for="demon-race">种族 (Race)：</label><input type="text" id="demon-race" placeholder="例如: 妖精, 女神, アーシーズ..."></div>
         <div class="form-group"><label for="demon-level">基础等级 (Level)：</label><input type="number" id="demon-level"></div>
         <div class="form-group"><label for="demon-price">全书价格 (Macca)：</label><input type="number" id="demon-price"></div>
         <div class="form-actions">
@@ -93,7 +93,7 @@
         <hr>
         
         <h2 id="fusion-form-title">特殊合成管理</h2>
-        <p>只用于录入不遵循常规合成法则的特殊配方。</p>
+        <p>只用于录入不遵循以上三类合成法则的特殊配方。</p>
         <div class="form-group"><label for="source-a-select">素材 1：</label><select id="source-a-select"></select></div>
         <div class="form-group"><label for="source-b-select">素材 2：</label><select id="source-b-select"></select></div>
         <div class="form-group"><label for="result-select">结果：</label><select id="result-select"></select></div>
@@ -105,36 +105,76 @@
 <script>
 // ====================================================================================
 // CORE FUSION LOGIC & DATA
+// (!!!) 您需要在这里填充所有规则数据 (!!!)
 // ====================================================================================
 
 /**
- * 种族列表 (RACE_LIST)
- * !!! 重要: 请将游戏中所有的种族名称准确无误地录入此处。
- * 顺序无关紧要，但拼写必须与仲魔数据中的 `race` 字段完全一致。
+ * 精灵种族列表
  */
-const RACE_LIST = [
-    "魔神", "女神", "大天使", "天使", "妖精", "圣兽", "魔兽", "邪龙", "鬼女", "夜魔",
-    // ... 在此继续添加所有种族
-];
-
+const ELEMENTAL_RACES = ['磐石精灵', '风精灵', '水精灵', '火精灵'];
 
 /**
- * 种族合成表 (RACE_CHART)
- * !!! 核心规则: 这是合成算法的基石。请务必完整、准确地填充。
- * 结构: RACE_CHART['种族A']['种族B'] = '结果种族';
- * 注意: 表格是对称的，'种族A'+'种族B' 和 '种族B'+'种族A' 结果相同。
- * 为减少冗余，可以只定义一种组合，程序会自动处理对称性。
+ * 规则: 精灵合成规则 (二维精确版)
+ * 结构: ELEMENTAL_RULES['常规种族']['精灵种族'] = 变化值;
+ * +1 代表升阶 (△), -1 代表降阶 (▼)。
+ */
+const ELEMENTAL_RULES = {
+    // !!! 请根据您的图表 (image_114c45.png) 完整填写 !!!
+    // 示例:
+    '外道': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '鬼女': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '鬼神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '凶鸟': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '军神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '幻魔': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '国津神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '邪鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '邪神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '邪龙': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '女神': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '神兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    // '精灵': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    '圣兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '堕天使': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '大天使': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '地母神': { '磐石精灵': +1, '风精灵': -1, '水精灵': -1, '火精灵': -1 },
+    '地灵': { '磐石精灵': +1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '天使': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '破坏神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '魔王': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    '魔兽': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': +1 },
+    '魔神': { '磐石精灵': -1, '风精灵': -1, '水精灵': -1, '火精灵': +1 },
+    // '魔人': { '磐石精灵': 0, '风精灵': 0, '水精灵': 0, '火精灵': 0 },
+    '夜魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '幽鬼': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '妖鬼': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '妖兽': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '妖精': { '磐石精灵': +1, '风精灵': -1, '水精灵': +1, '火精灵': -1 },
+    '妖魔': { '磐石精灵': -1, '风精灵': +1, '水精灵': +1, '火精灵': -1 },
+    '龙王': { '磐石精灵': -1, '风精灵': -1, '水精灵': +1, '火精灵': +1 },
+    '龙神': { '磐石精灵': -1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    '灵鸟': { '磐石精灵': +1, '风精灵': +1, '水精灵': -1, '火精灵': -1 },
+    // ... 在此为每一个常规种族定义它与四个精灵的合成效果
+};
+
+/**
+ * 规则 3: 常规种族合成表
+ * 结构: RACE_CHART['种族A']['种族B'] = '结果种族' 或 '结果精灵缩写' 或 'N/A';
  */
 const RACE_CHART = {
-    // 示例, 请用真实数据替换
-    '女神': {
-        '妖精': '幻魔',
-        '圣兽': '灵鸟',
-        '天使': '大天使'
+    // !!! 请根据您的图表 (image_114c0c.png) 完整填写 !!!
+    // 示例:
+    '外道': {
+        '鬼女': '妖鬼',
+        '鬼神': 'N/A', // N/A 表示不可合成
+        '凶鸟': '妖獣'
     },
-    '妖精': {
-        '圣兽': '魔兽',
-        '魔兽': '凶鸟'
+    '鬼女': {
+        '鬼神': '地霊',
+        '凶鸟': '天使'
+    },
+    '鬼神': {
+        '鬼神': 'アシ' // 同种族合成会产生精灵缩写
     }
     // ... 在此为所有种族组合定义结果
 };
@@ -145,7 +185,7 @@ const RACE_CHART = {
 
 let db = { demons: [], specialFusions: [], nextDemonId: 1 };
 let editState = { type: 'none', targetId: null };
-const DB_KEY = 'smtvFusionDB_v3_0';
+const DB_KEY = 'smtvFusionDB_v4_0';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
 
 // ====================================================================================
@@ -178,204 +218,42 @@ async function loadDataFromSource() {
     }
 }
 
-function saveData() {
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
-    renderAll();
-}
-
-function exportData() {
-    const dataStr = JSON.stringify(db, null, 2);
-    const dataBlob = new Blob([dataStr], {type: "application/json"});
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a'); link.download = "smtv_db.json"; link.href = url; link.click();
-    URL.revokeObjectURL(url);
-    alert('数据已导出为 smtv_db.json 文件！');
-}
-
-function importDataFromFile(event) {
-    const file = event.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedDb = JSON.parse(e.target.result);
-            if (importedDb.demons && importedDb.specialFusions && importedDb.nextDemonId) {
-                if (confirm('确定要用导入的数据覆盖现有数据吗？')) {
-                    db = importedDb;
-                    resetCalculator();
-                    saveData();
-                    alert('数据导入成功！');
-                }
-            } else { alert('文件格式不正确！'); }
-        } catch (error) { alert('导入失败！无效的JSON文件。'); console.error(error); }
-    };
-    reader.readAsText(file);
-    event.target.value = null;
-}
+// ... (此处省略未作修改的 saveData, exportData, importDataFromFile 函数) ...
+function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(db)); renderAll(); }
+function exportData() { const dataStr = JSON.stringify(db, null, 2); const dataBlob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(dataBlob); const link = document.createElement('a'); link.download = "smtv_db.json"; link.href = url; link.click(); URL.revokeObjectURL(url); alert('数据已导出为 smtv_db.json 文件！'); }
+function importDataFromFile(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { try { const importedDb = JSON.parse(e.target.result); if (importedDb.demons && importedDb.specialFusions && importedDb.nextDemonId) { if (confirm('确定要用导入的数据覆盖现有数据吗？')) { db = importedDb; resetCalculator(); saveData(); alert('数据导入成功！'); } } else { alert('文件格式不正确！'); } } catch (error) { alert('导入失败！无效的JSON文件。'); console.error(error); } }; reader.readAsText(file); event.target.value = null; }
 
 // ====================================================================================
 // DEMON & FUSION MANAGEMENT (CRUD)
 // ====================================================================================
 
+// ... (此处省略未作修改的仲魔和特殊合成管理函数: processDemonForm, addDemon, deleteDemon, etc.) ...
 function processDemonForm(){ if (editState.type === 'demon') saveDemonChanges(); else addDemon(); }
-
-function addDemon() {
-    const name = document.getElementById('demon-name').value.trim();
-    const race = document.getElementById('demon-race').value.trim();
-    const level = parseInt(document.getElementById('demon-level').value, 10);
-    const price = parseInt(document.getElementById('demon-price').value, 10);
-
-    if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、种族、等级和价格！');
-    if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！');
-    
-    db.demons.push({ id: db.nextDemonId++, name, race, level, price });
-    
-    document.getElementById('demon-name').value = '';
-    document.getElementById('demon-race').value = '';
-    document.getElementById('demon-level').value = '';
-    document.getElementById('demon-price').value = '';
-    saveData();
-}
-
-function deleteDemon(demonId) {
-    if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return;
-    db.demons = db.demons.filter(d => d.id !== demonId);
-    db.specialFusions = db.specialFusions.filter(f => f.resultId !== demonId && f.sourceA_Id !== demonId && f.sourceB_Id !== demonId);
-    if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode();
-    saveData();
-}
-
-function addSpecialFusion() {
-    const ids = ['source-a-select', 'source-b-select', 'result-select'].map(s => parseInt(document.getElementById(s).value, 10));
-    if (ids.some(id => !id)) return alert('请选择全部三个仲魔。');
-    if (new Set(ids).size < 2) return alert('素材和结果不能是同一个仲魔。');
-    
-    const [sourceA_Id, sourceB_Id, resultId] = ids;
-    const sortedSources = [sourceA_Id, sourceB_Id].sort((a, b) => a - b);
-    
-    if (db.specialFusions.some(f => f.resultId === resultId && f.sourceA_Id === sortedSources[0] && f.sourceB_Id === sortedSources[1])) return alert('这个特殊合成已经存在了。');
-    
-    db.specialFusions.push({ resultId, sourceA_Id: sortedSources[0], sourceB_Id: sortedSources[1] });
-    saveData();
-}
-
-function deleteSpecialFusion(index) {
-    if (!confirm('确定要删除这个特殊合成吗？')) return;
-    db.specialFusions.splice(index, 1);
-    saveData();
-}
-
-function startEditDemon(demonId) {
-    cancelEditMode(); const demon = getDemonById(demonId); if (!demon) return;
-    editState = { type: 'demon', targetId: demonId };
-    document.getElementById('demon-form-title').scrollIntoView({ behavior: 'smooth' });
-    document.getElementById('demon-name').value = demon.name;
-    document.getElementById('demon-race').value = demon.race;
-    document.getElementById('demon-level').value = demon.level;
-    document.getElementById('demon-price').value = demon.price;
-    const submitBtn = document.getElementById('demon-submit-btn'); submitBtn.textContent = '保存修改';
-    document.getElementById('cancel-edit-btn').style.display = 'block';
-}
-
-function saveDemonChanges() {
-    const demon = getDemonById(editState.targetId); if (!demon) return;
-    const name = document.getElementById('demon-name').value.trim();
-    const race = document.getElementById('demon-race').value.trim();
-    const level = parseInt(document.getElementById('demon-level').value, 10);
-    const price = parseInt(document.getElementById('demon-price').value, 10);
-
-    if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入完整且有效的仲魔信息！');
-    if (db.demons.some(d => d.name === name && d.id !== demon.id)) return alert('该仲魔名称与其他仲魔重复！');
-    
-    demon.name = name; demon.race = race; demon.level = level; demon.price = price;
-    cancelEditMode();
-    saveData();
-}
-
-function cancelEditMode() {
-    editState = { type: 'none', targetId: null };
-    document.getElementById('demon-name').value = '';
-    document.getElementById('demon-race').value = '';
-    document.getElementById('demon-level').value = '';
-    document.getElementById('demon-price').value = '';
-    let btn = document.getElementById('demon-submit-btn'); btn.textContent = '添加仲魔';
-    document.getElementById('cancel-edit-btn').style.display = 'none';
-}
-
+function addDemon() { const name = document.getElementById('demon-name').value.trim(); const race = document.getElementById('demon-race').value.trim(); const level = parseInt(document.getElementById('demon-level').value, 10); const price = parseInt(document.getElementById('demon-price').value, 10); if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、种族、等级和价格！'); if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！'); db.demons.push({ id: db.nextDemonId++, name, race, level, price }); document.getElementById('demon-name').value = ''; document.getElementById('demon-race').value = ''; document.getElementById('demon-level').value = ''; document.getElementById('demon-price').value = ''; saveData(); }
+function deleteDemon(demonId) { if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return; db.demons = db.demons.filter(d => d.id !== demonId); db.specialFusions = db.specialFusions.filter(f => f.resultId !== demonId && f.sourceA_Id !== demonId && f.sourceB_Id !== demonId); if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode(); saveData(); }
+function addSpecialFusion() { const ids = ['source-a-select', 'source-b-select', 'result-select'].map(s => parseInt(document.getElementById(s).value, 10)); if (ids.some(id => !id)) return alert('请选择全部三个仲魔。'); if (new Set(ids).size < 2) return alert('素材和结果不能是同一个仲魔。'); const [sourceA_Id, sourceB_Id, resultId] = ids; const sortedSources = [sourceA_Id, sourceB_Id].sort((a, b) => a - b); if (db.specialFusions.some(f => f.resultId === resultId && f.sourceA_Id === sortedSources[0] && f.sourceB_Id === sortedSources[1])) return alert('这个特殊合成已经存在了。'); db.specialFusions.push({ resultId, sourceA_Id: sortedSources[0], sourceB_Id: sortedSources[1] }); saveData(); }
+function deleteSpecialFusion(index) { if (!confirm('确定要删除这个特殊合成吗？')) return; db.specialFusions.splice(index, 1); saveData(); }
+function startEditDemon(demonId) { cancelEditMode(); const demon = getDemonById(demonId); if (!demon) return; editState = { type: 'demon', targetId: demonId }; document.getElementById('demon-form-title').scrollIntoView({ behavior: 'smooth' }); document.getElementById('demon-name').value = demon.name; document.getElementById('demon-race').value = demon.race; document.getElementById('demon-level').value = demon.level; document.getElementById('demon-price').value = demon.price; const submitBtn = document.getElementById('demon-submit-btn'); submitBtn.textContent = '保存修改'; document.getElementById('cancel-edit-btn').style.display = 'block'; }
+function saveDemonChanges() { const demon = getDemonById(editState.targetId); if (!demon) return; const name = document.getElementById('demon-name').value.trim(); const race = document.getElementById('demon-race').value.trim(); const level = parseInt(document.getElementById('demon-level').value, 10); const price = parseInt(document.getElementById('demon-price').value, 10); if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入完整且有效的仲魔信息！'); if (db.demons.some(d => d.name === name && d.id !== demon.id)) return alert('该仲魔名称与其他仲魔重复！'); demon.name = name; demon.race = race; demon.level = level; demon.price = price; cancelEditMode(); saveData(); }
+function cancelEditMode() { editState = { type: 'none', targetId: null }; document.getElementById('demon-name').value = ''; document.getElementById('demon-race').value = ''; document.getElementById('demon-level').value = ''; document.getElementById('demon-price').value = ''; let btn = document.getElementById('demon-submit-btn'); btn.textContent = '添加仲魔'; document.getElementById('cancel-edit-btn').style.display = 'none'; }
 
 // ====================================================================================
 // RENDERING FUNCTIONS
 // ====================================================================================
 
-function renderAll() {
-    const sortedDemons = [...db.demons].sort((a, b) => {
-        if (a.level !== b.level) return a.level - b.level;
-        return a.name.localeCompare(b.name, 'zh-CN');
-    });
-    renderManagementLists(sortedDemons);
-    renderCalculatorSelects(sortedDemons);
-    updateCalculatorResults();
-}
-
-function renderManagementLists(sortedDemons) {
-    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - ${d.price.toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>';
-    
-    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name}</option>`).join('');
-    ['source-a-select', 'source-b-select', 'result-select'].forEach(id => document.getElementById(id).innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions);
-    
-    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => {
-        const sA = getDemonById(f.sourceA_Id), sB = getDemonById(f.sourceB_Id), res = getDemonById(f.resultId);
-        return (sA && sB && res) ? `<li><span>${sA.name} + ${sB.name} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : '';
-    }).join('') + '</ul>';
-}
-
-function renderCalculatorSelects(sortedDemons) {
-    const placeholder = '<option value="">-- 任意 --</option>';
-    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name}</option>`).join('');
-    ['slot1', 'slot2', 'slot3'].forEach(id => {
-        const select = document.getElementById(id);
-        const currentValue = select.value;
-        select.innerHTML = placeholder + demonOptions;
-        select.value = currentValue;
-    });
-}
-
-function renderResults(recipes, container, ancestry) {
-    container.innerHTML = "";
-    recipes.sort((a, b) => a.cost - b.cost);
-    const resultList = document.createElement('ul'); resultList.className = 'result-list';
-    recipes.forEach(recipe => {
-        if (recipe.type === 'special' || recipe.type === 'normal') {
-            const sA = getDemonById(recipe.sourceA_Id);
-            const sB = getDemonById(recipe.sourceB_Id);
-            const res = getDemonById(recipe.resultId);
-            if (sA && sB && res) resultList.appendChild(createFusionElement(sA, sB, res, ancestry, recipe.type));
-        } else if (recipe.type === 'direct') {
-            const demon = getDemonById(recipe.demonId);
-            if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry));
-        }
-    });
-    container.appendChild(resultList);
-}
-
+// ... (此处省略未作修改的 renderAll, renderManagementLists, renderCalculatorSelects 等渲染函数) ...
+function renderAll() { const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; return a.name.localeCompare(b.name, 'zh-CN'); }); renderManagementLists(sortedDemons); renderCalculatorSelects(sortedDemons); updateCalculatorResults(); }
+function renderManagementLists(sortedDemons) { document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - ${d.price.toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name}</option>`).join(''); ['source-a-select', 'source-b-select', 'result-select'].forEach(id => document.getElementById(id).innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions); document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { const sA = getDemonById(f.sourceA_Id), sB = getDemonById(f.sourceB_Id), res = getDemonById(f.resultId); return (sA && sB && res) ? `<li><span>${sA.name} + ${sB.name} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; }).join('') + '</ul>'; }
+function renderCalculatorSelects(sortedDemons) { const placeholder = '<option value="">-- 任意 --</option>'; const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name}</option>`).join(''); ['slot1', 'slot2', 'slot3'].forEach(id => { const select = document.getElementById(id); const currentValue = select.value; select.innerHTML = placeholder + demonOptions; select.value = currentValue; }); }
+function renderResults(recipes, container, ancestry) { container.innerHTML = ""; recipes.sort((a, b) => a.cost - b.cost); const resultList = document.createElement('ul'); resultList.className = 'result-list'; recipes.forEach(recipe => { if (recipe.type === 'special' || recipe.type === 'normal') { const sA = getDemonById(recipe.sourceA_Id); const sB = getDemonById(recipe.sourceB_Id); const res = getDemonById(recipe.resultId); if (sA && sB && res) resultList.appendChild(createFusionElement(sA, sB, res, ancestry, recipe.type)); } else if (recipe.type === 'direct') { const demon = getDemonById(recipe.demonId); if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry)); } }); container.appendChild(resultList); }
 
 // ====================================================================================
-// CALCULATOR CORE LOGIC (V3.0 ALGORITHM)
+// CALCULATOR CORE LOGIC (V4.0 ALGORITHM)
 // ====================================================================================
 let calculatorState = { slot1: null, slot2: null, slot3: null };
 
-function updateCalculatorState() {
-    calculatorState = {
-        slot1: parseInt(document.getElementById('slot1').value) || null,
-        slot2: parseInt(document.getElementById('slot2').value) || null,
-        slot3: parseInt(document.getElementById('slot3').value) || null,
-    };
-    updateCalculatorResults();
-}
-
-function resetCalculator() {
-    ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).value = "");
-    updateCalculatorState();
-}
+function updateCalculatorState() { calculatorState = { slot1: parseInt(document.getElementById('slot1').value) || null, slot2: parseInt(document.getElementById('slot2').value) || null, slot3: parseInt(document.getElementById('slot3').value) || null }; updateCalculatorResults(); }
+function resetCalculator() { ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).value = ""); updateCalculatorState(); }
 
 function getResultRace(raceA, raceB) {
     if (RACE_CHART[raceA] && RACE_CHART[raceA][raceB]) return RACE_CHART[raceA][raceB];
@@ -383,18 +261,53 @@ function getResultRace(raceA, raceB) {
     return null;
 }
 
-function calculateNormalFusion(demonA, demonB) {
-    if (!demonA || !demonB || !demonA.race || !demonB.race) return null;
+/**
+ * 核心合成计算函数
+ * 按优先级处理全部三种合成规则
+ */
+function calculateFusionResult(demonA, demonB) {
+    if (!demonA || !demonB) return null;
 
+    // --- 规则 1: 同种族合成 ---
+    if (demonA.race === demonB.race) {
+        const resultAbbr = getResultRace(demonA.race, demonA.race);
+        if (resultAbbr && SAME_RACE_FUSION_MAP[resultAbbr]) {
+            const elementalRaceName = SAME_RACE_FUSION_MAP[resultAbbr];
+            return db.demons.find(d => d.race === elementalRaceName);
+        }
+        return null;
+    }
+
+    // --- 规则 2: 精灵合成 (位阶变化) ---
+    const isElementalFusion = ELEMENTAL_RACES.includes(demonA.race) || ELEMENTAL_RACES.includes(demonB.race);
+    if (isElementalFusion) {
+        const elementalDemon = ELEMENTAL_RACES.includes(demonA.race) ? demonA : demonB;
+        const normalDemon = elementalDemon === demonA ? demonB : demonA;
+
+        if (ELEMENTAL_RACES.includes(normalDemon.race)) return null;
+
+        const rankChange = ELEMENTAL_RULES[normalDemon.race] ? ELEMENTAL_RULES[normalDemon.race][elementalDemon.race] : undefined;
+        if (rankChange === undefined) return null;
+
+        const targetRaceDemons = db.demons.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
+        const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
+        if (currentIndex === -1) return null;
+
+        const targetIndex = currentIndex + rankChange;
+        if (targetIndex >= 0 && targetIndex < targetRaceDemons.length) {
+            return targetRaceDemons[targetIndex];
+        }
+        return null;
+    }
+
+    // --- 规则 3: 常规种族合成 ---
     const resultRace = getResultRace(demonA.race, demonB.race);
-    if (!resultRace) return null;
+    if (!resultRace || resultRace === 'N/A') return null;
 
     const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
-    
     const possibleResults = db.demons
         .filter(d => d.race === resultRace && d.level >= targetLevel)
         .sort((a, b) => a.level - b.level);
-
     return possibleResults.length > 0 ? possibleResults[0] : null;
 }
 
@@ -402,165 +315,88 @@ function updateCalculatorResults() {
     const { slot1, slot2, slot3 } = calculatorState;
     let recipes = [];
 
-    // Case 1: A + B = ?
+    const demonPool = db.demons;
+
+    // Case 1: A + B = ? (最简单的计算)
     if (slot1 && slot2 && !slot3) {
-        // Check special fusions first
+        const demonA = getDemonById(slot1);
+        const demonB = getDemonById(slot2);
+
+        // 优先级 1: 检查特殊合成
         const specialResult = db.specialFusions.find(f => 
             (f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)
         );
         if (specialResult) {
-            recipes.push({ type: 'special', ...specialResult, cost: getDemonById(slot1).price + getDemonById(slot2).price });
+            recipes.push({ type: 'special', ...specialResult, cost: demonA.price + demonB.price });
         } else {
-            // Normal fusion
-            const demonA = getDemonById(slot1);
-            const demonB = getDemonById(slot2);
-            const result = calculateNormalFusion(demonA, demonB);
+            // 优先级 2: 计算常规/精灵合成
+            const result = calculateFusionResult(demonA, demonB);
             if (result) {
                 recipes.push({ type: 'normal', sourceA_Id: slot1, sourceB_Id: slot2, resultId: result.id, cost: demonA.price + demonB.price });
             }
         }
     } 
-    // Case 2: Find all combinations for a specific result
-    else if (slot3) {
-        const demonsToUse = db.demons.filter(d => 
-            (!slot1 || d.id === slot1) && 
-            (!slot2 || d.id === slot2)
-        );
-
-        // Find special fusions for the result
+    // Case 2: 涉及任意项的复杂计算 (A + ? = C, ? + ? = C, etc.)
+    else {
+        // 查找特殊合成
         db.specialFusions.forEach(f => {
-            if (f.resultId === slot3) {
-                 if ((!slot1 || f.sourceA_Id === slot1 || f.sourceB_Id === slot1) &&
-                    (!slot2 || f.sourceA_Id === slot2 || f.sourceB_Id === slot2)) {
-                    recipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price });
-                 }
+            if ((!slot3 || f.resultId === slot3) &&
+                (!slot1 || f.sourceA_Id === slot1 || f.sourceB_Id === slot1) &&
+                (!slot2 || f.sourceA_Id === slot2 || f.sourceB_Id === slot2) &&
+                !(slot1 && slot2 && !((f.sourceA_Id === slot1 && f.sourceB_Id === slot2) || (f.sourceA_Id === slot2 && f.sourceB_Id === slot1)))) {
+                recipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price });
             }
         });
+        
+        // 查找常规/精灵合成
+        for (let i = 0; i < demonPool.length; i++) {
+            // 优化: 如果slot1已选，外层循环只需跑一次
+            if (slot1 && demonPool[i].id !== slot1) continue;
+            
+            for (let j = i + 1; j < demonPool.length; j++) {
+                // 优化: 如果slot2已选，内层循环只需跑一次
+                if (slot2 && demonPool[j].id !== slot2) continue;
+                
+                // 如果 slot1 和 slot2 都已选，则跳过不匹配的组合
+                if (slot1 && slot2 && (demonPool[i].id !== slot1 || demonPool[j].id !== slot2)) continue;
 
-        // Find normal fusions for the result
-        for (let i = 0; i < db.demons.length; i++) {
-            for (let j = i + 1; j < db.demons.length; j++) {
-                const d1 = db.demons[i];
-                const d2 = db.demons[j];
 
-                // Filter based on selected slots
-                if (slot1 && (d1.id !== slot1 && d2.id !== slot1)) continue;
-                if (slot2 && (d1.id !== slot2 && d2.id !== slot2)) continue;
-                if (slot1 && slot2 && !( (d1.id === slot1 && d2.id === slot2) || (d1.id === slot2 && d2.id === slot1) )) continue;
+                const d1 = demonPool[i];
+                const d2 = demonPool[j];
 
-
-                const result = calculateNormalFusion(d1, d2);
-                if (result && result.id === slot3) {
-                    recipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: result.id, cost: d1.price + d2.price });
+                const result = calculateFusionResult(d1, d2);
+                if (result) {
+                    if (!slot3 || result.id === slot3) {
+                         recipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: result.id, cost: d1.price + d2.price });
+                    }
                 }
             }
         }
-
-        // Add direct purchase option if only slot3 is selected
-        if (!slot1 && !slot2) {
+        
+        // 添加直接购买选项 (仅当只选择了结果时)
+        if (slot3 && !slot1 && !slot2) {
              const target = getDemonById(slot3);
              if (target) recipes.push({ type: 'direct', demonId: slot3, cost: target.price });
         }
     }
     
-    renderResults(recipes, document.getElementById('results-container'), new Set());
-}
+    // 去重，因为特殊合成和普通合成可能结果相同
+    const uniqueRecipes = Array.from(new Map(recipes.map(r => [`${[r.sourceA_Id, r.sourceB_Id, r.resultId].sort().join('-')}`, r])).values());
 
+    renderResults(uniqueRecipes, document.getElementById('results-container'), new Set());
+}
 
 // ====================================================================================
 // UI ELEMENT CREATION & INTERACTION
 // ====================================================================================
-
-function createDemonSpan(demon, ancestry) {
-    const span = document.createElement('span'); span.textContent = `Lv${demon.level} ${demon.name}`;
-    if (ancestry.has(demon.id)) {
-        span.className = 'demon-no-link'; span.title = '为防止无限循环，已禁止展开';
-    } else {
-        span.className = 'demon-link'; span.onclick = (e) => { e.stopPropagation(); toggleSubList(e.currentTarget, demon, ancestry); };
-    }
-    return span;
-}
-
-function toggleSubList(element, demon, ancestry) {
-    const parentItem = element.closest('.result-item');
-    let subListContainer = parentItem.querySelector('.sub-list-container');
-    if (subListContainer) { subListContainer.remove(); return; }
-
-    subListContainer = document.createElement('div'); subListContainer.className = 'sub-list-container';
-    parentItem.appendChild(subListContainer);
-    
-    const parentIds = getDemonIdsFromElement(parentItem);
-    const newAncestry = new Set([...ancestry, ...parentIds]);
-    
-    // Find all ways to make this demon
-    let subRecipes = [];
-
-    // Special fusions
-    db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => {
-        subRecipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price });
-    });
-    // Normal fusions
-    for (let i = 0; i < db.demons.length; i++) {
-        for (let j = i + 1; j < db.demons.length; j++) {
-            const d1 = db.demons[i];
-            const d2 = db.demons[j];
-            const result = calculateNormalFusion(d1, d2);
-            if (result && result.id === demon.id) {
-                subRecipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: demon.id, cost: d1.price + d2.price });
-            }
-        }
-    }
-    // Direct purchase
-    subRecipes.push({ type: 'direct', demonId: demon.id, cost: demon.price });
-
-    renderResults(subRecipes, subListContainer, newAncestry);
-}
-
-function createFusionElement(sA, sB, res, ancestry, type) {
-    const li = document.createElement('li');
-    li.className = `result-item ${type}-fusion`;
-    li.dataset.sA = sA.id; li.dataset.sB = sB.id; li.dataset.res = res.id;
-
-    const path = document.createElement('div'); path.className = 'result-path';
-    path.append( createDemonSpan(sA, ancestry), ' + ', createDemonSpan(sB, ancestry), ' = ', createDemonSpan(res, ancestry) );
-    
-    const costDiv = document.createElement('div'); costDiv.className = 'result-cost';
-    const totalCost = sA.price + sB.price;
-    costDiv.innerHTML = `${totalCost.toLocaleString()} M <span class="breakdown">(${type === 'special' ? '特殊' : '普通'}合成)</span>`;
-    
-    path.appendChild(costDiv);
-    li.appendChild(path);
-    return li;
-}
-
-function createDirectPurchaseElement(demon, ancestry) {
-    const li = document.createElement('li');
-    li.className = 'result-item direct-purchase';
-    li.dataset.res = demon.id;
-    const path = document.createElement('div'); path.className = 'result-path';
-    path.append('从全书召唤 ', createDemonSpan(demon, ancestry));
-    const cost = document.createElement('div'); cost.className = 'result-cost';
-    cost.innerHTML = `${demon.price.toLocaleString()} M <span class="breakdown">(直接购买)</span>`;
-    path.appendChild(cost);
-    li.appendChild(path);
-    return li;
-}
-
+// ... (此处省略未作修改的 UI 创建和交互函数, createDemonSpan, toggleSubList, etc.) ...
+function createDemonSpan(demon, ancestry) { const span = document.createElement('span'); span.textContent = `Lv${demon.level} ${demon.name}`; if (ancestry.has(demon.id)) { span.className = 'demon-no-link'; span.title = '为防止无限循环，已禁止展开'; } else { span.className = 'demon-link'; span.onclick = (e) => { e.stopPropagation(); toggleSubList(e.currentTarget, demon, ancestry); }; } return span; }
+function toggleSubList(element, demon, ancestry) { const parentItem = element.closest('.result-item'); let subListContainer = parentItem.querySelector('.sub-list-container'); if (subListContainer) { subListContainer.remove(); return; } subListContainer = document.createElement('div'); subListContainer.className = 'sub-list-container'; parentItem.appendChild(subListContainer); const parentIds = getDemonIdsFromElement(parentItem); const newAncestry = new Set([...ancestry, ...parentIds]); let subRecipes = []; db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { subRecipes.push({ type: 'special', ...f, cost: getDemonById(f.sourceA_Id).price + getDemonById(f.sourceB_Id).price }); }); for (let i = 0; i < db.demons.length; i++) { for (let j = i + 1; j < db.demons.length; j++) { const d1 = db.demons[i]; const d2 = db.demons[j]; const result = calculateFusionResult(d1, d2); if (result && result.id === demon.id) { subRecipes.push({ type: 'normal', sourceA_Id: d1.id, sourceB_Id: d2.id, resultId: demon.id, cost: d1.price + d2.price }); } } } subRecipes.push({ type: 'direct', demonId: demon.id, cost: demon.price }); const uniqueSubRecipes = Array.from(new Map(subRecipes.map(r => [`${[r.sourceA_Id, r.sourceB_Id, r.resultId].sort().join('-')}`, r])).values()); renderResults(uniqueSubRecipes, subListContainer, newAncestry); }
+function createFusionElement(sA, sB, res, ancestry, type) { const li = document.createElement('li'); li.className = `result-item ${type}-fusion`; li.dataset.sA = sA.id; li.dataset.sB = sB.id; li.dataset.res = res.id; const path = document.createElement('div'); path.className = 'result-path'; path.append( createDemonSpan(sA, ancestry), ' + ', createDemonSpan(sB, ancestry), ' = ', createDemonSpan(res, ancestry) ); const costDiv = document.createElement('div'); costDiv.className = 'result-cost'; const totalCost = sA.price + sB.price; costDiv.innerHTML = `${totalCost.toLocaleString()} M <span class="breakdown">(${type === 'special' ? '特殊' : '常规'})</span>`; path.appendChild(costDiv); li.appendChild(path); return li; }
+function createDirectPurchaseElement(demon, ancestry) { const li = document.createElement('li'); li.className = 'result-item direct-purchase'; li.dataset.res = demon.id; const path = document.createElement('div'); path.className = 'result-path'; path.append('从全书召唤 ', createDemonSpan(demon, ancestry)); const cost = document.createElement('div'); cost.className = 'result-cost'; cost.innerHTML = `${demon.price.toLocaleString()} M <span class="breakdown">(直接购买)</span>`; path.appendChild(cost); li.appendChild(path); return li; }
 function getDemonById(id) { return db.demons.find(d => d.id === id); }
-function getDemonIdsFromElement(element) {
-    const ids = [];
-    if(element.dataset.sA) ids.push(parseInt(element.dataset.sA));
-    if(element.dataset.sB) ids.push(parseInt(element.dataset.sB));
-    if(element.dataset.res) ids.push(parseInt(element.dataset.res));
-    return ids.filter(id => !isNaN(id));
-}
-
-function showTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
-}
+function getDemonIdsFromElement(element) { const ids = []; if(element.dataset.sA) ids.push(parseInt(element.dataset.sA)); if(element.dataset.sB) ids.push(parseInt(element.dataset.sB)); if(element.dataset.res) ids.push(parseInt(element.dataset.res)); return ids.filter(id => !isNaN(id)); }
+function showTab(tabName) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); document.getElementById(tabName).classList.add('active'); document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active'); }
 </script>
 </body>
 </html>
