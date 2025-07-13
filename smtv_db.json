@@ -89,7 +89,7 @@
       "name": "磐石精灵",
       "price": 15959,
       "level": 9,
-      "cheapestPrice": 4592
+      "cheapestPrice": 3290
     },
     {
       "id": 19,
@@ -166,14 +166,14 @@
       "name": "土蜘蛛",
       "price": 3580,
       "level": 13,
-      "cheapestPrice": 3580
+      "cheapestPrice": 2278
     },
     {
       "id": 32,
       "name": "涯米涯米",
       "price": 3461,
       "level": 13,
-      "cheapestPrice": 3461
+      "cheapestPrice": 3264
     },
     {
       "id": 35,
@@ -1861,6 +1861,256 @@
       "resultId": 31,
       "sourceA_Id": 46,
       "sourceB_Id": 66
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 48,
+      "sourceB_Id": 80
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 46,
+      "sourceB_Id": 88
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 46,
+      "sourceB_Id": 105
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 48,
+      "sourceB_Id": 117
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 51,
+      "sourceB_Id": 79
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 51,
+      "sourceB_Id": 120
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 54,
+      "sourceB_Id": 66
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 54,
+      "sourceB_Id": 88
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 54,
+      "sourceB_Id": 105
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 58,
+      "sourceB_Id": 112
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 58,
+      "sourceB_Id": 96
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 72,
+      "sourceB_Id": 101
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 75,
+      "sourceB_Id": 122
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 75,
+      "sourceB_Id": 91
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 66,
+      "sourceB_Id": 88
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 66,
+      "sourceB_Id": 105
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 79,
+      "sourceB_Id": 120
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 80,
+      "sourceB_Id": 117
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 88,
+      "sourceB_Id": 105
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 91,
+      "sourceB_Id": 122
+    },
+    {
+      "resultId": 31,
+      "sourceA_Id": 96,
+      "sourceB_Id": 112
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 14,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 23,
+      "sourceB_Id": 33
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 24,
+      "sourceB_Id": 36
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 14,
+      "sourceB_Id": 45
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 20,
+      "sourceB_Id": 72
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 37,
+      "sourceB_Id": 72
+    },
+    {
+      "resultId": 32,
+      "sourceA_Id": 47,
+      "sourceB_Id": 72
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 7,
+      "sourceB_Id": 21
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 7,
+      "sourceB_Id": 40
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 10,
+      "sourceB_Id": 35
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 12,
+      "sourceB_Id": 18
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 12,
+      "sourceB_Id": 46
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 14,
+      "sourceB_Id": 20
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 14,
+      "sourceB_Id": 31
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 22,
+      "sourceB_Id": 24
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 12,
+      "sourceB_Id": 16
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 16,
+      "sourceB_Id": 28
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 16,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 9,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 18,
+      "sourceB_Id": 27
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 18,
+      "sourceB_Id": 23
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 22,
+      "sourceB_Id": 25
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 11,
+      "sourceB_Id": 29
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 28,
+      "sourceB_Id": 30
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 12,
+      "sourceB_Id": 39
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 37,
+      "sourceB_Id": 44
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 44,
+      "sourceB_Id": 47
+    },
+    {
+      "resultId": 33,
+      "sourceA_Id": 9,
+      "sourceB_Id": 53
+    },
+    {
+      "resultId": 34,
+      "sourceA_Id": 7,
+      "sourceB_Id": 35
     }
   ],
   "nextDemonId": 124
