@@ -41,8 +41,22 @@
       "race": "军神",
       "level": 5,
       "price": 2071
+    },
+    {
+      "id": 7,
+      "name": "木灵",
+      "race": "地灵",
+      "level": 6,
+      "price": 1012
+    },
+    {
+      "id": 8,
+      "name": "曼陀罗",
+      "race": "妖魔",
+      "level": 6,
+      "price": 1280
     }
   ],
   "specialFusions": [],
-  "nextDemonId": 7
+  "nextDemonId": 9
 }
