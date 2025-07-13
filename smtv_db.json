@@ -2,102 +2,102 @@
   "demons": [
     {
       "id": 7,
-      "name": "Lv1 软泥怪",
+      "name": "软泥怪",
       "price": 436
     },
     {
       "id": 9,
-      "name": "Lv2 皮克希",
+      "name": "皮克希",
       "price": 919
     },
     {
       "id": 10,
-      "name": "Lv3 饿鬼",
+      "name": "饿鬼",
       "price": 894
     },
     {
       "id": 11,
-      "name": "Lv4 阴摩罗鬼",
+      "name": "阴摩罗鬼",
       "price": 804
     },
     {
       "id": 12,
-      "name": "Lv5 葛雷姆林",
+      "name": "葛雷姆林",
       "price": 1224
     },
     {
       "id": 13,
-      "name": "Lv5 猫将军",
+      "name": "猫将军",
       "price": 2071
     },
     {
       "id": 14,
-      "name": "Lv6 木灵",
+      "name": "木灵",
       "price": 1012
     },
     {
       "id": 15,
-      "name": "Lv6 曼陀罗",
+      "name": "曼陀罗",
       "price": 1280
     },
     {
       "id": 16,
-      "name": "Lv8 睡魔",
+      "name": "睡魔",
       "price": 1887
     },
     {
       "id": 17,
-      "name": "Lv8 皮亚雷",
+      "name": "皮亚雷",
       "price": 1892
     },
     {
       "id": 18,
-      "name": "Lv7 猫妖精",
+      "name": "猫妖精",
       "price": 1132
     },
     {
       "id": 19,
-      "name": "Lv9 猪豚蛇",
+      "name": "猪豚蛇",
       "price": 1839
     },
     {
       "id": 20,
-      "name": "Lv9 磐石精灵",
+      "name": "磐石精灵",
       "price": 15959
     },
     {
       "id": 21,
-      "name": "Lv10 阿珈席翁",
+      "name": "阿珈席翁",
       "price": 1842
     },
     {
       "id": 22,
-      "name": "Lv10 天使",
+      "name": "天使",
       "price": 2806
     },
     {
       "id": 23,
-      "name": "Lv11 哈帕斯",
+      "name": "哈帕斯",
       "price": 2376
     },
     {
       "id": 24,
-      "name": "Lv7 戴蒙",
+      "name": "戴蒙",
       "price": 1532
     },
     {
       "id": 25,
-      "name": "Lv11 安昙神",
+      "name": "安昙神",
       "price": 1900
     },
     {
       "id": 27,
-      "name": "Lv11 吐鲁达克",
+      "name": "吐鲁达克",
       "price": 2380
     },
     {
       "id": 28,
-      "name": "Lv11 独角兽",
+      "name": "独角兽",
       "price": 2363
     },
     {
