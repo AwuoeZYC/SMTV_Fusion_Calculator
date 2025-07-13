@@ -1,0 +1,34 @@
+{
+  "demons": [
+    {
+      "id": 1,
+      "name": "软泥怪",
+      "race": "外道",
+      "level": 1,
+      "price": 436
+    },
+    {
+      "id": 2,
+      "name": "皮克希",
+      "race": "妖精",
+      "level": 2,
+      "price": 919
+    },
+    {
+      "id": 3,
+      "name": "饿鬼",
+      "race": "幽鬼",
+      "level": 3,
+      "price": 894
+    },
+    {
+      "id": 4,
+      "name": "阴摩罗鬼",
+      "race": "凶鸟",
+      "level": 4,
+      "price": 804
+    }
+  ],
+  "specialFusions": [],
+  "nextDemonId": 5
+}
