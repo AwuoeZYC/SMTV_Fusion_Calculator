@@ -734,7 +734,7 @@
       "race": "女神",
       "level": 35,
       "price": 26326,
-      "cheapestPrice": 7852
+      "cheapestPrice": 6106
     },
     {
       "id": 89,
@@ -790,7 +790,7 @@
       "race": "堕天使",
       "level": 37,
       "price": 999999,
-      "cheapestPrice": 6180
+      "cheapestPrice": 7238
     },
     {
       "id": 120,
@@ -854,7 +854,7 @@
       "race": "天使",
       "level": 39,
       "price": 999999,
-      "cheapestPrice": 5212
+      "cheapestPrice": 6863
     },
     {
       "id": 96,
@@ -910,7 +910,7 @@
       "race": "幽鬼",
       "level": 41,
       "price": 999999,
-      "cheapestPrice": 7797
+      "cheapestPrice": 8313
     },
     {
       "id": 99,
@@ -926,7 +926,7 @@
       "race": "妖精",
       "level": 41,
       "price": 999999,
-      "cheapestPrice": 6193
+      "cheapestPrice": 7351
     },
     {
       "id": 100,
@@ -950,7 +950,7 @@
       "race": "邪神",
       "level": 42,
       "price": 999999,
-      "cheapestPrice": 7168
+      "cheapestPrice": 6935
     },
     {
       "id": 129,
@@ -958,7 +958,7 @@
       "race": "女神",
       "level": 42,
       "price": 999999,
-      "cheapestPrice": 17551
+      "cheapestPrice": 15805
     },
     {
       "id": 102,
@@ -966,7 +966,7 @@
       "race": "圣兽",
       "level": 43,
       "price": 999999,
-      "cheapestPrice": 6545
+      "cheapestPrice": 8643
     },
     {
       "id": 130,
@@ -982,7 +982,7 @@
       "race": "魔人",
       "level": 43,
       "price": 999999,
-      "cheapestPrice": 19547
+      "cheapestPrice": 22256
     },
     {
       "id": 132,
@@ -990,7 +990,7 @@
       "race": "灵鸟",
       "level": 43,
       "price": 999999,
-      "cheapestPrice": 7296
+      "cheapestPrice": 7699
     },
     {
       "id": 103,
@@ -1006,7 +1006,7 @@
       "race": "魔王",
       "level": 44,
       "price": 999999,
-      "cheapestPrice": 5573
+      "cheapestPrice": 6089
     },
     {
       "id": 134,
@@ -1022,7 +1022,7 @@
       "race": "堕天使",
       "level": 44,
       "price": 999999,
-      "cheapestPrice": 7238
+      "cheapestPrice": 7579
     },
     {
       "id": 136,
@@ -1046,7 +1046,7 @@
       "race": "夜魔",
       "level": 45,
       "price": 999999,
-      "cheapestPrice": 16423
+      "cheapestPrice": 15734
     },
     {
       "id": 138,
@@ -1086,7 +1086,7 @@
       "race": "女神",
       "level": 47,
       "price": 999999,
-      "cheapestPrice": 6660
+      "cheapestPrice": 6567
     },
     {
       "id": 142,
@@ -1094,7 +1094,7 @@
       "race": "魔人",
       "level": 47,
       "price": 999999,
-      "cheapestPrice": 35764
+      "cheapestPrice": 38473
     },
     {
       "id": 143,
@@ -1102,7 +1102,7 @@
       "race": "妖精",
       "level": 47,
       "price": 999999,
-      "cheapestPrice": 8361
+      "cheapestPrice": 8934
     },
     {
       "id": 105,
@@ -1150,7 +1150,7 @@
       "race": "妖兽",
       "level": 49,
       "price": 999999,
-      "cheapestPrice": 10267
+      "cheapestPrice": 10282
     },
     {
       "id": 148,
@@ -1182,7 +1182,7 @@
       "race": "魔王",
       "level": 56,
       "price": 62291,
-      "cheapestPrice": 8015
+      "cheapestPrice": 11137
     },
     {
       "id": 108,
@@ -1198,7 +1198,7 @@
       "race": "大天使",
       "level": 60,
       "price": 999999,
-      "cheapestPrice": 4293
+      "cheapestPrice": 7859
     },
     {
       "id": 151,
@@ -1222,7 +1222,7 @@
       "race": "堕天使",
       "level": 50,
       "price": 999999,
-      "cheapestPrice": 7579
+      "cheapestPrice": 10174
     },
     {
       "id": 154,
@@ -1230,7 +1230,263 @@
       "race": "国津神",
       "level": 50,
       "price": 999999,
-      "cheapestPrice": 17401
+      "cheapestPrice": 17804
+    },
+    {
+      "id": 155,
+      "name": "摩洛",
+      "race": "魔王",
+      "level": 51,
+      "price": 999999,
+      "cheapestPrice": 8015
+    },
+    {
+      "id": 156,
+      "name": "持国天王",
+      "race": "鬼神",
+      "level": 51,
+      "price": 999999,
+      "cheapestPrice": 8656
+    },
+    {
+      "id": 157,
+      "name": "克洛托",
+      "race": "鬼女",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 10587
+    },
+    {
+      "id": 158,
+      "name": "弗栗多",
+      "race": "龙神",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 11463
+    },
+    {
+      "id": 159,
+      "name": "切尔诺伯格",
+      "race": "破坏神",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 6844
+    },
+    {
+      "id": 160,
+      "name": "黑骑士",
+      "race": "魔人",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 161,
+      "name": "库夫林",
+      "race": "幻魔",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 10860
+    },
+    {
+      "id": 162,
+      "name": "帕祖祖",
+      "race": "邪神",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 9645
+    },
+    {
+      "id": 163,
+      "name": "伊弗利特",
+      "race": "妖魔",
+      "level": 52,
+      "price": 999999,
+      "cheapestPrice": 10830
+    },
+    {
+      "id": 164,
+      "name": "海德拉",
+      "race": "邪龙",
+      "level": 53,
+      "price": 999999,
+      "cheapestPrice": 8698
+    },
+    {
+      "id": 165,
+      "name": "阿尔迈蒂",
+      "race": "大天使",
+      "level": 53,
+      "price": 999999,
+      "cheapestPrice": 4293
+    },
+    {
+      "id": 166,
+      "name": "狼人",
+      "race": "魔兽",
+      "level": 54,
+      "price": 999999,
+      "cheapestPrice": 14376
+    },
+    {
+      "id": 167,
+      "name": "大元帅明王",
+      "race": "魔神",
+      "level": 54,
+      "price": 999999,
+      "cheapestPrice": 7626
+    },
+    {
+      "id": 168,
+      "name": "八咫鸟",
+      "race": "灵鸟",
+      "level": 54,
+      "price": 999999,
+      "cheapestPrice": 8841
+    },
+    {
+      "id": 169,
+      "name": "单卡拉比",
+      "race": "堕天使",
+      "level": 55,
+      "price": 999999,
+      "cheapestPrice": 12834
+    },
+    {
+      "id": 170,
+      "name": "大国主",
+      "race": "国津神",
+      "level": 55,
+      "price": 999999,
+      "cheapestPrice": 13862
+    },
+    {
+      "id": 171,
+      "name": "百臂巨人",
+      "race": "邪鬼",
+      "level": 55,
+      "price": 999999,
+      "cheapestPrice": 11415
+    },
+    {
+      "id": 172,
+      "name": "奇美拉",
+      "race": "圣兽",
+      "level": 55,
+      "price": 999999,
+      "cheapestPrice": 12127
+    },
+    {
+      "id": 173,
+      "name": "斯卡哈",
+      "race": "女神",
+      "level": 55,
+      "price": 999999,
+      "cheapestPrice": 9227
+    },
+    {
+      "id": 174,
+      "name": "妖精女王",
+      "race": "夜魔",
+      "level": 56,
+      "price": 999999,
+      "cheapestPrice": 13104
+    },
+    {
+      "id": 175,
+      "name": "水鬼",
+      "race": "妖鬼",
+      "level": 56,
+      "price": 999999,
+      "cheapestPrice": 9961
+    },
+    {
+      "id": 176,
+      "name": "库柏勒",
+      "race": "地母神",
+      "level": 56,
+      "price": 999999,
+      "cheapestPrice": 8928
+    },
+    {
+      "id": 177,
+      "name": "苍白骑士",
+      "race": "魔人",
+      "level": 57,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 178,
+      "name": "缇坦妮雅",
+      "race": "妖精",
+      "level": 57,
+      "price": 999999,
+      "cheapestPrice": 11594
+    },
+    {
+      "id": 179,
+      "name": "拉刻西斯",
+      "race": "鬼女",
+      "level": 58,
+      "price": 999999,
+      "cheapestPrice": 13247
+    },
+    {
+      "id": 180,
+      "name": "毘沙门天",
+      "race": "鬼神",
+      "level": 58,
+      "price": 999999,
+      "cheapestPrice": 12024
+    },
+    {
+      "id": 181,
+      "name": "阿难陀",
+      "race": "龙神",
+      "level": 59,
+      "price": 999999,
+      "cheapestPrice": 13021
+    },
+    {
+      "id": 182,
+      "name": "格剌希亚拉波斯",
+      "race": "魔兽",
+      "level": 59,
+      "price": 999999,
+      "cheapestPrice": 17498
+    },
+    {
+      "id": 183,
+      "name": "库德拉克",
+      "race": "幽鬼",
+      "level": 60,
+      "price": 999999,
+      "cheapestPrice": 11435
+    },
+    {
+      "id": 184,
+      "name": "法夫纳",
+      "race": "邪龙",
+      "level": 60,
+      "price": 999999,
+      "cheapestPrice": 12066
+    },
+    {
+      "id": 185,
+      "name": "克雷斯尼克",
+      "race": "幻魔",
+      "level": 60,
+      "price": 999999,
+      "cheapestPrice": 13520
+    },
+    {
+      "id": 186,
+      "name": "巴隆",
+      "race": "神兽",
+      "level": 60,
+      "price": 999999,
+      "cheapestPrice": 9299
     }
   ],
   "specialFusions": [
@@ -1387,5 +1643,5 @@
       ]
     }
   ],
-  "nextDemonId": 155
+  "nextDemonId": 187
 }
