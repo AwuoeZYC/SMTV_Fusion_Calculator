@@ -902,7 +902,7 @@
       "race": "妖魔",
       "level": 40,
       "price": 999999,
-      "cheapestPrice": 8170
+      "cheapestPrice": 8140
     },
     {
       "id": 98,
@@ -934,7 +934,7 @@
       "race": "魔兽",
       "level": 42,
       "price": 999999,
-      "cheapestPrice": 8496
+      "cheapestPrice": 8248
     },
     {
       "id": 101,
@@ -1046,7 +1046,7 @@
       "race": "夜魔",
       "level": 45,
       "price": 999999,
-      "cheapestPrice": 15734
+      "cheapestPrice": 11942
     },
     {
       "id": 138,
@@ -1094,7 +1094,7 @@
       "race": "魔人",
       "level": 47,
       "price": 999999,
-      "cheapestPrice": 38473
+      "cheapestPrice": 38443
     },
     {
       "id": 143,
@@ -1158,7 +1158,7 @@
       "race": "魔兽",
       "level": 49,
       "price": 999999,
-      "cheapestPrice": 11618
+      "cheapestPrice": 10414
     },
     {
       "id": 149,
@@ -1302,7 +1302,7 @@
       "race": "妖魔",
       "level": 52,
       "price": 999999,
-      "cheapestPrice": 10830
+      "cheapestPrice": 9260
     },
     {
       "id": 164,
@@ -1326,7 +1326,7 @@
       "race": "魔兽",
       "level": 54,
       "price": 999999,
-      "cheapestPrice": 14376
+      "cheapestPrice": 12085
     },
     {
       "id": 167,
@@ -1390,7 +1390,7 @@
       "race": "夜魔",
       "level": 56,
       "price": 999999,
-      "cheapestPrice": 13104
+      "cheapestPrice": 9282
     },
     {
       "id": 175,
@@ -1430,7 +1430,7 @@
       "race": "鬼女",
       "level": 58,
       "price": 999999,
-      "cheapestPrice": 13247
+      "cheapestPrice": 13004
     },
     {
       "id": 180,
@@ -1454,7 +1454,7 @@
       "race": "魔兽",
       "level": 59,
       "price": 999999,
-      "cheapestPrice": 17498
+      "cheapestPrice": 15207
     },
     {
       "id": 183,
@@ -1487,6 +1487,158 @@
       "level": 60,
       "price": 999999,
       "cheapestPrice": 9299
+    },
+    {
+      "id": 187,
+      "name": "阿撒兹勒",
+      "race": "堕天使",
+      "level": 61,
+      "price": 999999,
+      "cheapestPrice": 15549
+    },
+    {
+      "id": 188,
+      "name": "克利奥帕特拉",
+      "race": "鬼女",
+      "level": 61,
+      "price": 999999,
+      "cheapestPrice": 15664
+    },
+    {
+      "id": 189,
+      "name": "歌革玛各",
+      "race": "地灵",
+      "level": 61,
+      "price": 999999,
+      "cheapestPrice": 7008
+    },
+    {
+      "id": 190,
+      "name": "苏尔特尔",
+      "race": "魔王",
+      "level": 62,
+      "price": 999999,
+      "cheapestPrice": 14259
+    },
+    {
+      "id": 191,
+      "name": "荒霸吐",
+      "race": "国津神",
+      "level": 62,
+      "price": 999999,
+      "cheapestPrice": 17428
+    },
+    {
+      "id": 192,
+      "name": "伊什塔尔",
+      "race": "地母神",
+      "level": 62,
+      "price": 999999,
+      "cheapestPrice": 12296
+    },
+    {
+      "id": 193,
+      "name": "孔苏",
+      "race": "魔神",
+      "level": 62,
+      "price": 999999,
+      "cheapestPrice": 11192
+    },
+    {
+      "id": 194,
+      "name": "拿玛",
+      "race": "女魔",
+      "level": 63,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 195,
+      "name": "风鬼",
+      "race": "妖鬼",
+      "level": 63,
+      "price": 999999,
+      "cheapestPrice": 12621
+    },
+    {
+      "id": 196,
+      "name": "莫特",
+      "race": "破坏神",
+      "level": 63,
+      "price": 999999,
+      "cheapestPrice": 9966
+    },
+    {
+      "id": 197,
+      "name": "齐格飞",
+      "race": "军神",
+      "level": 63,
+      "price": 999999,
+      "cheapestPrice": 12088
+    },
+    {
+      "id": 198,
+      "name": "阿特洛波斯",
+      "race": "鬼女",
+      "level": 64,
+      "price": 999999,
+      "cheapestPrice": 18324
+    },
+    {
+      "id": 199,
+      "name": "巴比伦大淫妇",
+      "race": "魔人",
+      "level": 64,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 200,
+      "name": "刻耳柏洛斯",
+      "race": "魔兽",
+      "level": 64,
+      "price": 999999,
+      "cheapestPrice": 18329
+    },
+    {
+      "id": 201,
+      "name": "座天使",
+      "race": "天使",
+      "level": 64,
+      "price": 999999,
+      "cheapestPrice": 8290
+    },
+    {
+      "id": 202,
+      "name": "迦楼罗",
+      "race": "灵鸟",
+      "level": 64,
+      "price": 999999,
+      "cheapestPrice": 11963
+    },
+    {
+      "id": 203,
+      "name": "芬里尔",
+      "race": "妖兽",
+      "level": 65,
+      "price": 999999,
+      "cheapestPrice": 12942
+    },
+    {
+      "id": 204,
+      "name": "创吼",
+      "race": "妖精",
+      "level": 65,
+      "price": 999999,
+      "cheapestPrice": 14254
+    },
+    {
+      "id": 205,
+      "name": "密特拉",
+      "race": "魔神",
+      "level": 65,
+      "price": 999999,
+      "cheapestPrice": 14758
     }
   ],
   "specialFusions": [
@@ -1643,5 +1795,5 @@
       ]
     }
   ],
-  "nextDemonId": 187
+  "nextDemonId": 206
 }
