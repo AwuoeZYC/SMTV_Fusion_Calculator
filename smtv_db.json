@@ -1478,7 +1478,7 @@
       "race": "邪龙",
       "level": 60,
       "price": 999999,
-      "cheapestPrice": 19031
+      "cheapestPrice": 17636
     },
     {
       "id": 185,
@@ -1590,7 +1590,7 @@
       "race": "鬼女",
       "level": 64,
       "price": 999999,
-      "cheapestPrice": 32571
+      "cheapestPrice": 22400
     },
     {
       "id": 199,
@@ -1647,6 +1647,118 @@
       "level": 65,
       "price": 999999,
       "cheapestPrice": 22054
+    },
+    {
+      "id": 207,
+      "name": "伊谢丝",
+      "race": "女魔",
+      "level": 66,
+      "price": 999999,
+      "cheapestPrice": 38085
+    },
+    {
+      "id": 208,
+      "name": "托尔",
+      "race": "鬼神",
+      "level": 66,
+      "price": 999999,
+      "cheapestPrice": 15392
+    },
+    {
+      "id": 209,
+      "name": "基力梅卡拉",
+      "race": "邪神",
+      "level": 66,
+      "price": 999999,
+      "cheapestPrice": 11919
+    },
+    {
+      "id": 210,
+      "name": "赛特",
+      "race": "邪龙",
+      "level": 67,
+      "price": 999999,
+      "cheapestPrice": 20346
+    },
+    {
+      "id": 211,
+      "name": "魔罗",
+      "race": "魔王",
+      "level": 67,
+      "price": 999999,
+      "cheapestPrice": 20916
+    },
+    {
+      "id": 212,
+      "name": "奈比洛斯",
+      "race": "堕天使",
+      "level": 67,
+      "price": 999999,
+      "cheapestPrice": 17958
+    },
+    {
+      "id": 213,
+      "name": "斯卡蒂",
+      "race": "地母神",
+      "level": 67,
+      "price": 999999,
+      "cheapestPrice": 26678
+    },
+    {
+      "id": 214,
+      "name": "诺伦",
+      "race": "女神",
+      "level": 67,
+      "price": 999999,
+      "cheapestPrice": 45991
+    },
+    {
+      "id": 215,
+      "name": "阿格拉特",
+      "race": "女魔",
+      "level": 68,
+      "price": 999999,
+      "cheapestPrice": 38888
+    },
+    {
+      "id": 216,
+      "name": "格鲁鲁",
+      "race": "凶鸟",
+      "level": 68,
+      "price": 999999,
+      "cheapestPrice": 10701
+    },
+    {
+      "id": 217,
+      "name": "经津主",
+      "race": "军神",
+      "level": 69,
+      "price": 999999,
+      "cheapestPrice": 15456
+    },
+    {
+      "id": 218,
+      "name": "卡麦尔",
+      "race": "大天使",
+      "level": 69,
+      "price": 999999,
+      "cheapestPrice": 11425
+    },
+    {
+      "id": 219,
+      "name": "兰达",
+      "race": "鬼女",
+      "level": 70,
+      "price": 999999,
+      "cheapestPrice": 25060
+    },
+    {
+      "id": 220,
+      "name": "吉祥天女",
+      "race": "女神",
+      "level": 70,
+      "price": 999999,
+      "cheapestPrice": 26817
     }
   ],
   "specialFusions": [
@@ -1892,7 +2004,31 @@
         134,
         58
       ]
+    },
+    {
+      "resultId": 207,
+      "ingredients": [
+        107,
+        205,
+        79
+      ]
+    },
+    {
+      "resultId": 214,
+      "ingredients": [
+        157,
+        179,
+        198
+      ]
+    },
+    {
+      "resultId": 215,
+      "ingredients": [
+        163,
+        174,
+        210
+      ]
     }
   ],
-  "nextDemonId": 207
+  "nextDemonId": 221
 }
