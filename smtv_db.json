@@ -2023,6 +2023,46 @@
       "level": 84,
       "price": 999999,
       "cheapestPrice": 30665
+    },
+    {
+      "id": 254,
+      "name": "宙斯",
+      "race": "魔神",
+      "level": 86,
+      "price": 999999,
+      "cheapestPrice": 64090
+    },
+    {
+      "id": 255,
+      "name": "加百列",
+      "race": "大天使",
+      "level": 86,
+      "price": 999999,
+      "cheapestPrice": 34231
+    },
+    {
+      "id": 256,
+      "name": "亚蒙",
+      "race": "魔王",
+      "level": 87,
+      "price": 999999,
+      "cheapestPrice": 34767
+    },
+    {
+      "id": 257,
+      "name": "伊南娜",
+      "race": "地母神",
+      "level": 87,
+      "price": 999999,
+      "cheapestPrice": 43905
+    },
+    {
+      "id": 258,
+      "name": "毗湿奴",
+      "race": "魔神",
+      "level": 87,
+      "price": 999999,
+      "cheapestPrice": 67656
     }
   ],
   "specialFusions": [
@@ -2426,5 +2466,5 @@
       ]
     }
   ],
-  "nextDemonId": 254
+  "nextDemonId": 259
 }
