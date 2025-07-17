@@ -2030,7 +2030,7 @@
       "race": "魔神",
       "level": 86,
       "price": 999999,
-      "cheapestPrice": 64090
+      "cheapestPrice": 44884
     },
     {
       "id": 255,
@@ -2062,7 +2062,127 @@
       "race": "魔神",
       "level": 87,
       "price": 999999,
-      "cheapestPrice": 67656
+      "cheapestPrice": 48450
+    },
+    {
+      "id": 259,
+      "name": "萨麦尔",
+      "race": "邪龙",
+      "level": 88,
+      "price": 999999,
+      "cheapestPrice": 146129
+    },
+    {
+      "id": 260,
+      "name": "萨图尔努斯",
+      "race": "邪神",
+      "level": 88,
+      "price": 999999,
+      "cheapestPrice": 19899
+    },
+    {
+      "id": 261,
+      "name": "圣德芬",
+      "race": "大天使",
+      "level": 88,
+      "price": 999999,
+      "cheapestPrice": 37797
+    },
+    {
+      "id": 262,
+      "name": "亚必迭 A",
+      "race": "堕天使",
+      "level": 89,
+      "price": 999999,
+      "cheapestPrice": 97641
+    },
+    {
+      "id": 263,
+      "name": "女娲 A",
+      "race": "地母神",
+      "level": 89,
+      "price": 999999,
+      "cheapestPrice": 88809
+    },
+    {
+      "id": 264,
+      "name": "米迦勒",
+      "race": "大天使",
+      "level": 90,
+      "price": 999999,
+      "cheapestPrice": 87271
+    },
+    {
+      "id": 265,
+      "name": "彼列",
+      "race": "魔王",
+      "level": 92,
+      "price": 999999,
+      "cheapestPrice": 38333
+    },
+    {
+      "id": 266,
+      "name": "达奴",
+      "race": "地母神",
+      "level": 93,
+      "price": 999999,
+      "cheapestPrice": 61351
+    },
+    {
+      "id": 267,
+      "name": "巴力",
+      "race": "魔神",
+      "level": 93,
+      "price": 999999,
+      "cheapestPrice": 47256
+    },
+    {
+      "id": 268,
+      "name": "将门",
+      "race": "军神",
+      "level": 94,
+      "price": 999999,
+      "cheapestPrice": 32298
+    },
+    {
+      "id": 269,
+      "name": "别西卜",
+      "race": "魔王",
+      "level": 95,
+      "price": 999999,
+      "cheapestPrice": 83253
+    },
+    {
+      "id": 270,
+      "name": "梅塔特隆",
+      "race": "大天使",
+      "level": 95,
+      "price": 999999,
+      "cheapestPrice": 74312
+    },
+    {
+      "id": 271,
+      "name": "湿婆",
+      "race": "破坏神",
+      "level": 96,
+      "price": 999999,
+      "cheapestPrice": 29428
+    },
+    {
+      "id": 272,
+      "name": "撒旦",
+      "race": "原天使",
+      "level": 99,
+      "price": 999999,
+      "cheapestPrice": 348242
+    },
+    {
+      "id": 273,
+      "name": "路西法",
+      "race": "恶魔",
+      "level": 99,
+      "price": 999999,
+      "cheapestPrice": 157565
     }
   ],
   "specialFusions": [
@@ -2464,7 +2584,96 @@
         206,
         249
       ]
+    },
+    {
+      "resultId": 259,
+      "ingredients": [
+        194,
+        207,
+        215,
+        224
+      ]
+    },
+    {
+      "resultId": 262,
+      "ingredients": [
+        230,
+        246,
+        256
+      ]
+    },
+    {
+      "resultId": 263,
+      "ingredients": [
+        158,
+        181,
+        226,
+        244
+      ]
+    },
+    {
+      "resultId": 264,
+      "ingredients": [
+        249,
+        253,
+        255
+      ]
+    },
+    {
+      "resultId": 266,
+      "ingredients": [
+        174,
+        213,
+        222
+      ]
+    },
+    {
+      "resultId": 267,
+      "ingredients": [
+        133,
+        196,
+        248
+      ]
+    },
+    {
+      "resultId": 268,
+      "ingredients": [
+        136,
+        156,
+        180,
+        91
+      ]
+    },
+    {
+      "resultId": 269,
+      "ingredients": [
+        212,
+        225,
+        267
+      ]
+    },
+    {
+      "resultId": 271,
+      "ingredients": [
+        186,
+        219
+      ]
+    },
+    {
+      "resultId": 272,
+      "ingredients": [
+        251,
+        259,
+        273
+      ]
+    },
+    {
+      "resultId": 273,
+      "ingredients": [
+        269,
+        270
+      ]
     }
   ],
-  "nextDemonId": 259
+  "nextDemonId": 274
 }
