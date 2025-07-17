@@ -2183,6 +2183,22 @@
       "level": 99,
       "price": 999999,
       "cheapestPrice": 157565
+    },
+    {
+      "id": 274,
+      "name": "阿玛比埃",
+      "race": "秘神",
+      "level": 39,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 275,
+      "name": "君真物",
+      "race": "秘神",
+      "level": 68,
+      "price": 999999,
+      "cheapestPrice": 999999
     }
   ],
   "specialFusions": [
@@ -2675,5 +2691,5 @@
       ]
     }
   ],
-  "nextDemonId": 274
+  "nextDemonId": 276
 }
