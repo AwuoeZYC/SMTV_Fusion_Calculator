@@ -1,972 +1,1391 @@
 {
   "demons": [
     {
-      "id": 7,
+      "id": 1,
       "name": "软泥怪",
-      "price": 436
+      "race": "外道",
+      "level": 1,
+      "price": 436,
+      "cheapestPrice": 436
     },
     {
-      "id": 9,
+      "id": 2,
       "name": "皮克希",
-      "price": 919
+      "race": "妖精",
+      "level": 2,
+      "price": 919,
+      "cheapestPrice": 919
     },
     {
-      "id": 10,
+      "id": 3,
       "name": "饿鬼",
-      "price": 894
+      "race": "幽鬼",
+      "level": 3,
+      "price": 894,
+      "cheapestPrice": 894
+    },
+    {
+      "id": 4,
+      "name": "阴摩罗鬼",
+      "race": "凶鸟",
+      "level": 4,
+      "price": 804,
+      "cheapestPrice": 804
+    },
+    {
+      "id": 5,
+      "name": "葛雷姆林",
+      "race": "邪鬼",
+      "level": 5,
+      "price": 1224,
+      "cheapestPrice": 1224
+    },
+    {
+      "id": 6,
+      "name": "猫将军",
+      "race": "军神",
+      "level": 5,
+      "price": 2071,
+      "cheapestPrice": 1355
+    },
+    {
+      "id": 7,
+      "name": "木灵",
+      "race": "地灵",
+      "level": 6,
+      "price": 1012,
+      "cheapestPrice": 1012
+    },
+    {
+      "id": 8,
+      "name": "曼陀罗",
+      "race": "妖魔",
+      "level": 6,
+      "price": 1280,
+      "cheapestPrice": 1280
     },
     {
       "id": 11,
-      "name": "阴摩罗鬼",
-      "price": 804
+      "name": "猫妖精",
+      "race": "魔兽",
+      "level": 7,
+      "price": 1132,
+      "cheapestPrice": 1132
     },
     {
       "id": 12,
-      "name": "葛雷姆林",
-      "price": 1224
+      "name": "戴蒙",
+      "race": "妖鬼",
+      "level": 7,
+      "price": 1532,
+      "cheapestPrice": 1532
+    },
+    {
+      "id": 9,
+      "name": "睡魔",
+      "race": "夜魔",
+      "level": 8,
+      "price": 1887,
+      "cheapestPrice": 1887
+    },
+    {
+      "id": 10,
+      "name": "皮亚雷",
+      "race": "妖兽",
+      "level": 8,
+      "price": 1892,
+      "cheapestPrice": 1240
     },
     {
       "id": 13,
-      "name": "猫将军",
-      "price": 2071
+      "name": "猪豚蛇",
+      "race": "邪龙",
+      "level": 9,
+      "price": 1839,
+      "cheapestPrice": 1330
     },
     {
       "id": 14,
-      "name": "木灵",
-      "price": 1012
+      "name": "磐石精灵",
+      "race": "精灵",
+      "level": 9,
+      "price": 15959,
+      "cheapestPrice": 3368
     },
     {
       "id": 15,
-      "name": "曼陀罗",
-      "price": 1280
+      "name": "阿珈席翁",
+      "race": "妖魔",
+      "level": 10,
+      "price": 1842,
+      "cheapestPrice": 1842
     },
     {
       "id": 16,
-      "name": "睡魔",
-      "price": 1887
+      "name": "天使",
+      "race": "天使",
+      "level": 10,
+      "price": 2806,
+      "cheapestPrice": 1816
     },
     {
       "id": 17,
-      "name": "皮亚雷",
-      "price": 1892
+      "name": "哈帕斯",
+      "race": "堕天使",
+      "level": 11,
+      "price": 2376,
+      "cheapestPrice": 2252
     },
     {
       "id": 18,
-      "name": "猫妖精",
-      "price": 1132
+      "name": "安昙神",
+      "race": "妖鬼",
+      "level": 11,
+      "price": 1900,
+      "cheapestPrice": 1900
     },
     {
       "id": 19,
-      "name": "猪豚蛇",
-      "price": 1839
+      "name": "吐鲁达克",
+      "race": "邪鬼",
+      "level": 11,
+      "price": 2380,
+      "cheapestPrice": 2342
     },
     {
       "id": 20,
-      "name": "磐石精灵",
-      "price": 15959
+      "name": "独角兽",
+      "race": "圣兽",
+      "level": 11,
+      "price": 2363,
+      "cheapestPrice": 2159
     },
     {
       "id": 21,
-      "name": "阿珈席翁",
-      "price": 1842
+      "name": "背背鬼",
+      "race": "幽鬼",
+      "level": 12,
+      "price": 3459,
+      "cheapestPrice": 1766
     },
     {
       "id": 22,
-      "name": "天使",
-      "price": 2806
+      "name": "美人鱼",
+      "race": "鬼女",
+      "level": 12,
+      "price": 3475,
+      "cheapestPrice": 1813
     },
     {
       "id": 23,
-      "name": "哈帕斯",
-      "price": 2376
+      "name": "风精灵",
+      "race": "精灵",
+      "level": 12,
+      "price": 30479,
+      "cheapestPrice": 3122
     },
     {
       "id": 24,
-      "name": "戴蒙",
-      "price": 1532
+      "name": "涯米涯米",
+      "race": "龙神",
+      "level": 13,
+      "price": 3461,
+      "cheapestPrice": 3264
     },
     {
       "id": 25,
-      "name": "安昙神",
-      "price": 1900
+      "name": "土蜘蛛",
+      "race": "地灵",
+      "level": 13,
+      "price": 3580,
+      "cheapestPrice": 2356
+    },
+    {
+      "id": 26,
+      "name": "双角兽",
+      "race": "妖兽",
+      "level": 14,
+      "price": 3993,
+      "cheapestPrice": 2688
     },
     {
       "id": 27,
-      "name": "吐鲁达克",
-      "price": 2380
+      "name": "鸩",
+      "race": "凶鸟",
+      "level": 14,
+      "price": 3815,
+      "cheapestPrice": 3056
     },
     {
       "id": 28,
-      "name": "独角兽",
-      "price": 2363
+      "name": "野槌",
+      "race": "龙王",
+      "level": 15,
+      "price": 4392,
+      "cheapestPrice": 4392
     },
     {
       "id": 29,
-      "name": "背背鬼",
-      "price": 3459
+      "name": "水精灵",
+      "race": "精灵",
+      "level": 15,
+      "price": 28999,
+      "cheapestPrice": 2660
     },
     {
       "id": 30,
-      "name": "美人鱼",
-      "price": 3475
+      "name": "福尔图娜",
+      "race": "女神",
+      "level": 15,
+      "price": 4505,
+      "cheapestPrice": 1723
     },
     {
       "id": 31,
-      "name": "风精灵",
-      "price": 30479
+      "name": "莫考伊",
+      "race": "夜魔",
+      "level": 16,
+      "price": 3223,
+      "cheapestPrice": 2945
     },
     {
       "id": 32,
-      "name": "涯米涯米",
-      "price": 3461
+      "name": "飞天",
+      "race": "妖魔",
+      "level": 16,
+      "price": 4653,
+      "cheapestPrice": 3264
     },
     {
       "id": 33,
-      "name": "土蜘蛛",
-      "price": 3580
+      "name": "鸡龙",
+      "race": "邪龙",
+      "level": 17,
+      "price": 4818,
+      "cheapestPrice": 3006
     },
     {
       "id": 34,
-      "name": "双角兽",
-      "price": 3993
+      "name": "一本踏鞴",
+      "race": "妖鬼",
+      "level": 17,
+      "price": 6092,
+      "cheapestPrice": 3448
     },
     {
       "id": 35,
-      "name": "鸩",
-      "price": 3815
+      "name": "拉南希",
+      "race": "鬼女",
+      "level": 17,
+      "price": 5360,
+      "cheapestPrice": 3379
     },
     {
       "id": 36,
-      "name": "野槌",
-      "price": 4392
+      "name": "山灵",
+      "race": "地灵",
+      "level": 17,
+      "price": 3887,
+      "cheapestPrice": 3476
     },
     {
       "id": 37,
-      "name": "水精灵",
-      "price": 28999
+      "name": "安德拉斯",
+      "race": "堕天使",
+      "level": 18,
+      "price": 4645,
+      "cheapestPrice": 2855
     },
     {
       "id": 38,
-      "name": "福尔图娜",
-      "price": 4505
+      "name": "高等皮克希",
+      "race": "妖精",
+      "level": 18,
+      "price": 4900,
+      "cheapestPrice": 2735
     },
     {
       "id": 39,
-      "name": "莫考伊",
-      "price": 3223
+      "name": "火精灵",
+      "race": "精灵",
+      "level": 18,
+      "price": 38599,
+      "cheapestPrice": 3566
     },
     {
       "id": 40,
-      "name": "飞天",
-      "price": 4653
+      "name": "大天使",
+      "race": "天使",
+      "level": 18,
+      "price": 5458,
+      "cheapestPrice": 3850
     },
     {
       "id": 41,
-      "name": "鸡龙",
-      "price": 4818
+      "name": "恶灵军团",
+      "race": "外道",
+      "level": 19,
+      "price": 3848,
+      "cheapestPrice": 2224
     },
     {
       "id": 42,
-      "name": "一本踏鞴",
-      "price": 6092
+      "name": "建御名方",
+      "race": "国津神",
+      "level": 19,
+      "price": 5700,
+      "cheapestPrice": 2825
     },
     {
       "id": 43,
-      "name": "拉南希",
-      "price": 5360
+      "name": "狮爷",
+      "race": "圣兽",
+      "level": 19,
+      "price": 5103,
+      "cheapestPrice": 3532
     },
     {
       "id": 44,
-      "name": "山灵",
-      "price": 3887
+      "name": "薇薇尔",
+      "race": "龙王",
+      "level": 20,
+      "price": 6872,
+      "cheapestPrice": 3864
     },
     {
       "id": 45,
-      "name": "安德拉斯",
-      "price": 4645
+      "name": "罗刹",
+      "race": "邪鬼",
+      "level": 20,
+      "price": 7413,
+      "cheapestPrice": 3582
     },
     {
       "id": 46,
-      "name": "高等皮克希",
-      "price": 4900
+      "name": "杰克灯笼",
+      "race": "妖精",
+      "level": 20,
+      "price": 8904,
+      "cheapestPrice": 4298
     },
     {
       "id": 47,
-      "name": "火精灵",
-      "price": 38599
+      "name": "鹿屋野比卖",
+      "race": "地灵",
+      "level": 21,
+      "price": 8163,
+      "cheapestPrice": 4180
     },
     {
       "id": 48,
-      "name": "大天使",
-      "price": 5458
+      "name": "真神",
+      "race": "神兽",
+      "level": 21,
+      "price": 7522,
+      "cheapestPrice": 3003
     },
     {
       "id": 49,
-      "name": "恶灵军团",
-      "price": 3848
+      "name": "男梦魔",
+      "race": "夜魔",
+      "level": 22,
+      "price": 6000,
+      "cheapestPrice": 4065
     },
     {
       "id": 50,
-      "name": "建御名方",
-      "price": 5700
+      "name": "凤凰",
+      "race": "灵鸟",
+      "level": 22,
+      "price": 11110,
+      "cheapestPrice": 2570
     },
     {
       "id": 51,
-      "name": "狮爷",
-      "price": 5103
+      "name": "天钿女命",
+      "race": "女神",
+      "level": 22,
+      "price": 8967,
+      "cheapestPrice": 4090
     },
     {
       "id": 52,
-      "name": "薇薇尔",
-      "price": 6872
-    },
-    {
-      "id": 53,
-      "name": "罗刹",
-      "price": 7413
-    },
-    {
-      "id": 54,
-      "name": "杰克灯笼",
-      "price": 8904
-    },
-    {
-      "id": 55,
-      "name": "鹿屋野比卖",
-      "price": 8163
-    },
-    {
-      "id": 56,
-      "name": "真神",
-      "price": 7522
-    },
-    {
-      "id": 57,
-      "name": "男梦魔",
-      "price": 6000
-    },
-    {
-      "id": 58,
-      "name": "凤凰",
-      "price": 11110
-    },
-    {
-      "id": 59,
-      "name": "天钿女命",
-      "price": 8967
-    },
-    {
-      "id": 60,
       "name": "鬼",
-      "price": 9824
-    },
-    {
-      "id": 61,
-      "name": "菊理媛",
-      "price": 9236
-    },
-    {
-      "id": 62,
-      "name": "巴古斯",
-      "price": 7882
-    },
-    {
-      "id": 63,
-      "name": "犬神",
-      "price": 7849
+      "race": "妖鬼",
+      "level": 23,
+      "price": 9824,
+      "cheapestPrice": 4068
     },
     {
       "id": 64,
-      "name": "骚灵",
-      "price": 14096
+      "name": "玄武",
+      "race": "龙神",
+      "level": 23,
+      "price": 999999,
+      "cheapestPrice": 4619
+    },
+    {
+      "id": 53,
+      "name": "菊理媛",
+      "race": "地母神",
+      "level": 24,
+      "price": 9236,
+      "cheapestPrice": 2732
+    },
+    {
+      "id": 54,
+      "name": "巴古斯",
+      "race": "妖兽",
+      "level": 24,
+      "price": 7882,
+      "cheapestPrice": 4018
+    },
+    {
+      "id": 55,
+      "name": "犬神",
+      "race": "魔兽",
+      "level": 24,
+      "price": 7849,
+      "cheapestPrice": 2252
     },
     {
       "id": 65,
-      "name": "马纳南加尔",
-      "price": 11705
+      "name": "比利士",
+      "race": "堕天使",
+      "level": 24,
+      "price": 999999,
+      "cheapestPrice": 3975
     },
     {
       "id": 66,
+      "name": "木叶天狗",
+      "race": "妖魔",
+      "level": 24,
+      "price": 999999,
+      "cheapestPrice": 3722
+    },
+    {
+      "id": 111,
+      "name": "斗牛士",
+      "race": "魔人",
+      "level": 24,
+      "price": 999999,
+      "cheapestPrice": 8155
+    },
+    {
+      "id": 56,
+      "name": "骚灵",
+      "race": "幽鬼",
+      "level": 25,
+      "price": 14096,
+      "cheapestPrice": 3554
+    },
+    {
+      "id": 57,
+      "name": "马纳南加尔",
+      "race": "鬼女",
+      "level": 25,
+      "price": 11705,
+      "cheapestPrice": 3899
+    },
+    {
+      "id": 58,
       "name": "杰克霜精",
-      "price": 10800
+      "race": "妖精",
+      "level": 25,
+      "price": 10800,
+      "cheapestPrice": 4822
     },
     {
       "id": 67,
+      "name": "克鲁波克鲁",
+      "race": "地灵",
+      "level": 26,
+      "price": 999999,
+      "cheapestPrice": 4978
+    },
+    {
+      "id": 112,
+      "name": "高速婆婆",
+      "race": "外道",
+      "level": 26,
+      "price": 999999,
+      "cheapestPrice": 7482
+    },
+    {
+      "id": 59,
       "name": "阿提斯",
-      "price": 11409
+      "race": "鬼神",
+      "level": 27,
+      "price": 11409,
+      "cheapestPrice": 2367
     },
     {
       "id": 68,
-      "name": "哪吒太子",
-      "price": 11643
+      "name": "那伽",
+      "race": "龙王",
+      "level": 27,
+      "price": 999999,
+      "cheapestPrice": 4854
     },
     {
       "id": 69,
-      "name": "帕尔瓦蒂",
-      "price": 26326
+      "name": "奇隆努普",
+      "race": "圣兽",
+      "level": 27,
+      "price": 999999,
+      "cheapestPrice": 3406
+    },
+    {
+      "id": 60,
+      "name": "哪吒太子",
+      "race": "军神",
+      "level": 28,
+      "price": 11643,
+      "cheapestPrice": 2642
     },
     {
       "id": 70,
-      "name": "莫索保",
-      "price": 30694
+      "name": "权天使",
+      "race": "天使",
+      "level": 28,
+      "price": 999999,
+      "cheapestPrice": 4566
     },
     {
       "id": 71,
+      "name": "式王子",
+      "race": "妖鬼",
+      "level": 29,
+      "price": 999999,
+      "cheapestPrice": 4734
+    },
+    {
+      "id": 72,
+      "name": "天蛾人",
+      "race": "妖兽",
+      "level": 29,
+      "price": 999999,
+      "cheapestPrice": 5806
+    },
+    {
+      "id": 73,
+      "name": "獬豸",
+      "race": "神兽",
+      "level": 29,
+      "price": 999999,
+      "cheapestPrice": 4619
+    },
+    {
+      "id": 113,
+      "name": "阿娜希塔",
+      "race": "女神",
+      "level": 29,
+      "price": 999999,
+      "cheapestPrice": 9931
+    },
+    {
+      "id": 74,
+      "name": "母夜叉",
+      "race": "鬼女",
+      "level": 30,
+      "price": 999999,
+      "cheapestPrice": 5099
+    },
+    {
+      "id": 75,
+      "name": "洛阿",
+      "race": "邪鬼",
+      "level": 30,
+      "price": 999999,
+      "cheapestPrice": 5921
+    },
+    {
+      "id": 76,
+      "name": "凯尔派",
+      "race": "妖精",
+      "level": 30,
+      "price": 999999,
+      "cheapestPrice": 4433
+    },
+    {
+      "id": 114,
+      "name": "大僧正",
+      "race": "魔人",
+      "level": 30,
+      "price": 999999,
+      "cheapestPrice": 6855
+    },
+    {
+      "id": 77,
+      "name": "毕舍遮",
+      "race": "幽鬼",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 6676
+    },
+    {
+      "id": 78,
+      "name": "巴西利斯克",
+      "race": "邪龙",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 5330
+    },
+    {
+      "id": 79,
+      "name": "佛钮司",
+      "race": "堕天使",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 4894
+    },
+    {
+      "id": 80,
+      "name": "花魄",
+      "race": "地灵",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 5609
+    },
+    {
+      "id": 81,
+      "name": "狄丝",
+      "race": "妖魔",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 5510
+    },
+    {
+      "id": 115,
+      "name": "因幡白兔",
+      "race": "珍兽",
+      "level": 31,
+      "price": 999999,
+      "cheapestPrice": 999999
+    },
+    {
+      "id": 82,
+      "name": "莉莉姆",
+      "race": "夜魔",
+      "level": 32,
+      "price": 999999,
+      "cheapestPrice": 3286
+    },
+    {
+      "id": 83,
+      "name": "佳塔由",
+      "race": "灵鸟",
+      "level": 32,
+      "price": 999999,
+      "cheapestPrice": 3997
+    },
+    {
+      "id": 84,
+      "name": "黑软泥怪",
+      "race": "外道",
+      "level": 33,
+      "price": 999999,
+      "cheapestPrice": 7582
+    },
+    {
+      "id": 85,
+      "name": "托特",
+      "race": "魔神",
+      "level": 33,
+      "price": 999999,
+      "cheapestPrice": 3078
+    },
+    {
+      "id": 86,
+      "name": "巴风特",
+      "race": "邪神",
+      "level": 33,
+      "price": 999999,
+      "cheapestPrice": 4526
+    },
+    {
+      "id": 116,
+      "name": "霜精之王",
+      "race": "魔王",
+      "level": 33,
+      "price": 999999,
+      "cheapestPrice": 13095
+    },
+    {
+      "id": 87,
+      "name": "羽蛇神",
+      "race": "龙神",
+      "level": 34,
+      "price": 999999,
+      "cheapestPrice": 5370
+    },
+    {
+      "id": 88,
+      "name": "猫又",
+      "race": "魔兽",
+      "level": 34,
+      "price": 999999,
+      "cheapestPrice": 5374
+    },
+    {
+      "id": 61,
+      "name": "帕尔瓦蒂",
+      "race": "女神",
+      "level": 35,
+      "price": 26326,
+      "cheapestPrice": 7852
+    },
+    {
+      "id": 89,
+      "name": "诃梨帝母",
+      "race": "地母神",
+      "level": 35,
+      "price": 999999,
+      "cheapestPrice": 5099
+    },
+    {
+      "id": 90,
+      "name": "瑟坦特",
+      "race": "妖精",
+      "level": 35,
+      "price": 999999,
+      "cheapestPrice": 5680
+    },
+    {
+      "id": 117,
+      "name": "鸦天狗",
+      "race": "妖鬼",
+      "level": 35,
+      "price": 999999,
+      "cheapestPrice": 4641
+    },
+    {
+      "id": 91,
+      "name": "增长天王",
+      "race": "鬼神",
+      "level": 36,
+      "price": 999999,
+      "cheapestPrice": 5622
+    },
+    {
+      "id": 118,
+      "name": "拉弥亚",
+      "race": "鬼女",
+      "level": 36,
+      "price": 999999,
+      "cheapestPrice": 7008
+    },
+    {
+      "id": 119,
+      "name": "地狱天使",
+      "race": "魔人",
+      "level": 36,
+      "price": 999999,
+      "cheapestPrice": 9104
+    },
+    {
+      "id": 92,
+      "name": "埃力格",
+      "race": "堕天使",
+      "level": 37,
+      "price": 999999,
+      "cheapestPrice": 6180
+    },
+    {
+      "id": 120,
+      "name": "少彦名",
+      "race": "国津神",
+      "level": 37,
+      "price": 999999,
+      "cheapestPrice": 11058
+    },
+    {
+      "id": 121,
+      "name": "阿提密斯",
+      "race": "女神",
+      "level": 37,
+      "price": 999999,
+      "cheapestPrice": 14777
+    },
+    {
+      "id": 62,
+      "name": "莫索保",
+      "race": "凶鸟",
+      "level": 38,
+      "price": 30694,
+      "cheapestPrice": 4457
+    },
+    {
+      "id": 93,
+      "name": "那耳喀索斯",
+      "race": "地灵",
+      "level": 38,
+      "price": 999999,
+      "cheapestPrice": 7719
+    },
+    {
+      "id": 122,
+      "name": "女梦魔",
+      "race": "夜魔",
+      "level": 38,
+      "price": 999999,
+      "cheapestPrice": 6408
+    },
+    {
+      "id": 123,
+      "name": "雷鸟",
+      "race": "灵鸟",
+      "level": 38,
+      "price": 999999,
+      "cheapestPrice": 6452
+    },
+    {
+      "id": 94,
+      "name": "鞍马天狗",
+      "race": "幻魔",
+      "level": 39,
+      "price": 999999,
+      "cheapestPrice": 2274
+    },
+    {
+      "id": 95,
+      "name": "能天使",
+      "race": "天使",
+      "level": 39,
+      "price": 999999,
+      "cheapestPrice": 5212
+    },
+    {
+      "id": 96,
+      "name": "那伽之王",
+      "race": "龙王",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 5881
+    },
+    {
+      "id": 97,
+      "name": "德亚玛斯",
+      "race": "妖兽",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 7622
+    },
+    {
+      "id": 110,
+      "name": "爱丽丝",
+      "race": "魔人",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 16327
+    },
+    {
+      "id": 124,
+      "name": "大山津见",
+      "race": "国津神",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 7373
+    },
+    {
+      "id": 125,
+      "name": "早太郎",
+      "race": "圣兽",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 5077
+    },
+    {
+      "id": 126,
+      "name": "女武神",
+      "race": "妖魔",
+      "level": 40,
+      "price": 999999,
+      "cheapestPrice": 8170
+    },
+    {
+      "id": 98,
+      "name": "鸩盘茶",
+      "race": "幽鬼",
+      "level": 41,
+      "price": 999999,
+      "cheapestPrice": 7797
+    },
+    {
+      "id": 99,
+      "name": "阿努比斯",
+      "race": "神兽",
+      "level": 41,
+      "price": 999999,
+      "cheapestPrice": 6639
+    },
+    {
+      "id": 127,
+      "name": "希路奇",
+      "race": "妖精",
+      "level": 41,
+      "price": 999999,
+      "cheapestPrice": 6193
+    },
+    {
+      "id": 100,
+      "name": "欧特鲁斯",
+      "race": "魔兽",
+      "level": 42,
+      "price": 999999,
+      "cheapestPrice": 8496
+    },
+    {
+      "id": 101,
+      "name": "荷鲁斯",
+      "race": "魔神",
+      "level": 42,
+      "price": 999999,
+      "cheapestPrice": 4916
+    },
+    {
+      "id": 128,
+      "name": "御社宫司神",
+      "race": "邪神",
+      "level": 42,
+      "price": 999999,
+      "cheapestPrice": 7168
+    },
+    {
+      "id": 129,
+      "name": "伊登",
+      "race": "女神",
+      "level": 42,
+      "price": 999999,
+      "cheapestPrice": 17551
+    },
+    {
+      "id": 102,
+      "name": "仙狸",
+      "race": "圣兽",
+      "level": 43,
+      "price": 999999,
+      "cheapestPrice": 6545
+    },
+    {
+      "id": 130,
+      "name": "马卡布",
+      "race": "邪鬼",
+      "level": 43,
+      "price": 999999,
+      "cheapestPrice": 8047
+    },
+    {
+      "id": 131,
+      "name": "白骑士",
+      "race": "魔人",
+      "level": 43,
+      "price": 999999,
+      "cheapestPrice": 19547
+    },
+    {
+      "id": 132,
+      "name": "朱雀",
+      "race": "灵鸟",
+      "level": 43,
+      "price": 999999,
+      "cheapestPrice": 7296
+    },
+    {
+      "id": 103,
+      "name": "狄俄尼索斯",
+      "race": "破坏神",
+      "level": 44,
+      "price": 999999,
+      "cheapestPrice": 3722
+    },
+    {
+      "id": 133,
+      "name": "贝尔芬格",
+      "race": "魔王",
+      "level": 44,
+      "price": 999999,
+      "cheapestPrice": 5573
+    },
+    {
+      "id": 134,
+      "name": "邪恶霜精",
+      "race": "夜魔",
+      "level": 44,
+      "price": 999999,
+      "cheapestPrice": 23542
+    },
+    {
+      "id": 135,
+      "name": "欧赛",
+      "race": "堕天使",
+      "level": 44,
+      "price": 999999,
+      "cheapestPrice": 7238
+    },
+    {
+      "id": 136,
+      "name": "广目天王",
+      "race": "鬼神",
+      "level": 44,
+      "price": 999999,
+      "cheapestPrice": 5996
+    },
+    {
+      "id": 63,
       "name": "义经",
-      "price": 29351
+      "race": "军神",
+      "level": 45,
+      "price": 29351,
+      "cheapestPrice": 5352
+    },
+    {
+      "id": 137,
+      "name": "迦温",
+      "race": "夜魔",
+      "level": 45,
+      "price": 999999,
+      "cheapestPrice": 16423
+    },
+    {
+      "id": 138,
+      "name": "青龙",
+      "race": "龙神",
+      "level": 45,
+      "price": 999999,
+      "cheapestPrice": 8341
+    },
+    {
+      "id": 139,
+      "name": "荼吉尼",
+      "race": "鬼女",
+      "level": 46,
+      "price": 999999,
+      "cheapestPrice": 7927
+    },
+    {
+      "id": 140,
+      "name": "伊西斯",
+      "race": "地母神",
+      "level": 46,
+      "price": 999999,
+      "cheapestPrice": 5560
+    },
+    {
+      "id": 141,
+      "name": "哈努曼",
+      "race": "幻魔",
+      "level": 46,
+      "price": 999999,
+      "cheapestPrice": 4934
+    },
+    {
+      "id": 104,
+      "name": "妙音天女",
+      "race": "女神",
+      "level": 47,
+      "price": 999999,
+      "cheapestPrice": 6660
+    },
+    {
+      "id": 142,
+      "name": "红骑士",
+      "race": "魔人",
+      "level": 47,
+      "price": 999999,
+      "cheapestPrice": 35764
+    },
+    {
+      "id": 143,
+      "name": "奥伯隆",
+      "race": "妖精",
+      "level": 47,
+      "price": 999999,
+      "cheapestPrice": 8361
+    },
+    {
+      "id": 105,
+      "name": "安祖",
+      "race": "凶鸟",
+      "level": 48,
+      "price": 999999,
+      "cheapestPrice": 7579
+    },
+    {
+      "id": 144,
+      "name": "疯狂瓦斯怪人",
+      "race": "外道",
+      "level": 48,
+      "price": 999999,
+      "cheapestPrice": 8656
+    },
+    {
+      "id": 145,
+      "name": "拉赫穆",
+      "race": "邪神",
+      "level": 48,
+      "price": 999999,
+      "cheapestPrice": 18357
+    },
+    {
+      "id": 106,
+      "name": "奇稻田姬",
+      "race": "国津神",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 7834
+    },
+    {
+      "id": 146,
+      "name": "金鬼",
+      "race": "妖鬼",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 7301
+    },
+    {
+      "id": 147,
+      "name": "奴延",
+      "race": "妖兽",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 10267
+    },
+    {
+      "id": 148,
+      "name": "欧若博司",
+      "race": "魔兽",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 11618
+    },
+    {
+      "id": 149,
+      "name": "白虎",
+      "race": "圣兽",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 9667
+    },
+    {
+      "id": 150,
+      "name": "安纳西",
+      "race": "幻魔",
+      "level": 49,
+      "price": 999999,
+      "cheapestPrice": 9156
+    },
+    {
+      "id": 107,
+      "name": "洛基",
+      "race": "魔王",
+      "level": 56,
+      "price": 999999,
+      "cheapestPrice": 8015
+    },
+    {
+      "id": 108,
+      "name": "葛内舍",
+      "race": "军神",
+      "level": 57,
+      "price": 999999,
+      "cheapestPrice": 8720
+    },
+    {
+      "id": 109,
+      "name": "麦基洗德",
+      "race": "大天使",
+      "level": 60,
+      "price": 999999,
+      "cheapestPrice": 4293
+    },
+    {
+      "id": 151,
+      "name": "奥尼扬科蓬",
+      "race": "秘神",
+      "level": 50,
+      "price": 999999,
+      "cheapestPrice": 17289
+    },
+    {
+      "id": 152,
+      "name": "虹蛇",
+      "race": "龙王",
+      "level": 50,
+      "price": 999999,
+      "cheapestPrice": 8541
+    },
+    {
+      "id": 153,
+      "name": "弗劳洛斯",
+      "race": "堕天使",
+      "level": 50,
+      "price": 999999,
+      "cheapestPrice": 7579
+    },
+    {
+      "id": 154,
+      "name": "木花朔那",
+      "race": "国津神",
+      "level": 50,
+      "price": 999999,
+      "cheapestPrice": 17401
     }
   ],
-  "fusions": [
-    {
-      "resultId": 13,
-      "sourceA_Id": 7,
-      "sourceB_Id": 9
-    },
-    {
-      "resultId": 13,
-      "sourceA_Id": 9,
-      "sourceB_Id": 14
-    },
-    {
-      "resultId": 14,
-      "sourceA_Id": 7,
-      "sourceB_Id": 15
-    },
-    {
-      "resultId": 14,
-      "sourceA_Id": 9,
-      "sourceB_Id": 12
-    },
-    {
-      "resultId": 14,
-      "sourceA_Id": 10,
-      "sourceB_Id": 11
-    },
-    {
-      "resultId": 15,
-      "sourceA_Id": 7,
-      "sourceB_Id": 16
-    },
-    {
-      "resultId": 7,
-      "sourceA_Id": 47,
-      "sourceB_Id": 49
-    },
-    {
-      "resultId": 7,
-      "sourceA_Id": 31,
-      "sourceB_Id": 49
-    },
-    {
-      "resultId": 7,
-      "sourceA_Id": 20,
-      "sourceB_Id": 49
-    },
-    {
-      "resultId": 9,
-      "sourceA_Id": 46,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 9,
-      "sourceA_Id": 31,
-      "sourceB_Id": 46
-    },
-    {
-      "resultId": 9,
-      "sourceA_Id": 47,
-      "sourceB_Id": 54
-    },
-    {
-      "resultId": 9,
-      "sourceA_Id": 31,
-      "sourceB_Id": 54
-    },
-    {
-      "resultId": 10,
-      "sourceA_Id": 29,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 10,
-      "sourceA_Id": 29,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 10,
-      "sourceA_Id": 20,
-      "sourceB_Id": 29
-    },
-    {
-      "resultId": 11,
-      "sourceA_Id": 35,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 11,
-      "sourceA_Id": 20,
-      "sourceB_Id": 35
-    },
-    {
-      "resultId": 12,
-      "sourceA_Id": 27,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 12,
-      "sourceA_Id": 27,
-      "sourceB_Id": 31
-    },
-    {
-      "resultId": 14,
-      "sourceA_Id": 33,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 14,
-      "sourceA_Id": 33,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 15,
-      "sourceA_Id": 21,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 15,
-      "sourceA_Id": 20,
-      "sourceB_Id": 21
-    },
-    {
-      "resultId": 13,
-      "sourceA_Id": 47,
-      "sourceB_Id": 68
-    },
-    {
-      "resultId": 13,
-      "sourceA_Id": 31,
-      "sourceB_Id": 68
-    },
-    {
-      "resultId": 13,
-      "sourceA_Id": 37,
-      "sourceB_Id": 68
-    },
-    {
-      "resultId": 24,
-      "sourceA_Id": 10,
-      "sourceB_Id": 15
-    },
-    {
-      "resultId": 24,
-      "sourceA_Id": 25,
-      "sourceB_Id": 31
-    },
-    {
-      "resultId": 24,
-      "sourceA_Id": 7,
-      "sourceB_Id": 27
-    },
-    {
-      "resultId": 24,
-      "sourceA_Id": 7,
-      "sourceB_Id": 12
-    },
-    {
-      "resultId": 24,
-      "sourceA_Id": 12,
-      "sourceB_Id": 14
-    },
-    {
-      "resultId": 18,
-      "sourceA_Id": 37,
-      "sourceB_Id": 63
-    },
-    {
-      "resultId": 18,
-      "sourceA_Id": 20,
-      "sourceB_Id": 63
-    },
-    {
-      "resultId": 18,
-      "sourceA_Id": 7,
-      "sourceB_Id": 17
-    },
-    {
-      "resultId": 18,
-      "sourceA_Id": 11,
-      "sourceB_Id": 17
-    },
-    {
-      "resultId": 16,
-      "sourceA_Id": 9,
-      "sourceB_Id": 18
-    },
-    {
-      "resultId": 16,
-      "sourceA_Id": 9,
-      "sourceB_Id": 23
-    },
-    {
-      "resultId": 16,
-      "sourceA_Id": 39,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 16,
-      "sourceA_Id": 37,
-      "sourceB_Id": 39
-    },
-    {
-      "resultId": 16,
-      "sourceA_Id": 20,
-      "sourceB_Id": 39
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 7,
-      "sourceB_Id": 18
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 10,
-      "sourceB_Id": 18
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 31,
-      "sourceB_Id": 34
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 20,
-      "sourceB_Id": 34
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 7,
-      "sourceB_Id": 11
-    },
-    {
-      "resultId": 17,
-      "sourceA_Id": 11,
-      "sourceB_Id": 12
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 31,
-      "sourceB_Id": 41
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 37,
-      "sourceB_Id": 41
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 12,
-      "sourceB_Id": 17
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 10,
-      "sourceB_Id": 17
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 7,
-      "sourceB_Id": 29
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 7,
-      "sourceB_Id": 10
-    },
-    {
-      "resultId": 19,
-      "sourceA_Id": 12,
-      "sourceB_Id": 23
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 39,
-      "sourceB_Id": 57
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 16,
-      "sourceB_Id": 57
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 16,
-      "sourceB_Id": 39
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 18,
-      "sourceB_Id": 63
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 13,
-      "sourceB_Id": 71
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 68,
-      "sourceB_Id": 71
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 13,
-      "sourceB_Id": 68
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 33,
-      "sourceB_Id": 55
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 44,
-      "sourceB_Id": 55
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 14,
-      "sourceB_Id": 55
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 14,
-      "sourceB_Id": 33
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 33,
-      "sourceB_Id": 44
-    },
-    {
-      "resultId": 20,
-      "sourceA_Id": 14,
-      "sourceB_Id": 44
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 40,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 20,
-      "sourceB_Id": 40
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 15,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 15,
-      "sourceB_Id": 31
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 7,
-      "sourceB_Id": 39
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 10,
-      "sourceB_Id": 16
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 14,
-      "sourceB_Id": 18
-    },
-    {
-      "resultId": 21,
-      "sourceA_Id": 10,
-      "sourceB_Id": 23
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 9,
-      "sourceB_Id": 40
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 9,
-      "sourceB_Id": 21
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 16,
-      "sourceB_Id": 21
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 11,
-      "sourceB_Id": 21
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 9,
-      "sourceB_Id": 15
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 15,
-      "sourceB_Id": 16
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 11,
-      "sourceB_Id": 15
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 9,
-      "sourceB_Id": 39
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 9,
-      "sourceB_Id": 16
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 31,
-      "sourceB_Id": 48
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 20,
-      "sourceB_Id": 48
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 7,
-      "sourceB_Id": 23
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 11,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 11,
-      "sourceB_Id": 33
-    },
-    {
-      "resultId": 22,
-      "sourceA_Id": 11,
-      "sourceB_Id": 14
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 21,
-      "sourceB_Id": 22
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 15,
-      "sourceB_Id": 22
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 13,
-      "sourceB_Id": 18
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 37,
-      "sourceB_Id": 45
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 20,
-      "sourceB_Id": 45
+  "specialFusions": [
+    {
+      "resultId": 38,
+      "ingredients": [
+        16,
+        2
+      ]
     },
     {
-      "resultId": 23,
-      "sourceA_Id": 7,
-      "sourceB_Id": 48
+      "resultId": 110,
+      "ingredients": [
+        46,
+        54,
+        56,
+        62
+      ]
     },
-    {
-      "resultId": 23,
-      "sourceA_Id": 7,
-      "sourceB_Id": 22
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 13,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 13,
-      "sourceB_Id": 25
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 13,
-      "sourceB_Id": 24
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 14,
-      "sourceB_Id": 22
-    },
-    {
-      "resultId": 23,
-      "sourceA_Id": 24,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 10,
-      "sourceB_Id": 40
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 10,
-      "sourceB_Id": 21
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 15,
-      "sourceB_Id": 29
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 16,
-      "sourceB_Id": 17
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 16,
-      "sourceB_Id": 23
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 16,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 19,
-      "sourceB_Id": 27
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 12,
-      "sourceB_Id": 19
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 18,
-      "sourceB_Id": 22
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 24,
-      "sourceB_Id": 47
+    {
+      "resultId": 111,
+      "ingredients": [
+        19,
+        30,
+        51
+      ]
     },
-    {
-      "resultId": 25,
-      "sourceA_Id": 24,
-      "sourceB_Id": 37
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 31,
-      "sourceB_Id": 42
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 20,
-      "sourceB_Id": 24
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 7,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 7,
-      "sourceB_Id": 43
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 10,
-      "sourceB_Id": 30
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 14,
-      "sourceB_Id": 27
-    },
-    {
-      "resultId": 25,
-      "sourceA_Id": 12,
-      "sourceB_Id": 33
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 21,
-      "sourceB_Id": 24
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 15,
-      "sourceB_Id": 25
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 15,
-      "sourceB_Id": 24
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 14,
-      "sourceB_Id": 19
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 24,
-      "sourceB_Id": 28
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 12,
-      "sourceB_Id": 47
-    },
-    {
-      "resultId": 27,
-      "sourceA_Id": 37,
-      "sourceB_Id": 53
+    {
+      "resultId": 112,
+      "ingredients": [
+        10,
+        26,
+        56
+      ]
     },
-    {
-      "resultId": 27,
-      "sourceA_Id": 31,
-      "sourceB_Id": 53
+    {
+      "resultId": 113,
+      "ingredients": [
+        22,
+        24,
+        68
+      ]
     },
-    {
-      "resultId": 27,
-      "sourceA_Id": 12,
-      "sourceB_Id": 20
+    {
+      "resultId": 114,
+      "ingredients": [
+        36,
+        59,
+        7
+      ]
     },
-    {
-      "resultId": 27,
-      "sourceA_Id": 10,
-      "sourceB_Id": 22
+    {
+      "resultId": 116,
+      "ingredients": [
+        46,
+        58,
+        65
+      ]
+    },
+    {
+      "resultId": 119,
+      "ingredients": [
+        16,
+        37,
+        76
+      ]
+    },
+    {
+      "resultId": 120,
+      "ingredients": [
+        18,
+        47,
+        67
+      ]
+    },
+    {
+      "resultId": 121,
+      "ingredients": [
+        26,
+        48,
+        69,
+        90
+      ]
+    },
+    {
+      "resultId": 125,
+      "ingredients": [
+        42,
+        55
+      ]
+    },
+    {
+      "resultId": 129,
+      "ingredients": [
+        51,
+        61,
+        80
+      ]
+    },
+    {
+      "resultId": 131,
+      "ingredients": [
+        111,
+        92,
+        95
+      ]
+    },
+    {
+      "resultId": 134,
+      "ingredients": [
+        116,
+        75,
+        86
+      ]
+    },
+    {
+      "resultId": 142,
+      "ingredients": [
+        126,
+        130,
+        131
+      ]
+    },
+    {
+      "resultId": 145,
+      "ingredients": [
+        79,
+        84,
+        96
+      ]
+    },
+    {
+      "resultId": 150,
+      "ingredients": [
+        103,
+        25,
+        85
+      ]
+    },
+    {
+      "resultId": 151,
+      "ingredients": [
+        101,
+        123,
+        75
+      ]
+    },
+    {
+      "resultId": 154,
+      "ingredients": [
+        124,
+        132,
+        53
+      ]
     }
   ],
-  "nextDemonId": 72
+  "nextDemonId": 155
 }
