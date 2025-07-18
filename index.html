@@ -474,12 +474,21 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
 
 function resetCalculator() {
     ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).value = "");
-    isInitialState = true; 
-    updateCalculatorState(); 
+    
+    isInitialState = true;
+    
+    calculatorState.slot1 = null;
+    calculatorState.slot2 = null;
+    calculatorState.slot3 = null;
+    updateCalculatorResults();
 }
 
 function updateCalculatorState() {
-    isInitialState = false; 
+    if (calculatorState.slot1 !== null || calculatorState.slot2 !== null || calculatorState.slot3 !== null) {
+        isInitialState = false;
+    }
+    const previousFilter = calculatorState.filter;
+
     calculatorState = {
         slot1: parseInt(document.getElementById('slot1').value) || null,
         slot2: parseInt(document.getElementById('slot2').value) || null,
@@ -487,6 +496,12 @@ function updateCalculatorState() {
         filter: document.getElementById('fusion-filter').value,
         discount: document.getElementById('discount-toggle').checked
     };
+
+    if (calculatorState.slot1 === null && calculatorState.slot2 === null && calculatorState.slot3 === null && calculatorState.filter !== previousFilter) {
+    } else {
+        isInitialState = false;
+    }
+
     updateCalculatorResults();
 }
 
@@ -498,6 +513,7 @@ function updateCalculatorResults() {
             showExampleData();
             return;
         }
+        
         if (filter === 'special') {
             const allSpecialRecipes = db.specialFusions.map(f => {
                 const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0);
@@ -506,11 +522,13 @@ function updateCalculatorResults() {
             renderResults(allSpecialRecipes, document.getElementById('results-container'), new Set());
             return;
         }
+        
         if (filter === 'direct') {
             const allDemons = db.demons.map(d => ({ type: 'direct', demonId: d.id, cost: getCompendiumPrice(d) }));
             renderResults(allDemons, document.getElementById('results-container'), new Set());
             return;
         }
+
         document.getElementById('results-container').innerHTML = '';
         return;
     }
@@ -520,7 +538,6 @@ function updateCalculatorResults() {
 
     if (filter === 'all' || filter === 'special') {
         db.specialFusions.forEach(f => {
-
             const matchesSlot3 = !slot3 || f.resultId === slot3;
             const matchesSlot1 = !slot1 || f.ingredients.includes(slot1);
             const remainingIngredients = slot1 ? f.ingredients.filter(id => id !== slot1) : f.ingredients;
@@ -534,14 +551,18 @@ function updateCalculatorResults() {
     }
 
     if (filter === 'all' && (!slot3 || !specialDemonIds.has(slot3))) {
+
         const pool1 = slot1 ? [getDemonById(slot1)] : db.demons;
         const pool2 = slot2 ? [getDemonById(slot2)] : db.demons;
+        const calculatedPairs = new Set();
 
         for (const d1 of pool1) {
             for (const d2 of pool2) {
-                if (!d1 || !d2 || d1.id >= d2.id) continue;
+                if (!d1 || !d2 || d1.id === d2.id) continue;
 
-                if (slot1 && slot2 && (d1.id !== slot1 || d2.id !== slot2)) continue;
+                const pairKey = d1.id < d2.id ? `${d1.id}-${d2.id}` : `${d2.id}-${d1.id}`;
+                if (calculatedPairs.has(pairKey)) continue;
+                calculatedPairs.add(pairKey);
 
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
                 if (result && (!slot3 || result.id === slot3)) {
