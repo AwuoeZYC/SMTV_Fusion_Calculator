@@ -557,7 +557,7 @@
       "name": "式王子",
       "race": "妖鬼",
       "level": 29,
-      "price": 999999,
+      "price": 8000,
       "cheapestPrice": 4734
     },
     {
@@ -573,7 +573,7 @@
       "name": "獬豸",
       "race": "神兽",
       "level": 29,
-      "price": 999999,
+      "price": 13584,
       "cheapestPrice": 4619
     },
     {
@@ -589,7 +589,7 @@
       "name": "母夜叉",
       "race": "鬼女",
       "level": 30,
-      "price": 999999,
+      "price": 10981,
       "cheapestPrice": 5099
     },
     {
@@ -597,7 +597,7 @@
       "name": "洛阿",
       "race": "邪鬼",
       "level": 30,
-      "price": 999999,
+      "price": 15936,
       "cheapestPrice": 5921
     },
     {
@@ -621,7 +621,7 @@
       "name": "毕舍遮",
       "race": "幽鬼",
       "level": 31,
-      "price": 999999,
+      "price": 14709,
       "cheapestPrice": 6676
     },
     {
@@ -757,7 +757,7 @@
       "name": "鸦天狗",
       "race": "妖鬼",
       "level": 35,
-      "price": 999999,
+      "price": 17771,
       "cheapestPrice": 4641
     },
     {
@@ -877,7 +877,7 @@
       "name": "德亚玛斯",
       "race": "妖兽",
       "level": 40,
-      "price": 999999,
+      "price": 31991,
       "cheapestPrice": 7622
     },
     {
@@ -917,7 +917,7 @@
       "name": "鸩盘茶",
       "race": "幽鬼",
       "level": 41,
-      "price": 999999,
+      "price": 29351,
       "cheapestPrice": 8313
     },
     {
@@ -973,7 +973,7 @@
       "name": "仙狸",
       "race": "圣兽",
       "level": 43,
-      "price": 999999,
+      "price": 37678,
       "cheapestPrice": 6972
     },
     {
@@ -1021,7 +1021,7 @@
       "name": "邪恶霜精",
       "race": "夜魔",
       "level": 44,
-      "price": 999999,
+      "price": 52093,
       "cheapestPrice": 22823
     },
     {
@@ -1141,7 +1141,7 @@
       "name": "奇稻田姬",
       "race": "国津神",
       "level": 49,
-      "price": 999999,
+      "price": 37307,
       "cheapestPrice": 7834
     },
     {
@@ -1149,7 +1149,7 @@
       "name": "金鬼",
       "race": "妖鬼",
       "level": 49,
-      "price": 999999,
+      "price": 37695,
       "cheapestPrice": 7301
     },
     {
@@ -1469,7 +1469,7 @@
       "name": "麦基洗德",
       "race": "大天使",
       "level": 60,
-      "price": 999999,
+      "price": 62139,
       "cheapestPrice": 7859
     },
     {
@@ -1541,7 +1541,7 @@
       "name": "荒霸吐",
       "race": "国津神",
       "level": 62,
-      "price": 999999,
+      "price": 49994,
       "cheapestPrice": 14966
     },
     {
