@@ -637,7 +637,7 @@
       "name": "佛钮司",
       "race": "堕天使",
       "level": 31,
-      "price": 999999,
+      "price": 24772,
       "cheapestPrice": 4894
     },
     {
@@ -661,8 +661,8 @@
       "name": "因幡白兔",
       "race": "珍兽",
       "level": 31,
-      "price": 999999,
-      "cheapestPrice": 999999
+      "price": 23015,
+      "cheapestPrice": 23015
     },
     {
       "id": 82,
@@ -693,7 +693,7 @@
       "name": "托特",
       "race": "魔神",
       "level": 33,
-      "price": 999999,
+      "price": 21470,
       "cheapestPrice": 3078
     },
     {
@@ -717,7 +717,7 @@
       "name": "羽蛇神",
       "race": "龙神",
       "level": 34,
-      "price": 999999,
+      "price": 18853,
       "cheapestPrice": 5370
     },
     {
@@ -741,7 +741,7 @@
       "name": "诃梨帝母",
       "race": "地母神",
       "level": 35,
-      "price": 999999,
+      "price": 27328,
       "cheapestPrice": 5099
     },
     {
@@ -749,7 +749,7 @@
       "name": "瑟坦特",
       "race": "妖精",
       "level": 35,
-      "price": 999999,
+      "price": 25057,
       "cheapestPrice": 5680
     },
     {
@@ -829,7 +829,7 @@
       "name": "女梦魔",
       "race": "夜魔",
       "level": 38,
-      "price": 999999,
+      "price": 35188,
       "cheapestPrice": 6408
     },
     {
@@ -965,7 +965,7 @@
       "name": "伊登",
       "race": "女神",
       "level": 42,
-      "price": 999999,
+      "price": 33922,
       "cheapestPrice": 15805
     },
     {
@@ -1109,7 +1109,7 @@
       "name": "奥伯隆",
       "race": "妖精",
       "level": 47,
-      "price": 999999,
+      "price": 40236,
       "cheapestPrice": 8934
     },
     {
@@ -1317,7 +1317,7 @@
       "name": "狼人",
       "race": "魔兽",
       "level": 54,
-      "price": 999999,
+      "price": 62016,
       "cheapestPrice": 12085
     },
     {
@@ -1429,7 +1429,7 @@
       "name": "缇坦妮雅",
       "race": "妖精",
       "level": 57,
-      "price": 999999,
+      "price": 62685,
       "cheapestPrice": 11594
     },
     {
@@ -1525,7 +1525,7 @@
       "name": "歌革玛各",
       "race": "地灵",
       "level": 61,
-      "price": 999999,
+      "price": 56334,
       "cheapestPrice": 7008
     },
     {
