@@ -492,6 +492,7 @@ function updateCalculatorState() {
 
 function updateCalculatorResults() {
     const { slot1, slot2, slot3, filter } = calculatorState;
+
     if (!slot1 && !slot2 && !slot3) {
         if (isInitialState && filter === 'all') {
             showExampleData();
@@ -513,81 +514,367 @@ function updateCalculatorResults() {
         document.getElementById('results-container').innerHTML = '';
         return;
     }
+
     let recipes = [];
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
+
     if (filter === 'all' || filter === 'special') {
         db.specialFusions.forEach(f => {
-            if ((!slot3 || f.resultId === slot3) &&
-                (!slot1 || f.ingredients.includes(slot1)) &&
-                (!slot2 || (f.ingredients.filter(id => id !== slot1).includes(slot2) || !slot1))) 
-            {
+
+            const matchesSlot3 = !slot3 || f.resultId === slot3;
+            const matchesSlot1 = !slot1 || f.ingredients.includes(slot1);
+            const remainingIngredients = slot1 ? f.ingredients.filter(id => id !== slot1) : f.ingredients;
+            const matchesSlot2 = !slot2 || remainingIngredients.includes(slot2);
+
+            if (matchesSlot3 && matchesSlot1 && matchesSlot2) {
                 const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0);
                 recipes.push({ type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost });
             }
         });
     }
+
     if (filter === 'all' && (!slot3 || !specialDemonIds.has(slot3))) {
-        if (slot1 && slot2) {
-            const d1 = getDemonById(slot1);
-            const d2 = getDemonById(slot2);
-            if (d1 && d2) {
+        const pool1 = slot1 ? [getDemonById(slot1)] : db.demons;
+        const pool2 = slot2 ? [getDemonById(slot2)] : db.demons;
+
+        for (const d1 of pool1) {
+            for (const d2 of pool2) {
+                if (!d1 || !d2 || d1.id >= d2.id) continue;
+
+                if (slot1 && slot2 && (d1.id !== slot1 || d2.id !== slot2)) continue;
+
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
                 if (result && (!slot3 || result.id === slot3)) {
-                    const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2);
-                    recipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost });
-                }
-            }
-        } else {
-            for (let i = 0; i < db.demons.length; i++) {
-                if (slot1 && db.demons[i].id !== slot1) continue;
-                for (let j = i + 1; j < db.demons.length; j++) {
-                    if (slot2 && db.demons[j].id !== slot2) continue;
-                    const d1 = db.demons[i];
-                    const d2 = db.demons[j];
-                    const result = calculateFusionResult(d1, d2, specialDemonIds);
-                    if (result && (!slot3 || result.id === slot3)) {
-                         const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2);
-                         recipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost });
-                    }
+                     const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2);
+                     recipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost });
                 }
             }
         }
     }
+
     if (slot3) {
          const target = getDemonById(slot3);
          if (target) {
             recipes.push({ type: 'direct', demonId: slot3, cost: getCompendiumPrice(target) });
          }
     }
+
     const uniqueRecipes = Array.from(new Map(recipes.map(r => {
         const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`;
         return [key, r];
     })).values());
+
     renderResults(uniqueRecipes, document.getElementById('results-container'), new Set());
 }
 
-function processDemonForm(){ if (editState.type === 'demon') saveDemonChanges(); else addDemon(); }
-function addDemon() { const name = document.getElementById('demon-name').value.trim(); const race = document.getElementById('demon-race').value; const levelInput = document.getElementById('demon-level'); const level = parseInt(levelInput.value, 10); const price = parseInt(document.getElementById('demon-price').value, 10); if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、种族、等级和价格！'); if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！'); db.demons.push({ id: db.nextDemonId++, name, race, level, price }); document.getElementById('demon-name').value = ''; document.getElementById('demon-price').value = ''; document.getElementById('demon-race').value = ''; dataChanged(); }
-function deleteDemon(demonId) { if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return; db.demons = db.demons.filter(d => d.id !== demonId); db.specialFusions = db.specialFusions.filter(f => !f.ingredients.includes(demonId) && f.resultId !== demonId); if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode(); dataChanged(); }
-function addSpecialFusion() { const ingredientNodes = document.querySelectorAll('#special-fusion-ingredients select'); const ingredients = Array.from(ingredientNodes).map(s => parseInt(s.value, 10)).filter(id => !isNaN(id)); const resultId = parseInt(document.getElementById('special-result-select').value, 10); if (ingredients.length < 2 || !resultId) return alert('请至少选择两个素材和一个结果。'); if (new Set([...ingredients, resultId]).size !== ingredients.length + 1) return alert('素材和结果不能重复。'); ingredients.sort((a,b) => a - b); if (db.specialFusions.some(f => f.resultId === resultId && JSON.stringify(f.ingredients) === JSON.stringify(ingredients))) return alert('这个特殊合成已经存在了。'); db.specialFusions.push({ resultId, ingredients }); dataChanged(); }
-function deleteSpecialFusion(index) { if (!confirm('确定要删除这个特殊合成吗？')) return; db.specialFusions.splice(index, 1); dataChanged(); }
-function startEditDemon(demonId) { cancelEditMode(); const demon = getDemonById(demonId); if (!demon) return; editState = { type: 'demon', targetId: demonId }; document.getElementById('demon-form-title').scrollIntoView({ behavior: 'smooth' }); document.getElementById('demon-name').value = demon.name; document.getElementById('demon-race').value = demon.race; document.getElementById('demon-level').value = demon.level; document.getElementById('demon-price').value = demon.price; const submitBtn = document.getElementById('demon-submit-btn'); submitBtn.textContent = '保存修改'; document.getElementById('cancel-edit-btn').style.display = 'block'; }
-function saveDemonChanges() { const demon = getDemonById(editState.targetId); if (!demon) return; const name = document.getElementById('demon-name').value.trim(); const race = document.getElementById('demon-race').value; const level = parseInt(document.getElementById('demon-level').value, 10); const price = parseInt(document.getElementById('demon-price').value, 10); if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入完整且有效的仲魔信息！'); if (db.demons.some(d => d.name === name && d.id !== demon.id)) return alert('该仲魔名称与其他仲魔重复！'); demon.name = name; demon.race = race; demon.level = level; demon.price = price; cancelEditMode(); dataChanged(); }
-function cancelEditMode() { editState = { type: 'none', targetId: null }; document.getElementById('demon-name').value = ''; document.getElementById('demon-race').value = ''; document.getElementById('demon-level').value = ''; document.getElementById('demon-price').value = ''; let btn = document.getElementById('demon-submit-btn'); btn.textContent = '添加仲魔'; document.getElementById('cancel-edit-btn').style.display = 'none'; }
-function initializeSpecialFusionUI() { addIngredientSlot(); addIngredientSlot(); }
-function addIngredientSlot() { const container = document.getElementById('special-fusion-ingredients'); const ingredientCount = container.children.length + 1; const div = document.createElement('div'); div.className = 'form-group'; const label = document.createElement('label'); label.textContent = `素材 ${ingredientCount}：`; const select = document.createElement('select'); const placeholder = '<option value="">-- 选择仲魔 --</option>'; const demonOptions = (db.isExample ? [] : db.demons).sort((a,b) => a.level - b.level).map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); select.innerHTML = placeholder + demonOptions; div.appendChild(label); div.appendChild(select); container.appendChild(div); }
-function removeIngredientSlot() { const container = document.getElementById('special-fusion-ingredients'); if (container.children.length > 2) { container.removeChild(container.lastChild); } else { alert('特殊合成至少需要两个素材。'); } }
-function renderAll() { if (db.isExample) return; const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; return a.name.localeCompare(b.name, 'zh-CN'); }); renderManagementLists(sortedDemons); renderCalculatorSelects(sortedDemons); updateCalculatorResults(); }
-function renderManagementLists(sortedDemons) { document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); ingredientSelects.forEach(select => { const currentValue = select.value; select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue; }); document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + '); const res = getDemonById(f.resultId); return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; }).join('') + '</ul>'; }
-function renderCalculatorSelects(sortedDemons) { const placeholder = '<option value="">-- 任意 --</option>'; const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); ['slot1', 'slot2', 'slot3'].forEach(id => { const select = document.getElementById(id); const currentValue = select.value; select.innerHTML = placeholder + demonOptions; select.value = currentValue; }); }
-function renderResults(recipes, container, ancestry) { container.innerHTML = ""; recipes.sort((a, b) => a.cost - b.cost); const resultList = document.createElement('ul'); resultList.className = 'result-list'; recipes.forEach(recipe => { if (recipe.type === 'special' || recipe.type === 'normal') { const res = getDemonById(recipe.resultId); if(res) resultList.appendChild(createFusionElement(recipe.ingredients.map(getDemonById), res, ancestry, recipe.type)); } else if (recipe.type === 'direct') { const demon = getDemonById(recipe.demonId); if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry)); } }); container.appendChild(resultList); }
-function getResultRace(raceA, raceB) { if (RACE_CHART[raceA] && RACE_CHART[raceA][raceB]) return RACE_CHART[raceA][raceB]; if (RACE_CHART[raceB] && RACE_CHART[raceB][raceA]) return RACE_CHART[raceB][raceA]; return null; }
-function createFusionElement(ingredients, res, ancestry, type) { const li = document.createElement('li'); li.className = `result-item ${type}-fusion`; const path = document.createElement('div'); path.className = 'result-path'; ingredients.forEach((ing, index) => { if (!ing) return; path.append(createDemonSpan(ing, ancestry)); if (index < ingredients.length - 1) { path.append(' + '); } }); path.append(' = ', createDemonSpan(res, ancestry)); const costDiv = document.createElement('div'); costDiv.className = 'result-cost'; const totalCost = ingredients.reduce((sum, ing) => sum + (ing ? getDemonCheapestPrice(ing) : 0), 0); const breakdown = ingredients.map(ing => ing ? getDemonCheapestPrice(ing).toLocaleString() : '0').join(' + '); const compendiumPrice = getCompendiumPrice(res); const savings = compendiumPrice - totalCost; costDiv.innerHTML = `${totalCost.toLocaleString()} M <span class="breakdown">(最优: ${breakdown})</span>`; if (savings > 0) { const savingsSpan = document.createElement('span'); savingsSpan.className = 'savings'; savingsSpan.textContent = `(省: ${savings.toLocaleString()})`; costDiv.appendChild(savingsSpan); } path.appendChild(costDiv); li.appendChild(path); return li; }
-function createDemonSpan(demon, ancestry) { const demonRace = demon.isExample ? "" : ` (${demon.race})`; const span = document.createElement('span'); span.textContent = `Lv${demon.level} ${demon.name}${demonRace}`; if (ancestry.has(demon.id)) { span.className = 'demon-no-link'; span.title = '为防止无限循环，已禁止展开'; } else { span.className = 'demon-link'; span.onclick = (e) => { e.stopPropagation(); toggleSubList(e.currentTarget, demon, ancestry); }; } return span; }
-function toggleSubList(element, demon, ancestry) { const parentItem = element.closest('.result-item'); let subListContainer = parentItem.querySelector('.sub-list-container'); if (subListContainer) { subListContainer.remove(); return; } subListContainer = document.createElement('div'); subListContainer.className = 'sub-list-container'; parentItem.appendChild(subListContainer); const newAncestry = new Set(ancestry).add(demon.id); let subRecipes = []; const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId)); db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0); subRecipes.push({ type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost }); }); if (!specialDemonIds.has(demon.id)) { for (let i = 0; i < db.demons.length; i++) { for (let j = i + 1; j < db.demons.length; j++) { const d1 = db.demons[i]; const d2 = db.demons[j]; const result = calculateFusionResult(d1, d2, specialDemonIds); if (result && result.id === demon.id) { const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2); subRecipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost }); } } } } subRecipes.push({ type: 'direct', demonId: demon.id, cost: getCompendiumPrice(getDemonById(demon.id)) }); const uniqueSubRecipes = Array.from(new Map(subRecipes.map(r => { const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`; return [key, r]; })).values()); renderResults(uniqueSubRecipes, subListContainer, newAncestry); }
-function createDirectPurchaseElement(demon, ancestry) { const li = document.createElement('li'); li.className = 'result-item direct-purchase'; const path = document.createElement('div'); path.className = 'result-path'; path.append('从全书召唤 ', createDemonSpan(demon, ancestry)); const cost = document.createElement('div'); cost.className = 'result-cost'; cost.innerHTML = `${getCompendiumPrice(demon).toLocaleString()} M <span class="breakdown">(直接购买)</span>`; path.appendChild(cost); li.appendChild(path); return li; }
-function getDemonById(id) { return db.demons.find(d => d.id === id); }
-function showTab(tabName) { document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); document.getElementById(tabName).classList.add('active'); document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active'); }
+function createFusionElement(ingredients, res, ancestry, type) {
+    const li = document.createElement('li');
+    li.className = `result-item ${type}-fusion`;
+
+    const path = document.createElement('div');
+    path.className = 'result-path';
+
+    ingredients.forEach((ing, index) => {
+        if (!ing) return;
+        path.append(createDemonSpan(ing, ancestry));
+        if (index < ingredients.length - 1) {
+            path.append(' + ');
+        }
+    });
+    path.append(' = ', createDemonSpan(res, ancestry));
+
+    const costDiv = document.createElement('div');
+    costDiv.className = 'result-cost';
+    
+    const totalCost = ingredients.reduce((sum, ing) => sum + (ing ? getDemonCheapestPrice(ing) : 0), 0);
+    const breakdown = ingredients.map(ing => ing ? getDemonCheapestPrice(ing).toLocaleString() : '0').join(' + ');
+    const compendiumPrice = getCompendiumPrice(res);
+    const savings = compendiumPrice - totalCost;
+
+    costDiv.innerHTML = `${totalCost.toLocaleString()} M <span class="breakdown">(最优: ${breakdown})</span>`;
+
+    if (savings > 0) {
+        const savingsSpan = document.createElement('span');
+        savingsSpan.className = 'savings';
+        savingsSpan.textContent = `(省: ${savings.toLocaleString()})`;
+        costDiv.appendChild(savingsSpan);
+    } else if (savings < 0) {
+        const lossSpan = document.createElement('span');
+        lossSpan.className = 'loss';
+        lossSpan.textContent = `(亏: ${Math.abs(savings).toLocaleString()})`;
+        costDiv.appendChild(lossSpan);
+    }
+
+    path.appendChild(costDiv);
+    li.appendChild(path);
+    return li;
+}
+
+function renderResults(recipes, container, ancestry) {
+    container.innerHTML = "";
+	
+    if (recipes.length > 0) {
+        const note = document.createElement('p');
+        note.textContent = '注：“省”/“亏”的价格是与从全书直接召唤该仲魔的价格进行比较。';
+        note.style.fontSize = '0.8em';
+        note.style.opacity = '0.7';
+        note.style.textAlign = 'center';
+        container.appendChild(note);
+    }
+
+    recipes.sort((a, b) => a.cost - b.cost);
+    const resultList = document.createElement('ul');
+    resultList.className = 'result-list';
+
+    recipes.forEach(recipe => {
+        if (recipe.type === 'special' || recipe.type === 'normal') {
+            const res = getDemonById(recipe.resultId);
+            if(res) resultList.appendChild(createFusionElement(recipe.ingredients.map(getDemonById), res, ancestry, recipe.type));
+        } else if (recipe.type === 'direct') {
+            const demon = getDemonById(recipe.demonId);
+            if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry));
+        }
+    });
+    container.appendChild(resultList);
+}
+
+function processDemonForm(){ 
+    if (editState.type === 'demon') saveDemonChanges(); 
+    else addDemon(); 
+}
+
+function addDemon() { 
+    const name = document.getElementById('demon-name').value.trim(); 
+    const race = document.getElementById('demon-race').value; 
+    const levelInput = document.getElementById('demon-level'); 
+    const level = parseInt(levelInput.value, 10); 
+    const price = parseInt(document.getElementById('demon-price').value, 10); 
+    if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、种族、等级和价格！'); 
+    if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！'); 
+    db.demons.push({ id: db.nextDemonId++, name, race, level, price }); 
+    document.getElementById('demon-name').value = ''; 
+    document.getElementById('demon-price').value = ''; 
+    document.getElementById('demon-race').value = ''; 
+    dataChanged(); 
+}
+
+function deleteDemon(demonId) { 
+    if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return; 
+    db.demons = db.demons.filter(d => d.id !== demonId); 
+    db.specialFusions = db.specialFusions.filter(f => !f.ingredients.includes(demonId) && f.resultId !== demonId); 
+    if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode(); 
+    dataChanged(); 
+}
+
+function addSpecialFusion() { 
+    const ingredientNodes = document.querySelectorAll('#special-fusion-ingredients select'); 
+    const ingredients = Array.from(ingredientNodes).map(s => parseInt(s.value, 10)).filter(id => !isNaN(id)); 
+    const resultId = parseInt(document.getElementById('special-result-select').value, 10); 
+    if (ingredients.length < 2 || !resultId) return alert('请至少选择两个素材和一个结果。'); 
+    if (new Set([...ingredients, resultId]).size !== ingredients.length + 1) return alert('素材和结果不能重复。'); 
+    ingredients.sort((a,b) => a - b); 
+    if (db.specialFusions.some(f => f.resultId === resultId && JSON.stringify(f.ingredients) === JSON.stringify(ingredients))) return alert('这个特殊合成已经存在了。'); 
+    db.specialFusions.push({ resultId, ingredients }); 
+    dataChanged(); 
+}
+
+function deleteSpecialFusion(index) { 
+    if (!confirm('确定要删除这个特殊合成吗？')) return; 
+    db.specialFusions.splice(index, 1); 
+    dataChanged(); 
+}
+
+function startEditDemon(demonId) { 
+    cancelEditMode(); 
+    const demon = getDemonById(demonId); 
+    if (!demon) return; 
+    editState = { type: 'demon', targetId: demonId }; 
+    document.getElementById('demon-form-title').scrollIntoView({ behavior: 'smooth' }); 
+    document.getElementById('demon-name').value = demon.name; 
+    document.getElementById('demon-race').value = demon.race; 
+    document.getElementById('demon-level').value = demon.level; 
+    document.getElementById('demon-price').value = demon.price; 
+    const submitBtn = document.getElementById('demon-submit-btn'); 
+    submitBtn.textContent = '保存修改'; 
+    document.getElementById('cancel-edit-btn').style.display = 'block'; 
+}
+
+function saveDemonChanges() { 
+    const demon = getDemonById(editState.targetId); 
+    if (!demon) return; 
+    const name = document.getElementById('demon-name').value.trim(); 
+    const race = document.getElementById('demon-race').value; 
+    const level = parseInt(document.getElementById('demon-level').value, 10); 
+    const price = parseInt(document.getElementById('demon-price').value, 10); 
+    if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入完整且有效的仲魔信息！'); 
+    if (db.demons.some(d => d.name === name && d.id !== demon.id)) return alert('该仲魔名称与其他仲魔重复！'); 
+    demon.name = name; 
+    demon.race = race; 
+    demon.level = level; 
+    demon.price = price; 
+    cancelEditMode(); 
+    dataChanged(); 
+}
+
+function cancelEditMode() { 
+    editState = { type: 'none', targetId: null }; 
+    document.getElementById('demon-name').value = ''; 
+    document.getElementById('demon-race').value = ''; 
+    document.getElementById('demon-level').value = ''; 
+    document.getElementById('demon-price').value = ''; 
+    let btn = document.getElementById('demon-submit-btn'); 
+    btn.textContent = '添加仲魔'; 
+    document.getElementById('cancel-edit-btn').style.display = 'none'; 
+}
+
+function initializeSpecialFusionUI() { 
+    addIngredientSlot(); 
+    addIngredientSlot(); 
+}
+
+function addIngredientSlot() { 
+    const container = document.getElementById('special-fusion-ingredients'); 
+    const ingredientCount = container.children.length + 1; 
+    const div = document.createElement('div'); 
+    div.className = 'form-group'; 
+    const label = document.createElement('label'); 
+    label.textContent = `素材 ${ingredientCount}：`; 
+    const select = document.createElement('select'); 
+    const placeholder = '<option value="">-- 选择仲魔 --</option>'; 
+    const demonOptions = (db.isExample ? [] : db.demons).sort((a,b) => a.level - b.level).map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
+    select.innerHTML = placeholder + demonOptions; 
+    div.appendChild(label); 
+    div.appendChild(select); 
+    container.appendChild(div); 
+}
+
+function removeIngredientSlot() { 
+    const container = document.getElementById('special-fusion-ingredients'); 
+    if (container.children.length > 2) { 
+        container.removeChild(container.lastChild); 
+    } else { 
+        alert('特殊合成至少需要两个素材。'); 
+    } 
+}
+
+function renderAll() { 
+    if (db.isExample) return; 
+    const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; 
+        return a.name.localeCompare(b.name, 'zh-CN'); 
+    }); 
+    renderManagementLists(sortedDemons); 
+    renderCalculatorSelects(sortedDemons); 
+    updateCalculatorResults(); 
+}
+
+function renderManagementLists(sortedDemons) { 
+    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; 
+    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
+    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; 
+    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); 
+    ingredientSelects.forEach(select => { 
+        const currentValue = select.value; 
+        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue; 
+    }); 
+    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { 
+        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + '); 
+        const res = getDemonById(f.resultId); 
+        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; 
+    }).join('') + '</ul>'; 
+}
+
+function renderCalculatorSelects(sortedDemons) { 
+    const placeholder = '<option value="">-- 任意 --</option>'; 
+    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
+    ['slot1', 'slot2', 'slot3'].forEach(id => { 
+        const select = document.getElementById(id); 
+        const currentValue = select.value; 
+        select.innerHTML = placeholder + demonOptions; 
+        select.value = currentValue; 
+    }); 
+}
+
+function getResultRace(raceA, raceB) { 
+    if (RACE_CHART[raceA] && RACE_CHART[raceA][raceB]) return RACE_CHART[raceA][raceB]; 
+    if (RACE_CHART[raceB] && RACE_CHART[raceB][raceA]) return RACE_CHART[raceB][raceA]; 
+    return null; 
+}
+
+function createDemonSpan(demon, ancestry) { 
+    const demonRace = demon.isExample ? "" : ` (${demon.race})`; 
+    const span = document.createElement('span'); 
+    span.textContent = `Lv${demon.level} ${demon.name}${demonRace}`; 
+    if (ancestry.has(demon.id)) { 
+        span.className = 'demon-no-link'; 
+        span.title = '为防止无限循环，已禁止展开'; 
+    } else { 
+        span.className = 'demon-link'; 
+        span.onclick = (e) => { 
+            e.stopPropagation(); 
+            toggleSubList(e.currentTarget, demon, ancestry); 
+        }; 
+    } return span; 
+}
+
+function toggleSubList(element, demon, ancestry) { 
+    const parentItem = element.closest('.result-item'); 
+    let subListContainer = parentItem.querySelector('.sub-list-container'); 
+    if (subListContainer) { 
+        subListContainer.remove(); 
+        return; 
+    } subListContainer = document.createElement('div'); 
+    subListContainer.className = 'sub-list-container'; 
+    parentItem.appendChild(subListContainer); 
+    const newAncestry = new Set(ancestry).add(demon.id); 
+    let subRecipes = []; 
+    const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId)); 
+    db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { 
+        const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0); 
+        subRecipes.push({ type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost }); 
+    }); 
+    if (!specialDemonIds.has(demon.id)) { 
+        for (let i = 0; i < db.demons.length; i++) { 
+            for (let j = i + 1; j < db.demons.length; j++) { 
+                const d1 = db.demons[i]; const d2 = db.demons[j]; 
+                const result = calculateFusionResult(d1, d2, specialDemonIds); 
+                if (result && result.id === demon.id) { 
+                    const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2); 
+                    subRecipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost }); 
+                } 
+            } 
+        } 
+    } subRecipes.push({ type: 'direct', demonId: demon.id, cost: getCompendiumPrice(getDemonById(demon.id)) }); 
+    const uniqueSubRecipes = Array.from(new Map(subRecipes.map(r => { 
+        const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`; 
+        return [key, r]; 
+    })).values()); 
+    renderResults(uniqueSubRecipes, subListContainer, newAncestry); 
+}
+
+function createDirectPurchaseElement(demon, ancestry) { 
+    const li = document.createElement('li'); 
+    li.className = 'result-item direct-purchase'; 
+    const path = document.createElement('div'); 
+    path.className = 'result-path'; 
+    path.append('从全书召唤 ', createDemonSpan(demon, ancestry)); 
+    const cost = document.createElement('div'); 
+    cost.className = 'result-cost'; 
+    cost.innerHTML = `${getCompendiumPrice(demon).toLocaleString()} M <span class="breakdown">(直接购买)</span>`; 
+    path.appendChild(cost); 
+    li.appendChild(path); 
+    return li; 
+}
+
+function getDemonById(id) { 
+    return db.demons.find(d => d.id === id); 
+}
+
+function showTab(tabName) { 
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active')); 
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); 
+    document.getElementById(tabName).classList.add('active'); 
+    document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active'); 
+}
 
 </script>
 </body>
