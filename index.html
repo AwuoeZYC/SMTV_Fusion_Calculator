@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMT5V - 最优合成计算器 v6.1 (Final)</title>
+    <title>SMT5V - 最优合成计算器</title>
     <style>
         :root {
             --bg-color: #1a1a2e; --primary-color: #16213e; --secondary-color: #0f3460;
@@ -77,13 +77,13 @@
                 <label for="fusion-filter">筛选:</label>
                 <select id="fusion-filter">
                     <option value="all">显示所有</option>
-                    <option value="special">只看特殊合成</option>
-                    <option value="direct">只看全书购买</option>
+                    <option value="special">只显示特殊合体</option>
+                    <option value="direct">只显示全书召唤</option>
                 </select>
             </div>
             <div class="control-group">
                 <input type="checkbox" id="discount-toggle" style="width: auto;">
-                <label for="discount-toggle">全书9折优惠</label>
+                <label for="discount-toggle">全书厚待(-10%)</label>
             </div>
         </div>
 
@@ -124,8 +124,8 @@
         <hr><h3>已录入的仲魔</h3><div class="data-list" id="demon-list"></div>
         <hr>
         
-        <h2 id="fusion-form-title">特殊合成管理</h2>
-        <p>用于录入特殊合成配方。</p>
+        <h2 id="fusion-form-title">特殊合体管理</h2>
+        <p>用于录入特殊合体配方。</p>
         <div id="special-fusion-ingredients">
             </div>
         <div class="form-group special-fusion-controls">
@@ -136,8 +136,8 @@
             <label for="special-result-select">结果：</label>
             <select id="special-result-select"></select>
         </div>
-        <div class="form-actions"><button id="fusion-submit-btn" class="btn-add" onclick="addSpecialFusion()">添加特殊合成</button></div>
-        <hr><h3>已录入的特殊合成</h3><div class="data-list" id="special-fusion-list"></div>
+        <div class="form-actions"><button id="fusion-submit-btn" class="btn-add" onclick="addSpecialFusion()">添加特殊合体</button></div>
+        <hr><h3>已录入的特殊合体</h3><div class="data-list" id="special-fusion-list"></div>
     </div>
 </div>
 
