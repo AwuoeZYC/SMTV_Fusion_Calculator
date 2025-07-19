@@ -634,7 +634,7 @@ function createFusionElement(ingredients, res, ancestry, type) {
 function renderResults(recipes, container, ancestry) {
     container.innerHTML = "";
 	
-    if (recipes.length > 0) {
+    if (recipes.length > 0 && container.id === 'results-container') {
         const note = document.createElement('p');
         note.textContent = '注：“省”/“亏”的价格是与从全书直接召唤该仲魔的价格进行比较。';
         note.style.fontSize = '0.8em';
