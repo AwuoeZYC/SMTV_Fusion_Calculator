@@ -82,8 +82,12 @@
                 </select>
             </div>
             <div class="control-group">
-                <input type="checkbox" id="discount-toggle" style="width: auto;">
-                <label for="discount-toggle">全书厚待(-10%)</label>
+                <label for="discount-select">全书厚待:</label>
+                <select id="discount-select">
+                    <option value="0">无折扣</option>
+                    <option value="0.1">壹 (-10%)</option>
+                    <option value="0.3">贰 (-30%)</option>
+                </select>
             </div>
         </div>
 
@@ -146,17 +150,20 @@
 // ====================================================================================
 // GLOBAL STATE & CONFIG
 // ====================================================================================
+
 let db = { demons: [], specialFusions: [], nextDemonId: 1 };
 let tempDb = {}; // For examples
 let editState = { type: 'none', targetId: null };
 let RACE_CHART = {};
 let ELEMENTAL_RULES = {};
 let ALL_RACES = [];
-let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discount: false };
+let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discountRate: 0 };
 let isInitialState = true; // To control initial display
+let ELEMENTAL_NAMES = [];
 
-const ELEMENTAL_NAMES = ['磐石精灵', '风精灵', '水精灵', '火精灵'];
-const DB_KEY = 'smtvFusionDB_v6_1';
+window.isDisplayingExample = false;
+
+const DB_KEY = 'smtvFusionDB';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
 const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/race_chart.csv';
 const GITHUB_ELEMENTAL_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/elemental_chart.csv';
@@ -175,7 +182,6 @@ window.onload = async () => {
         loadElementalChartFromCSV()
     ]);
     
-    // Initial render logic is now handled by updateCalculatorResults
     if (db.demons.length > 0) {
         dataChanged(); 
     } else {
@@ -193,8 +199,8 @@ function setupEventListeners() {
     document.getElementById('level-plus-btn').addEventListener('click', () => updateLevel(1));
     document.getElementById('level-clear-btn').addEventListener('click', () => updateLevel(0, true));
     document.getElementById('fusion-filter').addEventListener('change', updateCalculatorState);
-    document.getElementById('discount-toggle').addEventListener('change', (e) => {
-        calculatorState.discount = e.target.checked;
+    document.getElementById('discount-select').addEventListener('change', (e) => {
+        calculatorState.discountRate = parseFloat(e.target.value) || 0;
         dataChanged();
     });
 }
@@ -271,6 +277,7 @@ async function loadElementalChartFromCSV() {
 
         const lines = csvText.trim().split(/\r?\n/);
         const headers = lines[0].split(',').slice(1).map(h => h.trim());
+        ELEMENTAL_NAMES = headers;
         const rules = {};
 
         for (let i = 1; i < lines.length; i++) {
@@ -341,36 +348,33 @@ function exportData() { if (db.isExample) { alert('不能导出示例数据。')
 function showExampleData() {
     tempDb = {
         demons: [
-            { id: 1, name: "仲魔A", race: "种族", level: 10, price: 100 },
-            { id: 2, name: "仲魔B", race: "种族", level: 10, price: 100 },
-            { id: 3, name: "仲魔C", race: "种族", level: 10, price: 300, cheapestPrice: 200 },
-            { id: 4, name: "仲魔D", race: "种族", level: 10, price: 100 },
-            { id: 5, name: "仲魔E", race: "种族", level: 10, price: 500, cheapestPrice: 300 },
+            { id: -1, name: "仲魔A", race: "种族A", level: 10, price: 100 },
+            { id: -2, name: "仲魔B", race: "种族B", level: 10, price: 100 },
+            { id: -3, name: "仲魔C", race: "种族C", level: 15, price: 300, cheapestPrice: 200 },
+            { id: -4, name: "仲魔D", race: "种族D", level: 10, price: 100 },
+            { id: -5, name: "仲魔E", race: "种族E", level: 10, price: 500, cheapestPrice: 300 },
         ],
-        specialFusions: [ { resultId: 5, ingredients: [3, 4] } ],
+        specialFusions: [ { resultId: -5, ingredients: [-3, -4] } ],
         isExample: true
     };
 
-    const getExampleDemonById = id => tempDb.demons.find(d => d.id === id);
-    const originalGetDemonById = window.getDemonById;
-    window.getDemonById = getExampleDemonById;
+    window.isDisplayingExample = true;
 
     const recipes = [
-        { type: 'normal', ingredients: [1, 2], resultId: 3, cost: 200 },
-        { type: 'special', ingredients: [3, 4], resultId: 5, cost: 300 },
+        { type: 'normal', ingredients: [-1, -2], resultId: -3, cost: 200 },
+        { type: 'special', ingredients: [-3, -4], resultId: -5, cost: 300 },
         ...tempDb.demons.map(d => ({ type: 'direct', demonId: d.id, cost: d.price }))
     ];
     renderResults(recipes, document.getElementById('results-container'), new Set());
-    
-    window.getDemonById = originalGetDemonById; // Restore
 }
 
 // ====================================================================================
 // OPTIMAL COST CALCULATION
 // ====================================================================================
 function getCompendiumPrice(demon) {
-    if (calculatorState.discount) {
-        return Math.floor(demon.price * 0.9);
+    const discountRate = calculatorState.discountRate || 0;
+    if (discountRate > 0) {
+        return Math.floor(demon.price * (1 - discountRate));
     }
     return demon.price;
 }
@@ -421,11 +425,13 @@ function getDemonCheapestPrice(demon) { return demon.cheapestPrice ?? getCompend
 function calculateFusionResult(demonA, demonB, specialDemonIds) {
     if (!demonA || !demonB) return null;
     let result = null;
+    
+    const demonList = window.isDisplayingExample ? tempDb.demons : db.demons;
 
     if (demonA.race === demonB.race && demonA.race !== '精灵') {
         const resultRace = getResultRace(demonA.race, demonA.race);
         if (resultRace && ELEMENTAL_NAMES.includes(resultRace)) {
-            result = db.demons.find(d => d.name === resultRace);
+            result = demonList.find(d => d.name === resultRace);
         }
     } else if (demonA.race === '精灵' || demonB.race === '精灵') {
         if (demonA.race === demonB.race) return null;
@@ -434,7 +440,7 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const rankChange = ELEMENTAL_RULES[normalDemon.race] ? ELEMENTAL_RULES[normalDemon.race][elementalDemon.name] : 0;
         
         if (rankChange !== 0) {
-            const targetRaceDemons = db.demons.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
+            const targetRaceDemons = demonList.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
             const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
             if (currentIndex !== -1) {
                 let nextIndex = currentIndex;
@@ -442,12 +448,12 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
                 while (steps > 0) {
                     nextIndex += Math.sign(rankChange);
                     if (nextIndex < 0 || nextIndex >= targetRaceDemons.length) {
-                        nextIndex = -1; // Out of bounds
+                        nextIndex = -1;
                         break;
                     }
                     const candidate = targetRaceDemons[nextIndex];
                     if (!specialDemonIds.has(candidate.id)) {
-                        steps--; // Found a valid step
+                        steps--;
                     }
                 }
                 if (nextIndex !== -1) {
@@ -459,7 +465,7 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const resultRace = getResultRace(demonA.race, demonB.race);
         if (resultRace && resultRace !== 'N/A') {
             const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
-            const possibleResults = db.demons.filter(d => d.race === resultRace && d.level >= targetLevel).sort((a, b) => a.level - b.level);
+            const possibleResults = demonList.filter(d => d.race === resultRace && d.level >= targetLevel).sort((a, b) => a.level - b.level);
             if (possibleResults.length > 0) {
                 result = possibleResults[0];
             }
@@ -488,6 +494,9 @@ function updateCalculatorState() {
     if (calculatorState.slot1 !== null || calculatorState.slot2 !== null || calculatorState.slot3 !== null) {
         isInitialState = false;
     }
+    
+    window.isDisplayingExample = false;
+
     const previousFilter = calculatorState.filter;
 
     calculatorState = {
@@ -495,7 +504,7 @@ function updateCalculatorState() {
         slot2: parseInt(document.getElementById('slot2').value) || null,
         slot3: parseInt(document.getElementById('slot3').value) || null,
         filter: document.getElementById('fusion-filter').value,
-        discount: document.getElementById('discount-toggle').checked
+        discountRate: parseFloat(document.getElementById('discount-select').value) || 0
     };
 
     if (calculatorState.slot1 === null && calculatorState.slot2 === null && calculatorState.slot3 === null && calculatorState.filter !== previousFilter) {
@@ -817,6 +826,7 @@ function renderCalculatorSelects(sortedDemons) {
 }
 
 function getResultRace(raceA, raceB) { 
+    if (window.isDisplayingExample && raceA === '种族A' && raceB === '种族B') return '种族C';
     if (RACE_CHART[raceA] && RACE_CHART[raceA][raceB]) return RACE_CHART[raceA][raceB]; 
     if (RACE_CHART[raceB] && RACE_CHART[raceB][raceA]) return RACE_CHART[raceB][raceA]; 
     return null; 
@@ -844,20 +854,27 @@ function toggleSubList(element, demon, ancestry) {
     if (subListContainer) { 
         subListContainer.remove(); 
         return; 
-    } subListContainer = document.createElement('div'); 
+    } 
+    subListContainer = document.createElement('div'); 
     subListContainer.className = 'sub-list-container'; 
     parentItem.appendChild(subListContainer); 
     const newAncestry = new Set(ancestry).add(demon.id); 
+    
+    const dataSource = window.isDisplayingExample ? tempDb : db;
+    
     let subRecipes = []; 
-    const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId)); 
-    db.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { 
+    const specialDemonIds = new Set(dataSource.specialFusions.map(f => f.resultId)); 
+    
+    dataSource.specialFusions.filter(f => f.resultId === demon.id).forEach(f => { 
         const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0); 
         subRecipes.push({ type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost }); 
     }); 
+    
     if (!specialDemonIds.has(demon.id)) { 
-        for (let i = 0; i < db.demons.length; i++) { 
-            for (let j = i + 1; j < db.demons.length; j++) { 
-                const d1 = db.demons[i]; const d2 = db.demons[j]; 
+        for (let i = 0; i < dataSource.demons.length; i++) { 
+            for (let j = i + 1; j < dataSource.demons.length; j++) { 
+                const d1 = dataSource.demons[i]; 
+                const d2 = dataSource.demons[j]; 
                 const result = calculateFusionResult(d1, d2, specialDemonIds); 
                 if (result && result.id === demon.id) { 
                     const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2); 
@@ -865,11 +882,15 @@ function toggleSubList(element, demon, ancestry) {
                 } 
             } 
         } 
-    } subRecipes.push({ type: 'direct', demonId: demon.id, cost: getCompendiumPrice(getDemonById(demon.id)) }); 
+    } 
+    
+    subRecipes.push({ type: 'direct', demonId: demon.id, cost: getCompendiumPrice(getDemonById(demon.id)) }); 
+    
     const uniqueSubRecipes = Array.from(new Map(subRecipes.map(r => { 
         const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`; 
         return [key, r]; 
     })).values()); 
+    
     renderResults(uniqueSubRecipes, subListContainer, newAncestry); 
 }
 
@@ -888,6 +909,9 @@ function createDirectPurchaseElement(demon, ancestry) {
 }
 
 function getDemonById(id) { 
+    if (window.isDisplayingExample) {
+        return tempDb.demons.find(d => d.id === id);
+    }
     return db.demons.find(d => d.id === id); 
 }
 
