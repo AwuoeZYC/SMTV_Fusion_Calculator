@@ -27,6 +27,8 @@
         .btn-add { background-color: var(--success-color); color: white; width: 100%; }
         .btn-delete { background-color: var(--danger-color); color: white; padding: 5px 10px; font-size: 0.8em; }
         .btn-edit { background-color: var(--edit-color); color: white; padding: 5px 10px; font-size: 0.8em; margin-left: auto; }
+        .btn-unlocked { background-color: var(--success-color); color: white; padding: 5px 10px; font-size: 0.8em; }
+        .btn-locked { background-color: var(--danger-color); color: white; padding: 5px 10px; font-size: 0.8em; }
         .data-list ul { list-style: none; padding: 0; }
         .data-list li { background-color: var(--secondary-color); padding: 10px 15px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; gap: 10px;}
         hr { border: 1px solid var(--secondary-color); margin: 25px 0; }
@@ -184,7 +186,6 @@ window.onload = async () => {
         loadElementalChartFromCSV()
     ]);
     
-    // Initial render logic is now handled by updateCalculatorResults
     if (db.demons.length > 0) {
         dataChanged(); 
     } else {
@@ -385,12 +386,15 @@ function getCompendiumPrice(demon) {
 function calculateAllCheapestCosts() {
     if (!db.demons || db.demons.length === 0) return;
     const costs = {};
-    for (const demon of db.demons) { costs[demon.id] = getCompendiumPrice(demon); }
+    const unlockedDemons = getUnlockedDemons();
+
+    for (const demon of db.demons) {
+        costs[demon.id] = getCompendiumPrice(demon);
+    }
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
 
-    for (let i = 0; i < db.demons.length; i++) {
+    for (let i = 0; i < unlockedDemons.length; i++) { 
         let changed = false;
-        // Special fusions
         for (const fusion of db.specialFusions) {
             const ingredientCost = fusion.ingredients.reduce((sum, ingId) => sum + (costs[ingId] || Infinity), 0);
             if (ingredientCost < (costs[fusion.resultId] || Infinity)) {
@@ -398,11 +402,10 @@ function calculateAllCheapestCosts() {
                 changed = true;
             }
         }
-        // Normal fusions
-        for (let j = 0; j < db.demons.length; j++) {
-            for (let k = j + 1; k < db.demons.length; k++) {
-                const d1 = db.demons[j];
-                const d2 = db.demons[k];
+        for (let j = 0; j < unlockedDemons.length; j++) {
+            for (let k = j + 1; k < unlockedDemons.length; k++) {
+                const d1 = unlockedDemons[j];
+                const d2 = unlockedDemons[k];
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
                 if (result) {
                     const fusionCost = (costs[d1.id] || Infinity) + (costs[d2.id] || Infinity);
@@ -416,9 +419,12 @@ function calculateAllCheapestCosts() {
         if (!changed) break;
     }
     for (const demon of db.demons) { demon.cheapestPrice = costs[demon.id]; }
-    console.log("Optimal costs recalculated.");
+    console.log("Optimal costs recalculated based on unlocked demons.");
 }
-function getDemonCheapestPrice(demon) { return demon.cheapestPrice ?? getCompendiumPrice(demon); }
+
+function getDemonCheapestPrice(demon) { 
+    return demon.cheapestPrice ?? getCompendiumPrice(demon); 
+}
 
 
 // ====================================================================================
@@ -429,7 +435,7 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
     if (!demonA || !demonB) return null;
     let result = null;
     
-    const demonList = window.isDisplayingExample ? tempDb.demons : db.demons;
+    const demonList = window.isDisplayingExample ? tempDb.demons : getUnlockedDemons();
 
     if (demonA.race === demonB.race && demonA.race !== '精灵') {
         const resultRace = getResultRace(demonA.race, demonA.race);
@@ -521,10 +527,12 @@ function updateCalculatorState() {
 function updateCalculatorResults() {
     const { slot1, slot2, slot3, filter } = calculatorState;
     let recipes = [];
+    const unlockedDemons = getUnlockedDemons();
 
     if (slot3) {
         const targetDemon = getDemonById(slot3);
-        if (targetDemon && ACCIDENT_RACES.includes(targetDemon.race)) {
+        const isSpecialFusion = db.specialFusions.some(f => f.resultId === slot3);
+        if (targetDemon && ACCIDENT_RACES.includes(targetDemon.race) && !isSpecialFusion) {
             recipes.push({ type: 'accident', demonId: slot3 });
         }
     }
@@ -534,7 +542,6 @@ function updateCalculatorResults() {
             showExampleData();
             return;
         }
-        
         if (filter === 'special') {
             const allSpecialRecipes = db.specialFusions.map(f => {
                 const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0);
@@ -543,26 +550,22 @@ function updateCalculatorResults() {
             renderResults(allSpecialRecipes, document.getElementById('results-container'), new Set());
             return;
         }
-        
         if (filter === 'direct') {
-            const allDemons = db.demons.map(d => ({ type: 'direct', demonId: d.id, cost: getCompendiumPrice(d) }));
+            const allDemons = unlockedDemons.map(d => ({ type: 'direct', demonId: d.id, cost: getCompendiumPrice(d) }));
             renderResults(allDemons, document.getElementById('results-container'), new Set());
             return;
         }
-
         document.getElementById('results-container').innerHTML = '';
         return;
     }
 
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
-
     if (filter === 'all' || filter === 'special') {
         db.specialFusions.forEach(f => {
             const matchesSlot3 = !slot3 || f.resultId === slot3;
             const matchesSlot1 = !slot1 || f.ingredients.includes(slot1);
             const remainingIngredients = slot1 ? f.ingredients.filter(id => id !== slot1) : f.ingredients;
             const matchesSlot2 = !slot2 || remainingIngredients.includes(slot2);
-
             if (matchesSlot3 && matchesSlot1 && matchesSlot2) {
                 const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0);
                 recipes.push({ type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost });
@@ -571,33 +574,29 @@ function updateCalculatorResults() {
     }
 
     if (filter === 'all' && (!slot3 || !specialDemonIds.has(slot3))) {
-
-        const pool1 = slot1 ? [getDemonById(slot1)] : db.demons;
-        const pool2 = slot2 ? [getDemonById(slot2)] : db.demons;
+        const pool1 = slot1 ? [getDemonById(slot1)] : unlockedDemons;
+        const pool2 = slot2 ? [getDemonById(slot2)] : unlockedDemons;
         const calculatedPairs = new Set();
-
         for (const d1 of pool1) {
             for (const d2 of pool2) {
                 if (!d1 || !d2 || d1.id === d2.id) continue;
-
                 const pairKey = d1.id < d2.id ? `${d1.id}-${d2.id}` : `${d2.id}-${d1.id}`;
                 if (calculatedPairs.has(pairKey)) continue;
                 calculatedPairs.add(pairKey);
-
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
                 if (result && (!slot3 || result.id === slot3)) {
-                     const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2);
-                     recipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost });
+                    const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2);
+                    recipes.push({ type: 'normal', ingredients: [d1.id, d2.id], resultId: result.id, cost: cost });
                 }
             }
         }
     }
 
     if (slot3) {
-         const target = getDemonById(slot3);
-         if (target) {
+        const target = getDemonById(slot3);
+        if (target) {
             recipes.push({ type: 'direct', demonId: slot3, cost: getCompendiumPrice(target) });
-         }
+        }
     }
 
     const uniqueRecipes = Array.from(new Map(recipes.map(r => {
@@ -696,7 +695,7 @@ function addDemon() {
     const price = parseInt(document.getElementById('demon-price').value, 10); 
     if (!name || !race || isNaN(level) || level <= 0 || isNaN(price) || price < 0) return alert('请输入有效的仲魔名称、种族、等级和价格！'); 
     if (db.demons.some(d => d.name === name)) return alert('该仲魔已存在！'); 
-    db.demons.push({ id: db.nextDemonId++, name, race, level, price }); 
+    db.demons.push({ id: db.nextDemonId++, name, race, level, price, unlocked: true }); 
     document.getElementById('demon-name').value = ''; 
     document.getElementById('demon-price').value = ''; 
     document.getElementById('demon-race').value = ''; 
@@ -772,6 +771,14 @@ function cancelEditMode() {
     document.getElementById('cancel-edit-btn').style.display = 'none'; 
 }
 
+function toggleDemonLock(demonId) {
+    const demon = getDemonById(demonId);
+    if (demon) {
+        demon.unlocked = !(demon.unlocked !== false);
+    }
+    dataChanged();
+}
+
 function initializeSpecialFusionUI() { 
     addIngredientSlot(); 
     addIngredientSlot(); 
@@ -813,7 +820,19 @@ function renderAll() {
 }
 
 function renderManagementLists(sortedDemons) { 
-    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; 
+    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => {
+        const isUnlocked = d.unlocked !== false;
+        const lockButtonClass = isUnlocked ? 'btn-unlocked' : 'btn-locked';
+        const lockButtonText = isUnlocked ? '已解锁' : '未解锁';
+        const lockButton = `<button class="${lockButtonClass}" onclick="toggleDemonLock(${d.id})">${lockButtonText}</button>`;
+        return `<li>
+            <span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span>
+            <div style="display:flex; gap: 5px;">
+                ${lockButton} <button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button>
+                <button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button>
+            </div>
+        </li>`;
+    }).join('') + '</ul>';
     const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
     document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; 
     const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); 
@@ -875,6 +894,7 @@ function toggleSubList(element, demon, ancestry) {
     const newAncestry = new Set(ancestry).add(demon.id); 
     
     const dataSource = window.isDisplayingExample ? tempDb : db;
+    const demonList = window.isDisplayingExample ? tempDb.demons : getUnlockedDemons();
     
     let subRecipes = []; 
     const specialDemonIds = new Set(dataSource.specialFusions.map(f => f.resultId)); 
@@ -885,10 +905,10 @@ function toggleSubList(element, demon, ancestry) {
     }); 
     
     if (!specialDemonIds.has(demon.id)) { 
-        for (let i = 0; i < dataSource.demons.length; i++) { 
-            for (let j = i + 1; j < dataSource.demons.length; j++) { 
-                const d1 = dataSource.demons[i]; 
-                const d2 = dataSource.demons[j]; 
+        for (let i = 0; i < demonList.length; i++) { 
+            for (let j = i + 1; j < demonList.length; j++) { 
+                const d1 = demonList[i]; 
+                const d2 = demonList[j]; 
                 const result = calculateFusionResult(d1, d2, specialDemonIds); 
                 if (result && result.id === demon.id) { 
                     const cost = getDemonCheapestPrice(d1) + getDemonCheapestPrice(d2); 
@@ -943,6 +963,10 @@ function getDemonById(id) {
         return tempDb.demons.find(d => d.id === id);
     }
     return db.demons.find(d => d.id === id); 
+}
+
+function getUnlockedDemons() {
+    return db.demons.filter(d => d.unlocked !== false);
 }
 
 function showTab(tabName) { 
