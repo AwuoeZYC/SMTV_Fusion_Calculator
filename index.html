@@ -158,8 +158,8 @@ let ELEMENTAL_RULES = {};
 let ALL_RACES = [];
 let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discountRate: 0 };
 let isInitialState = true; // To control initial display
+let ELEMENTAL_NAMES = [];
 
-const ELEMENTAL_NAMES = ['磐石精灵', '风精灵', '水精灵', '火精灵'];
 const DB_KEY = 'smtvFusionDB';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
 const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/race_chart.csv';
@@ -275,6 +275,7 @@ async function loadElementalChartFromCSV() {
 
         const lines = csvText.trim().split(/\r?\n/);
         const headers = lines[0].split(',').slice(1).map(h => h.trim());
+        ELEMENTAL_NAMES = headers;
         const rules = {};
 
         for (let i = 1; i < lines.length; i++) {
