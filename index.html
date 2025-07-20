@@ -59,6 +59,10 @@
         .calculator-controls { display: flex; justify-content: space-between; align-items: center; gap: 20px; background-color: var(--secondary-color); padding: 15px; border-radius: 5px; margin-bottom: 20px; flex-wrap: wrap; }
         .control-group { display: flex; align-items: center; gap: 10px; }
         .control-group label { margin-bottom: 0; }
+        .result-item.accident { border-left: 4px solid var(--link-color); }
+        .btn-lock-toggle {padding: 5px 10px;font-size: 0.8em;width: 60px; text-align: center; }
+        .unlocked { background-color: var(--success-color); color: white; }
+        .locked { background-color: var(--danger-color); color: white; }
     </style>
 </head>
 <body>
@@ -82,8 +86,12 @@
                 </select>
             </div>
             <div class="control-group">
-                <input type="checkbox" id="discount-toggle" style="width: auto;">
-                <label for="discount-toggle">全书厚待(-10%)</label>
+                <label for="discount-select">全书厚待:</label>
+                <select id="discount-select">
+                    <option value="0">无折扣</option>
+                    <option value="0.1">壹 (10%)</option>
+                    <option value="0.3">贰 (30%)</option>
+                </select>
             </div>
         </div>
 
@@ -155,8 +163,8 @@ let ALL_RACES = [];
 let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discount: false };
 let isInitialState = true; // To control initial display
 
-const ELEMENTAL_NAMES = ['磐石精灵', '风精灵', '水精灵', '火精灵'];
-const DB_KEY = 'smtvFusionDB_v6_1';
+const ACCIDENT_RACES = ['珍兽', '秘神'];
+const DB_KEY = 'smtvFusionDB';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
 const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/race_chart.csv';
 const GITHUB_ELEMENTAL_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/elemental_chart.csv';
@@ -193,8 +201,8 @@ function setupEventListeners() {
     document.getElementById('level-plus-btn').addEventListener('click', () => updateLevel(1));
     document.getElementById('level-clear-btn').addEventListener('click', () => updateLevel(0, true));
     document.getElementById('fusion-filter').addEventListener('change', updateCalculatorState);
-    document.getElementById('discount-toggle').addEventListener('change', (e) => {
-        calculatorState.discount = e.target.checked;
+    document.getElementById('discount-select').addEventListener('change', (e) => {
+        calculatorState.discount = parseFloat(e.target.value);
         dataChanged();
     });
 }
@@ -271,6 +279,9 @@ async function loadElementalChartFromCSV() {
 
         const lines = csvText.trim().split(/\r?\n/);
         const headers = lines[0].split(',').slice(1).map(h => h.trim());
+
+        ELEMENTAL_NAMES = headers;
+        
         const rules = {};
 
         for (let i = 1; i < lines.length; i++) {
@@ -286,6 +297,7 @@ async function loadElementalChartFromCSV() {
             }
         }
         ELEMENTAL_RULES = rules;
+        console.log("Parsed Elemental Rules:", ELEMENTAL_RULES);
     } catch (error) {
         console.error("Failed to load or parse elemental_chart.csv.", error);
         ELEMENTAL_RULES = {};
@@ -369,8 +381,8 @@ function showExampleData() {
 // OPTIMAL COST CALCULATION
 // ====================================================================================
 function getCompendiumPrice(demon) {
-    if (calculatorState.discount) {
-        return Math.floor(demon.price * 0.9);
+    if (calculatorState.discount > 0) {
+        return Math.floor(demon.price * (1 - calculatorState.discount));
     }
     return demon.price;
 }
@@ -411,7 +423,9 @@ function calculateAllCheapestCosts() {
     for (const demon of db.demons) { demon.cheapestPrice = costs[demon.id]; }
     console.log("Optimal costs recalculated.");
 }
-function getDemonCheapestPrice(demon) { return demon.cheapestPrice ?? getCompendiumPrice(demon); }
+function getDemonCheapestPrice(demon) { 
+    return demon.cheapestPrice ?? getCompendiumPrice(demon);
+ }
 
 
 // ====================================================================================
@@ -434,23 +448,11 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const rankChange = ELEMENTAL_RULES[normalDemon.race] ? ELEMENTAL_RULES[normalDemon.race][elementalDemon.name] : 0;
         
         if (rankChange !== 0) {
-            const targetRaceDemons = db.demons.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
+            const targetRaceDemons = db.demons.filter(d => d.race === normalDemon.race && (d.unlocked ?? true)).sort((a,b) => a.level - b.level);
             const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
             if (currentIndex !== -1) {
-                let nextIndex = currentIndex;
-                let steps = Math.abs(rankChange);
-                while (steps > 0) {
-                    nextIndex += Math.sign(rankChange);
-                    if (nextIndex < 0 || nextIndex >= targetRaceDemons.length) {
-                        nextIndex = -1; // Out of bounds
-                        break;
-                    }
-                    const candidate = targetRaceDemons[nextIndex];
-                    if (!specialDemonIds.has(candidate.id)) {
-                        steps--; // Found a valid step
-                    }
-                }
-                if (nextIndex !== -1) {
+                let nextIndex = currentIndex + rankChange;
+                if (nextIndex >= 0 && nextIndex < targetRaceDemons.length) {
                     result = targetRaceDemons[nextIndex];
                 }
             }
@@ -459,14 +461,14 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const resultRace = getResultRace(demonA.race, demonB.race);
         if (resultRace && resultRace !== 'N/A') {
             const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
-            const possibleResults = db.demons.filter(d => d.race === resultRace && d.level >= targetLevel).sort((a, b) => a.level - b.level);
+            const possibleResults = db.demons.filter(d => d.race === resultRace && d.level >= targetLevel && (d.unlocked ?? true)).sort((a, b) => a.level - b.level);
             if (possibleResults.length > 0) {
                 result = possibleResults[0];
             }
         }
     }
     
-    if (result && specialDemonIds.has(result.id) && !(demonA.race === '精灵' || demonB.race === '精灵')) {
+    if (result && specialDemonIds.has(result.id)) {
         return null;
     }
     return result;
@@ -577,7 +579,10 @@ function updateCalculatorResults() {
          const target = getDemonById(slot3);
          if (target) {
             recipes.push({ type: 'direct', demonId: slot3, cost: getCompendiumPrice(target) });
-         }
+            if (ACCIDENT_RACES.includes(target.race)) {
+                recipes.push({ type: 'accident', demonId: slot3, cost: Infinity });
+            }
+        }
     }
 
     const uniqueRecipes = Array.from(new Map(recipes.map(r => {
@@ -631,6 +636,24 @@ function createFusionElement(ingredients, res, ancestry, type) {
     return li;
 }
 
+function createFusionAccidentElement(demon, ancestry) {
+    const li = document.createElement('li');
+    // 使用与特殊合成相同的颜色进行高亮
+    li.className = 'result-item special-fusion'; 
+
+    const path = document.createElement('div');
+    path.className = 'result-path';
+    path.append('通过合体事故获得 ', createDemonSpan(demon, ancestry));
+
+    const cost = document.createElement('div');
+    cost.className = 'result-cost';
+    cost.innerHTML = `<span>—</span><span class="breakdown">(概率性事件)</span>`;
+    
+    path.appendChild(cost);
+    li.appendChild(path);
+    return li;
+}
+
 function renderResults(recipes, container, ancestry) {
     container.innerHTML = "";
 	
@@ -654,6 +677,9 @@ function renderResults(recipes, container, ancestry) {
         } else if (recipe.type === 'direct') {
             const demon = getDemonById(recipe.demonId);
             if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry));
+        } else if (recipe.type === 'accident') {
+            const demon = getDemonById(recipe.demonId);
+            if (demon) resultList.appendChild(createAccidentElement(demon));
         }
     });
     container.appendChild(resultList);
@@ -737,6 +763,14 @@ function saveDemonChanges() {
     dataChanged(); 
 }
 
+function toggleDemonLock(demonId) {
+    const demon = getDemonById(demonId);
+    if (demon) {
+        demon.unlocked = !(demon.unlocked ?? true);
+        dataChanged();
+    }
+}
+
 function cancelEditMode() { 
     editState = { type: 'none', targetId: null }; 
     document.getElementById('demon-name').value = ''; 
@@ -788,20 +822,38 @@ function renderAll() {
     updateCalculatorResults(); 
 }
 
-function renderManagementLists(sortedDemons) { 
-    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => `<li><span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span><div style="display:flex; gap: 5px;"><button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button><button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button></div></li>`).join('') + '</ul>'; 
-    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
-    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; 
-    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); 
-    ingredientSelects.forEach(select => { 
-        const currentValue = select.value; 
-        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue; 
-    }); 
-    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { 
-        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + '); 
-        const res = getDemonById(f.resultId); 
-        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; 
-    }).join('') + '</ul>'; 
+function renderManagementLists(sortedDemons) {
+    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => {
+        const isUnlocked = d.unlocked ?? true;
+        const lockButtonClass = isUnlocked ? 'unlocked' : 'locked';
+        const lockButtonText = isUnlocked ? '已解锁' : '未解锁';
+        
+        return `<li>
+            <span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - 
+                <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / 
+                ${getCompendiumPrice(d).toLocaleString()} M
+            </span>
+            <div style="display:flex; gap: 5px;">
+                <button class="btn-lock-toggle ${lockButtonClass}" onclick="toggleDemonLock(${d.id})">${lockButtonText}</button>
+                <button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button>
+                <button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button>
+            </div>
+        </li>`;
+    }).join('') + '</ul>';
+
+    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join('');
+    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions;
+    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select');
+    ingredientSelects.forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions;
+        select.value = currentValue;
+    });
+    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => {
+        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + ');
+        const res = getDemonById(f.resultId);
+        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : '';
+    }).join('') + '</ul>';
 }
 
 function renderCalculatorSelects(sortedDemons) { 
@@ -884,6 +936,16 @@ function createDirectPurchaseElement(demon, ancestry) {
     path.appendChild(cost); 
     li.appendChild(path); 
     return li; 
+}
+
+function createAccidentElement(demon) {
+    const li = document.createElement('li');
+    li.className = 'result-item accident';
+    const path = document.createElement('div');
+    path.className = 'result-path';
+    path.append('通过合体事故获得 ', createDemonSpan(demon, new Set()));
+    li.appendChild(path);
+    return li;
 }
 
 function getDemonById(id) { 
