@@ -40,6 +40,7 @@
         .result-item.special-fusion { border-left: 4px solid var(--edit-color); }
         .result-item.normal-fusion { border-left: 4px solid var(--success-color); }
         .result-item.direct-purchase { border-left: 4px solid var(--accent-color); }
+        .result-item.accident-fusion { border-left: 4px solid var(--link-color); }
         .result-item .demon-link { color: var(--link-color); cursor: pointer; text-decoration: underline; font-weight: bold; }
         .result-item .demon-link:hover { color: var(--accent-color); }
         .result-item .demon-no-link { color: var(--text-color); cursor: default; font-weight: bold; }
@@ -59,6 +60,7 @@
         .calculator-controls { display: flex; justify-content: space-between; align-items: center; gap: 20px; background-color: var(--secondary-color); padding: 15px; border-radius: 5px; margin-bottom: 20px; flex-wrap: wrap; }
         .control-group { display: flex; align-items: center; gap: 10px; }
         .control-group label { margin-bottom: 0; }
+        .control-group label { white-space: nowrap; }
     </style>
 </head>
 <body>
@@ -162,6 +164,7 @@ let ELEMENTAL_NAMES = [];
 
 window.isDisplayingExample = false;
 
+const ACCIDENT_RACES = ['珍兽', '秘神'];
 const DB_KEY = 'smtvFusionDB';
 const GITHUB_DB_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/smtv_db.json';
 const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/race_chart.csv';
@@ -517,6 +520,14 @@ function updateCalculatorState() {
 
 function updateCalculatorResults() {
     const { slot1, slot2, slot3, filter } = calculatorState;
+    let recipes = [];
+
+    if (slot3) {
+        const targetDemon = getDemonById(slot3);
+        if (targetDemon && ACCIDENT_RACES.includes(targetDemon.race)) {
+            recipes.push({ type: 'accident', demonId: slot3 });
+        }
+    }
 
     if (!slot1 && !slot2 && !slot3) {
         if (isInitialState && filter === 'all') {
@@ -543,7 +554,6 @@ function updateCalculatorResults() {
         return;
     }
 
-    let recipes = [];
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
 
     if (filter === 'all' || filter === 'special') {
@@ -591,6 +601,7 @@ function updateCalculatorResults() {
     }
 
     const uniqueRecipes = Array.from(new Map(recipes.map(r => {
+        if (r.type === 'accident') return [`acc-${r.demonId}`, r];
         const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`;
         return [key, r];
     })).values());
@@ -664,6 +675,9 @@ function renderResults(recipes, container, ancestry) {
         } else if (recipe.type === 'direct') {
             const demon = getDemonById(recipe.demonId);
             if (demon) resultList.appendChild(createDirectPurchaseElement(demon, ancestry));
+        } else if (recipe.type === 'accident') {
+            const demon = getDemonById(recipe.demonId);
+            if (demon) resultList.appendChild(createAccidentElement(demon));
         }
     });
     container.appendChild(resultList);
@@ -906,6 +920,22 @@ function createDirectPurchaseElement(demon, ancestry) {
     path.appendChild(cost); 
     li.appendChild(path); 
     return li; 
+}
+
+function createAccidentElement(demon) {
+    const li = document.createElement('li');
+    li.className = 'result-item accident-fusion';
+    const path = document.createElement('div');
+    path.className = 'result-path';
+    
+    const demonSpan = document.createElement('span');
+    demonSpan.className = 'demon-no-link';
+    demonSpan.textContent = `Lv${demon.level} ${demon.name} (${demon.race})`;
+
+    path.append('通过合体事故获得 ', demonSpan);
+    
+    li.appendChild(path);
+    return li;
 }
 
 function getDemonById(id) { 
