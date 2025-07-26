@@ -163,8 +163,6 @@ let ALL_RACES = [];
 let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discountRate: 0 };
 let isInitialState = true; // To control initial display
 let ELEMENTAL_NAMES = [];
-let isCalculating = false;
-let calculationTimeout = null;
 
 window.isDisplayingExample = false;
 
@@ -313,28 +311,13 @@ function saveData() {
 }
 
 function dataChanged() {
+    if (db.demons.length > 0 && !db.isExample) {
+        calculateAllCheapestCosts();
+    }
     if (!db.isExample) {
         localStorage.setItem(DB_KEY, JSON.stringify(db));
     }
     renderAll();
-    clearTimeout(calculationTimeout);
-    calculationTimeout = setTimeout(() => {
-        triggerCalculation();
-    }, 250);
-}
-
-function triggerCalculation() {
-    if (isCalculating) return;
-
-    isCalculating = true;
-    renderAll();
-    setTimeout(() => {
-        if (db.demons.length > 0 && !db.isExample) {
-            calculateAllCheapestCosts();
-        }
-        isCalculating = false;
-        renderAll();
-    }, 0);
 }
 
 function populateRaceSelect() { 
@@ -410,18 +393,17 @@ function getCompendiumPrice(demon) {
 }
 
 function calculateAllCheapestCosts() {
-    console.log("Starting optimal cost calculation...");
     if (!db.demons || db.demons.length === 0) return;
     const costs = {};
-    const unlockedDemons = getUnlockedDemons();
 
     for (const demon of db.demons) {
         costs[demon.id] = getCompendiumPrice(demon);
     }
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
 
-    for (let i = 0; i < unlockedDemons.length; i++) {
+    for (let i = 0; i < db.demons.length; i++) {
         let changed = false;
+
         for (const fusion of db.specialFusions) {
             const ingredientCost = fusion.ingredients.reduce((sum, ingId) => sum + (costs[ingId] || Infinity), 0);
             if (ingredientCost < (costs[fusion.resultId] || Infinity)) {
@@ -429,11 +411,14 @@ function calculateAllCheapestCosts() {
                 changed = true;
             }
         }
-        for (let j = 0; j < unlockedDemons.length; j++) {
-            for (let k = j + 1; k < unlockedDemons.length; k++) {
-                const d1 = unlockedDemons[j];
-                const d2 = unlockedDemons[k];
+
+        for (let j = 0; j < db.demons.length; j++) {
+            for (let k = j + 1; k < db.demons.length; k++) {
+                const d1 = db.demons[j];
+                const d2 = db.demons[k];
+
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
+                
                 if (result) {
                     const fusionCost = (costs[d1.id] || Infinity) + (costs[d2.id] || Infinity);
                     if (fusionCost < (costs[result.id] || Infinity)) {
@@ -443,10 +428,13 @@ function calculateAllCheapestCosts() {
                 }
             }
         }
+
         if (!changed) break;
     }
-    for (const demon of db.demons) { demon.cheapestPrice = costs[demon.id]; }
-    console.log("Optimal cost calculation finished.");
+
+    for (const demon of db.demons) {
+        demon.cheapestPrice = costs[demon.id];
+    }
 }
 
 function getDemonCheapestPrice(demon) { 
@@ -462,7 +450,7 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
     if (!demonA || !demonB) return null;
     let result = null;
     
-    const demonList = window.isDisplayingExample ? tempDb.demons : getUnlockedDemons();
+    const demonList = window.isDisplayingExample ? tempDb.demons : db.demons;
 
     if (demonA.race === demonB.race && demonA.race !== '精灵') {
         const resultRace = getResultRace(demonA.race, demonA.race);
@@ -478,17 +466,18 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         if (rankChange !== 0) {
             const targetRaceDemons = demonList.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
             const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
+            
             if (currentIndex !== -1) {
                 let nextIndex = currentIndex;
                 let steps = Math.abs(rankChange);
                 while (steps > 0) {
                     nextIndex += Math.sign(rankChange);
                     if (nextIndex < 0 || nextIndex >= targetRaceDemons.length) {
-                        nextIndex = -1;
+                        nextIndex = -1; 
                         break;
                     }
                     const candidate = targetRaceDemons[nextIndex];
-                    if (!specialDemonIds.has(candidate.id)) {
+                    if (candidate.unlocked !== false) {
                         steps--;
                     }
                 }
@@ -501,16 +490,16 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const resultRace = getResultRace(demonA.race, demonB.race);
         if (resultRace && resultRace !== 'N/A') {
             const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
-            const possibleResults = demonList.filter(d => d.race === resultRace && d.level >= targetLevel).sort((a, b) => a.level - b.level);
-            if (possibleResults.length > 0) {
-                result = possibleResults[0];
-            }
+            result = demonList
+                .filter(d => d.race === resultRace && d.level >= targetLevel && d.unlocked !== false)
+                .sort((a, b) => a.level - b.level)[0] || null;
         }
     }
     
     if (result && specialDemonIds.has(result.id) && !(demonA.race === '精灵' || demonB.race === '精灵')) {
         return null;
     }
+
     return result;
 }
 
