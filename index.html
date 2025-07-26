@@ -211,7 +211,6 @@ window.onload = async () => {
         renderAll();
     }
     updateCalculatorResults();
-    window.isDisplayingExample = false;
     showTab('calculator');
 };
 
@@ -224,9 +223,12 @@ function setupEventListeners() {
     document.getElementById('fusion-filter').addEventListener('change', updateCalculatorState);
     document.getElementById('discount-select').addEventListener('change', (e) => {
         calculatorState.discountRate = parseFloat(e.target.value) || 0;
-        dataChanged();
-        updateCalculatorResults();
-        window.isDisplayingExample = false;
+        if (window.isDisplayingExample) {
+            showExampleData();
+        } else {
+            dataChanged();
+            updateCalculatorResults();
+        }
     });
 }
 
@@ -374,9 +376,9 @@ function showExampleData() {
         demons: [
             { id: -1, name: "仲魔A", race: "种族A", level: 10, price: 100 },
             { id: -2, name: "仲魔B", race: "种族B", level: 10, price: 100 },
-            { id: -3, name: "仲魔C", race: "种族C", level: 15, price: 300, cheapestPrice: 200 },
+            { id: -3, name: "仲魔C", race: "种族C", level: 15, price: 300 },
             { id: -4, name: "仲魔D", race: "种族D", level: 10, price: 100 },
-            { id: -5, name: "仲魔E", race: "种族E", level: 10, price: 500, cheapestPrice: 300 },
+            { id: -5, name: "仲魔E", race: "种族E", level: 10, price: 500 },
         ],
         specialFusions: [ { resultId: -5, ingredients: [-3, -4] } ],
         isExample: true
@@ -384,12 +386,18 @@ function showExampleData() {
 
     window.isDisplayingExample = true;
 
+    tempDb.demons.forEach(d => { d.cheapestPrice = getCompendiumPrice(d); });
+    const normalFusionCost = getDemonCheapestPrice(tempDb.demons[0]) + getDemonCheapestPrice(tempDb.demons[1]);
+    const specialFusionCost = getDemonCheapestPrice(tempDb.demons[2]) + getDemonCheapestPrice(tempDb.demons[3]);
+
     const recipes = [
-        { type: 'normal', ingredients: [-1, -2], resultId: -3, cost: 200 },
-        { type: 'special', ingredients: [-3, -4], resultId: -5, cost: 300 },
-        ...tempDb.demons.map(d => ({ type: 'direct', demonId: d.id, cost: d.price }))
+        { type: 'normal', ingredients: [-1, -2], resultId: -3, cost: normalFusionCost },
+        { type: 'special', ingredients: [-3, -4], resultId: -5, cost: specialFusionCost },
+        ...tempDb.demons.map(d => ({ type: 'direct', demonId: d.id, cost: getCompendiumPrice(d) }))
     ];
-    renderResults(recipes, document.getElementById('results-container'), new Set());
+    const container = document.getElementById('results-container');
+    container.innerHTML = '';
+    renderResults(recipes, container, new Set());
 }
 
 // ====================================================================================
@@ -1016,6 +1024,9 @@ function showTab(tabName) {
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active')); 
     document.getElementById(tabName).classList.add('active'); 
     document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active'); 
+    if (tabName !== 'calculator') {
+        window.isDisplayingExample = false;
+    }
 }
 
 </script>
