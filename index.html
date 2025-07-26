@@ -208,10 +208,10 @@ window.onload = async () => {
     if (db.demons.length > 0) {
         dataChanged(); 
     } else {
-        renderAll(); // Render empty state
-        updateCalculatorResults(); // This will trigger the example view
+        renderAll();
     }
     updateCalculatorResults();
+    window.isDisplayingExample = false;
     showTab('calculator');
 };
 
@@ -226,6 +226,7 @@ function setupEventListeners() {
         calculatorState.discountRate = parseFloat(e.target.value) || 0;
         dataChanged();
         updateCalculatorResults();
+        window.isDisplayingExample = false;
     });
 }
 
@@ -516,24 +517,20 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
 
 function resetCalculator() {
     ['slot1', 'slot2', 'slot3'].forEach(id => document.getElementById(id).value = "");
-    
+
     isInitialState = true;
     window.isDisplayingExample = false;
-    
+
     calculatorState.slot1 = null;
     calculatorState.slot2 = null;
     calculatorState.slot3 = null;
+
     updateCalculatorResults();
 }
 
 function updateCalculatorState() {
-    if (calculatorState.slot1 !== null || calculatorState.slot2 !== null || calculatorState.slot3 !== null) {
-        isInitialState = false;
-    }
-    
+    isInitialState = false;
     window.isDisplayingExample = false;
-
-    const previousFilter = calculatorState.filter;
 
     calculatorState = {
         slot1: parseInt(document.getElementById('slot1').value) || null,
@@ -543,49 +540,19 @@ function updateCalculatorState() {
         discountRate: parseFloat(document.getElementById('discount-select').value) || 0
     };
 
-    if (calculatorState.slot1 === null && calculatorState.slot2 === null && calculatorState.slot3 === null && calculatorState.filter !== previousFilter) {
-    } else {
-        isInitialState = false;
-    }
     updateCalculatorResults();
 }
 
-function updateCalculatorResults() {
+function getCalculatorRecipes() {
     const { slot1, slot2, slot3, filter } = calculatorState;
-    let recipes = [];
     const unlockedDemons = getUnlockedDemons();
-
-    if (slot3) {
-        const targetDemon = getDemonById(slot3);
-        const isSpecialFusion = db.specialFusions.some(f => f.resultId === slot3);
-        if (targetDemon && ACCIDENT_RACES.includes(targetDemon.race) && !isSpecialFusion) {
-            recipes.push({ type: 'accident', demonId: slot3 });
-        }
-    }
-
-    if (!slot1 && !slot2 && !slot3) {
-        if (isInitialState && filter === 'all') {
-            showExampleData();
-            return;
-        }
-        if (filter === 'special') {
-            const allSpecialRecipes = db.specialFusions.map(f => {
-                const cost = f.ingredients.reduce((sum, id) => sum + getDemonCheapestPrice(getDemonById(id)), 0);
-                return { type: 'special', ingredients: f.ingredients, resultId: f.resultId, cost: cost };
-            });
-            renderResults(allSpecialRecipes, document.getElementById('results-container'), new Set());
-            return;
-        }
-        if (filter === 'direct') {
-            const allDemons = unlockedDemons.map(d => ({ type: 'direct', demonId: d.id, cost: getCompendiumPrice(d) }));
-            renderResults(allDemons, document.getElementById('results-container'), new Set());
-            return;
-        }
-        document.getElementById('results-container').innerHTML = '';
-        return;
-    }
-
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
+    let recipes = [];
+
+    if (!slot1 && !slot2 && !slot3 && filter === 'all') {
+        return [];
+    }
+    
     if (filter === 'all' || filter === 'special') {
         db.specialFusions.forEach(f => {
             const matchesSlot3 = !slot3 || f.resultId === slot3;
@@ -623,15 +590,33 @@ function updateCalculatorResults() {
         if (target) {
             recipes.push({ type: 'direct', demonId: slot3, cost: getCompendiumPrice(target) });
         }
+        if (target && ACCIDENT_RACES.includes(target.race) && !specialDemonIds.has(slot3)) {
+            recipes.push({ type: 'accident', demonId: slot3 });
+        }
     }
+    
+    if(filter === 'special') recipes = recipes.filter(r => r.type === 'special');
+    if(filter === 'direct') recipes = recipes.filter(r => r.type === 'direct');
 
-    const uniqueRecipes = Array.from(new Map(recipes.map(r => {
+    return Array.from(new Map(recipes.map(r => {
         if (r.type === 'accident') return [`acc-${r.demonId}`, r];
         const key = r.type === 'direct' ? `d-${r.demonId}` : `${(r.ingredients || []).sort().join('-')}-${r.resultId}`;
         return [key, r];
     })).values());
+}
 
-    renderResults(uniqueRecipes, document.getElementById('results-container'), new Set());
+function updateCalculatorResults() {
+    const container = document.getElementById('results-container');
+    container.innerHTML = ''; 
+
+    if (isInitialState) {
+        showExampleData();
+        return;
+    }
+    
+    const recipes = getCalculatorRecipes();
+    
+    renderResults(recipes, container, new Set());
 }
 
 function createFusionElement(ingredients, res, ancestry, type) {
