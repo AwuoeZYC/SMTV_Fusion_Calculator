@@ -163,6 +163,8 @@ let ALL_RACES = [];
 let calculatorState = { slot1: null, slot2: null, slot3: null, filter: 'all', discountRate: 0 };
 let isInitialState = true; // To control initial display
 let ELEMENTAL_NAMES = [];
+let isCalculating = false;
+let calculationTimeout = null;
 
 window.isDisplayingExample = false;
 
@@ -311,13 +313,37 @@ function saveData() {
 }
 
 function dataChanged() {
-    if (db.demons.length > 0 && !db.isExample) {
-        calculateAllCheapestCosts();
+    if (!db.isExample) {
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
     }
-    saveData();
+    renderAll();
+    clearTimeout(calculationTimeout);
+    calculationTimeout = setTimeout(() => {
+        triggerCalculation();
+    }, 250);
 }
 
-function populateRaceSelect() { const select = document.getElementById('demon-race'); const sortedRaces = [...ALL_RACES].sort((a, b) => a.localeCompare(b, 'zh-CN')); let options = '<option value="">--选择种族--</option>'; options += sortedRaces.map(r => `<option value="${r}">${r}</option>`).join(''); select.innerHTML = options; }
+function triggerCalculation() {
+    if (isCalculating) return;
+
+    isCalculating = true;
+    renderAll();
+    setTimeout(() => {
+        if (db.demons.length > 0 && !db.isExample) {
+            calculateAllCheapestCosts();
+        }
+        isCalculating = false;
+        renderAll();
+    }, 0);
+}
+
+function populateRaceSelect() { 
+    const select = document.getElementById('demon-race'); 
+    const sortedRaces = [...ALL_RACES].sort((a, b) => a.localeCompare(b, 'zh-CN')); 
+    let options = '<option value="">--选择种族--</option>'; 
+    options += sortedRaces.map(r => `<option value="${r}">${r}</option>`).join(''); 
+    select.innerHTML = options; 
+}
 
 async function importDataFromFile(event) {
     const file = event.target.files[0];
@@ -384,6 +410,7 @@ function getCompendiumPrice(demon) {
 }
 
 function calculateAllCheapestCosts() {
+    console.log("Starting optimal cost calculation...");
     if (!db.demons || db.demons.length === 0) return;
     const costs = {};
     const unlockedDemons = getUnlockedDemons();
@@ -393,7 +420,7 @@ function calculateAllCheapestCosts() {
     }
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
 
-    for (let i = 0; i < unlockedDemons.length; i++) { 
+    for (let i = 0; i < unlockedDemons.length; i++) {
         let changed = false;
         for (const fusion of db.specialFusions) {
             const ingredientCost = fusion.ingredients.reduce((sum, ingId) => sum + (costs[ingId] || Infinity), 0);
@@ -419,7 +446,7 @@ function calculateAllCheapestCosts() {
         if (!changed) break;
     }
     for (const demon of db.demons) { demon.cheapestPrice = costs[demon.id]; }
-    console.log("Optimal costs recalculated based on unlocked demons.");
+    console.log("Optimal cost calculation finished.");
 }
 
 function getDemonCheapestPrice(demon) { 
@@ -819,32 +846,44 @@ function renderAll() {
     updateCalculatorResults(); 
 }
 
-function renderManagementLists(sortedDemons) { 
-    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => {
+function renderManagementLists(sortedDemons) {
+    const demonListContainer = document.getElementById('demon-list');
+    demonListContainer.innerHTML = '<ul>' + sortedDemons.map(d => {
         const isUnlocked = d.unlocked !== false;
         const lockButtonClass = isUnlocked ? 'btn-unlocked' : 'btn-locked';
         const lockButtonText = isUnlocked ? '已解锁' : '未解锁';
-        const lockButton = `<button class="${lockButtonClass}" onclick="toggleDemonLock(${d.id})">${lockButtonText}</button>`;
+        const disabledAttr = isCalculating ? 'disabled' : '';
+        const lockButton = `<button class="${lockButtonClass}" onclick="toggleDemonLock(${d.id})" ${disabledAttr}>${lockButtonText}</button>`;
         return `<li>
             <span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span>
             <div style="display:flex; gap: 5px;">
-                ${lockButton} <button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button>
-                <button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button>
+                ${lockButton}
+                <button class="btn-edit" onclick="startEditDemon(${d.id})" ${disabledAttr}>修改</button>
+                <button class="btn-delete" onclick="deleteDemon(${d.id})" ${disabledAttr}>删除</button>
             </div>
         </li>`;
     }).join('') + '</ul>';
-    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
-    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; 
-    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); 
-    ingredientSelects.forEach(select => { 
-        const currentValue = select.value; 
-        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue; 
-    }); 
-    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { 
-        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + '); 
-        const res = getDemonById(f.resultId); 
-        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; 
-    }).join('') + '</ul>'; 
+
+    if (isCalculating) {
+        const statusP = document.createElement('p');
+        statusP.textContent = '正在重新计算最优价格...';
+        statusP.style.textAlign = 'center';
+        statusP.style.color = 'var(--warn-color)';
+        demonListContainer.prepend(statusP);
+    }
+
+    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join('');
+    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions;
+    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select');
+    ingredientSelects.forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue;
+    });
+    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => {
+        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + ');
+        const res = getDemonById(f.resultId);
+        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})" ${isCalculating ? 'disabled' : ''}>删除</button></li>` : '';
+    }).join('') + '</ul>';
 }
 
 function renderCalculatorSelects(sortedDemons) { 
