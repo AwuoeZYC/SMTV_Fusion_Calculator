@@ -177,19 +177,19 @@ const GITHUB_ELEMENTAL_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fu
 // DEBUG
 // ====================================================================================
 
-function inspectState(stepName) {
-    if (!db || !db.demons) {
-        console.error(`--- STATE at [${stepName}] --- DB not initialized!`);
-        return;
-    }
-    const count = db.demons.length;
-    const unlockedCount = db.demons.filter(d => d.unlocked !== false).length;
-    const slime = db.demons.find(d => d.id === 1);
-    console.log(`--- STATE at [${stepName}] --- Total Demons: ${count}, Unlocked: ${unlockedCount}, 软泥怪 (ID 1) found: ${!!slime}`);
-    if (count > 0 && !slime) {
-        console.error(`CRITICAL: 软泥怪 (ID 1) is MISSING at step [${stepName}]! The bug likely happened in the previous step.`);
-    }
-}
+// function inspectState(stepName) {
+//     if (!db || !db.demons) {
+//         console.error(`--- STATE at [${stepName}] --- DB not initialized!`);
+//         return;
+//     }
+//     const count = db.demons.length;
+//     const unlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+//     const slime = db.demons.find(d => d.id === 1);
+//     console.log(`--- STATE at [${stepName}] --- Total Demons: ${count}, Unlocked: ${unlockedCount}, 软泥怪 (ID 1) found: ${!!slime}`);
+//     if (count > 0 && !slime) {
+//         console.error(`CRITICAL: 软泥怪 (ID 1) is MISSING at step [${stepName}]! The bug likely happened in the previous step.`);
+//     }
+// }
 
 // ====================================================================================
 // INITIALIZATION
@@ -324,7 +324,7 @@ async function loadElementalChartFromCSV() {
 }
 
 function dataChanged() {
-    inspectState("dataChanged - Start");
+    // inspectState("dataChanged - Start");
 
     if (db.demons.length > 0 && !db.isExample) {
         calculateAllCheapestCosts();
@@ -403,12 +403,12 @@ function getCompendiumPrice(demon) {
 }
 
 function calculateAllCheapestCosts() {
-    inspectState("calculateAllCheapestCosts - Start");
+    // inspectState("calculateAllCheapestCosts - Start");
 
     if (!db.demons || db.demons.length === 0) return;
 
     const unlockedDemons = getUnlockedDemons();
-    console.log(`CALCULATION STEP: The function sees ${unlockedDemons.length} unlocked demons to work with.`);
+    // console.log(`CALCULATION STEP: The function sees ${unlockedDemons.length} unlocked demons to work with.`);
 
     const costs = {};
     for (const demon of db.demons) {
@@ -446,7 +446,7 @@ function calculateAllCheapestCosts() {
         demon.cheapestPrice = costs[demon.id];
     }
     
-    inspectState("calculateAllCheapestCosts - End");
+    // inspectState("calculateAllCheapestCosts - End");
 }
 
 function getDemonCheapestPrice(demon) { 
@@ -732,11 +732,11 @@ function deleteDemon(demonId) {
     if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return;
 
     const demonToDelete = getDemonById(demonId);
-    console.log(`--- ACTION: Deleting "${demonToDelete?.name}" (ID: ${demonId}) ---`);
+    // console.log(`--- ACTION: Deleting "${demonToDelete?.name}" (ID: ${demonId}) ---`);
 
     const initialUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
     const initialTotalCount = db.demons.length;
-    console.log(`STEP 1: Before deletion, there were ${initialUnlockedCount} unlocked demons out of ${initialTotalCount} total.`);
+    // console.log(`STEP 1: Before deletion, there were ${initialUnlockedCount} unlocked demons out of ${initialTotalCount} total.`);
     
     db.demons = db.demons.filter(d => d.id !== demonId);
     db.specialFusions = db.specialFusions.filter(f => !f.ingredients.includes(demonId) && f.resultId !== demonId);
@@ -744,7 +744,7 @@ function deleteDemon(demonId) {
 
     const finalUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
     const finalTotalCount = db.demons.length;
-    console.log(`STEP 2: After deleting ONE demon, there are now ${finalUnlockedCount} unlocked demons out of ${finalTotalCount} total.`);
+    // console.log(`STEP 2: After deleting ONE demon, there are now ${finalUnlockedCount} unlocked demons out of ${finalTotalCount} total.`);
     
     dataChanged();
 }
@@ -811,26 +811,26 @@ function cancelEditMode() {
 }
 
 function toggleDemonLock(demonId) {
-    inspectState("toggleDemonLock - Start");
+    // inspectState("toggleDemonLock - Start");
     const demon = getDemonById(demonId);
     if (demon) {
-        console.log(`--- ACTION: Locking/Unlocking "${demon.name}" (ID: ${demonId}) ---`);
+        // console.log(`--- ACTION: Locking/Unlocking "${demon.name}" (ID: ${demonId}) ---`);
         
         const initialUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
-        console.log(`STEP 1: Before the change, there were ${initialUnlockedCount} unlocked demons.`);
+        // console.log(`STEP 1: Before the change, there were ${initialUnlockedCount} unlocked demons.`);
 
         demon.unlocked = !(demon.unlocked !== false);
         
         const finalUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
-        console.log(`STEP 2: After changing ONE demon, there are now ${finalUnlockedCount} unlocked demons.`);
+        // console.log(`STEP 2: After changing ONE demon, there are now ${finalUnlockedCount} unlocked demons.`);
         
         if (initialUnlockedCount > 10 && finalUnlockedCount < 10) {
-            console.error("CRITICAL BUG DETECTED: The number of unlocked demons dropped unexpectedly!");
-            console.log("Current state of the entire db.demons array:", JSON.parse(JSON.stringify(db.demons)));
+            // console.error("CRITICAL BUG DETECTED: The number of unlocked demons dropped unexpectedly!");
+            // console.log("Current state of the entire db.demons array:", JSON.parse(JSON.stringify(db.demons)));
         }
     }
     dataChanged();
-    inspectState("toggleDemonLock - End");
+    // inspectState("toggleDemonLock - End");
 }
 
 function initializeSpecialFusionUI() { 
@@ -864,18 +864,18 @@ function removeIngredientSlot() {
 }
 
 function renderAll() { 
-    inspectState("renderAll - Start");
+    // inspectState("renderAll - Start");
     if (db.isExample) return; 
     const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; 
         return a.name.localeCompare(b.name, 'zh-CN'); 
     }); 
     renderManagementLists(sortedDemons); 
     renderCalculatorSelects(sortedDemons); 
-    inspectState("renderAll - End");
+    // inspectState("renderAll - End");
 }
 
 function renderManagementLists(sortedDemons) { 
-    inspectState("renderManagementLists - Start");
+    // inspectState("renderManagementLists - Start");
     document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => {
         const isUnlocked = d.unlocked !== false;
         const lockButtonClass = isUnlocked ? 'btn-unlocked' : 'btn-locked';
@@ -901,7 +901,7 @@ function renderManagementLists(sortedDemons) {
         const res = getDemonById(f.resultId); 
         return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; 
     }).join('') + '</ul>'; 
-    inspectState("renderManagementLists - End");
+    // inspectState("renderManagementLists - End");
 }
 
 function renderCalculatorSelects(sortedDemons) { 
