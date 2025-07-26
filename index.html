@@ -91,6 +91,7 @@
                     <option value="0">无折扣</option>
                     <option value="0.1">壹 (-10%)</option>
                     <option value="0.3">贰 (-30%)</option>
+                    <option value="0.5">叁 (-50%)</option>
                 </select>
             </div>
         </div>
@@ -173,6 +174,24 @@ const GITHUB_CHART_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion
 const GITHUB_ELEMENTAL_URL = 'https://raw.githubusercontent.com/AwuoeZYC/SMTV_Fusion_Calculator/main/elemental_chart.csv';
 
 // ====================================================================================
+// DEBUG
+// ====================================================================================
+
+function inspectState(stepName) {
+    if (!db || !db.demons) {
+        console.error(`--- STATE at [${stepName}] --- DB not initialized!`);
+        return;
+    }
+    const count = db.demons.length;
+    const unlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+    const slime = db.demons.find(d => d.id === 1);
+    console.log(`--- STATE at [${stepName}] --- Total Demons: ${count}, Unlocked: ${unlockedCount}, 软泥怪 (ID 1) found: ${!!slime}`);
+    if (count > 0 && !slime) {
+        console.error(`CRITICAL: 软泥怪 (ID 1) is MISSING at step [${stepName}]! The bug likely happened in the previous step.`);
+    }
+}
+
+// ====================================================================================
 // INITIALIZATION
 // ====================================================================================
 
@@ -192,7 +211,7 @@ window.onload = async () => {
         renderAll(); // Render empty state
         updateCalculatorResults(); // This will trigger the example view
     }
-    
+    updateCalculatorResults();
     showTab('calculator');
 };
 
@@ -206,6 +225,7 @@ function setupEventListeners() {
     document.getElementById('discount-select').addEventListener('change', (e) => {
         calculatorState.discountRate = parseFloat(e.target.value) || 0;
         dataChanged();
+        updateCalculatorResults();
     });
 }
 
@@ -303,30 +323,20 @@ async function loadElementalChartFromCSV() {
     }
 }
 
-function saveData() {
-    if (!db.isExample) {
-      localStorage.setItem(DB_KEY, JSON.stringify(db));
-    }
-    renderAll();
-}
-
 function dataChanged() {
+    inspectState("dataChanged - Start");
+
     if (db.demons.length > 0 && !db.isExample) {
         calculateAllCheapestCosts();
     }
+    
     if (!db.isExample) {
         localStorage.setItem(DB_KEY, JSON.stringify(db));
     }
     renderAll();
 }
 
-function populateRaceSelect() { 
-    const select = document.getElementById('demon-race'); 
-    const sortedRaces = [...ALL_RACES].sort((a, b) => a.localeCompare(b, 'zh-CN')); 
-    let options = '<option value="">--选择种族--</option>'; 
-    options += sortedRaces.map(r => `<option value="${r}">${r}</option>`).join(''); 
-    select.innerHTML = options; 
-}
+function populateRaceSelect() { const select = document.getElementById('demon-race'); const sortedRaces = [...ALL_RACES].sort((a, b) => a.localeCompare(b, 'zh-CN')); let options = '<option value="">--选择种族--</option>'; options += sortedRaces.map(r => `<option value="${r}">${r}</option>`).join(''); select.innerHTML = options; }
 
 async function importDataFromFile(event) {
     const file = event.target.files[0];
@@ -393,17 +403,21 @@ function getCompendiumPrice(demon) {
 }
 
 function calculateAllCheapestCosts() {
-    if (!db.demons || db.demons.length === 0) return;
-    const costs = {};
+    inspectState("calculateAllCheapestCosts - Start");
 
+    if (!db.demons || db.demons.length === 0) return;
+
+    const unlockedDemons = getUnlockedDemons();
+    console.log(`CALCULATION STEP: The function sees ${unlockedDemons.length} unlocked demons to work with.`);
+
+    const costs = {};
     for (const demon of db.demons) {
         costs[demon.id] = getCompendiumPrice(demon);
     }
     const specialDemonIds = new Set(db.specialFusions.map(f => f.resultId));
 
-    for (let i = 0; i < db.demons.length; i++) {
+    for (let i = 0; i < unlockedDemons.length; i++) {
         let changed = false;
-
         for (const fusion of db.specialFusions) {
             const ingredientCost = fusion.ingredients.reduce((sum, ingId) => sum + (costs[ingId] || Infinity), 0);
             if (ingredientCost < (costs[fusion.resultId] || Infinity)) {
@@ -411,14 +425,11 @@ function calculateAllCheapestCosts() {
                 changed = true;
             }
         }
-
-        for (let j = 0; j < db.demons.length; j++) {
-            for (let k = j + 1; k < db.demons.length; k++) {
-                const d1 = db.demons[j];
-                const d2 = db.demons[k];
-
+        for (let j = 0; j < unlockedDemons.length; j++) {
+            for (let k = j + 1; k < unlockedDemons.length; k++) {
+                const d1 = unlockedDemons[j];
+                const d2 = unlockedDemons[k];
                 const result = calculateFusionResult(d1, d2, specialDemonIds);
-                
                 if (result) {
                     const fusionCost = (costs[d1.id] || Infinity) + (costs[d2.id] || Infinity);
                     if (fusionCost < (costs[result.id] || Infinity)) {
@@ -428,13 +439,14 @@ function calculateAllCheapestCosts() {
                 }
             }
         }
-
         if (!changed) break;
     }
-
+    
     for (const demon of db.demons) {
         demon.cheapestPrice = costs[demon.id];
     }
+    
+    inspectState("calculateAllCheapestCosts - End");
 }
 
 function getDemonCheapestPrice(demon) { 
@@ -450,7 +462,7 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
     if (!demonA || !demonB) return null;
     let result = null;
     
-    const demonList = window.isDisplayingExample ? tempDb.demons : db.demons;
+    const demonList = window.isDisplayingExample ? tempDb.demons : getUnlockedDemons();
 
     if (demonA.race === demonB.race && demonA.race !== '精灵') {
         const resultRace = getResultRace(demonA.race, demonA.race);
@@ -465,19 +477,18 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         
         if (rankChange !== 0) {
             const targetRaceDemons = demonList.filter(d => d.race === normalDemon.race).sort((a,b) => a.level - b.level);
-            const currentIndex = targetRaceDemons.findIndex(d => d.id === normalDemon.id);
-            
+            const currentIndex = targetRaceDemons.findIndex(d => parseInt(d.id) === parseInt(normalDemon.id));
             if (currentIndex !== -1) {
                 let nextIndex = currentIndex;
                 let steps = Math.abs(rankChange);
                 while (steps > 0) {
                     nextIndex += Math.sign(rankChange);
                     if (nextIndex < 0 || nextIndex >= targetRaceDemons.length) {
-                        nextIndex = -1; 
+                        nextIndex = -1;
                         break;
                     }
                     const candidate = targetRaceDemons[nextIndex];
-                    if (candidate.unlocked !== false) {
+                    if (!specialDemonIds.has(candidate.id)) {
                         steps--;
                     }
                 }
@@ -490,16 +501,16 @@ function calculateFusionResult(demonA, demonB, specialDemonIds) {
         const resultRace = getResultRace(demonA.race, demonB.race);
         if (resultRace && resultRace !== 'N/A') {
             const targetLevel = Math.floor((demonA.level + demonB.level) / 2) + 1;
-            result = demonList
-                .filter(d => d.race === resultRace && d.level >= targetLevel && d.unlocked !== false)
-                .sort((a, b) => a.level - b.level)[0] || null;
+            const possibleResults = demonList.filter(d => d.race === resultRace && d.level >= targetLevel).sort((a, b) => a.level - b.level);
+            if (possibleResults.length > 0) {
+                result = possibleResults[0];
+            }
         }
     }
     
     if (result && specialDemonIds.has(result.id) && !(demonA.race === '精灵' || demonB.race === '精灵')) {
         return null;
     }
-
     return result;
 }
 
@@ -536,7 +547,6 @@ function updateCalculatorState() {
     } else {
         isInitialState = false;
     }
-
     updateCalculatorResults();
 }
 
@@ -718,12 +728,25 @@ function addDemon() {
     dataChanged(); 
 }
 
-function deleteDemon(demonId) { 
-    if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return; 
-    db.demons = db.demons.filter(d => d.id !== demonId); 
-    db.specialFusions = db.specialFusions.filter(f => !f.ingredients.includes(demonId) && f.resultId !== demonId); 
-    if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode(); 
-    dataChanged(); 
+function deleteDemon(demonId) {
+    if (!confirm('确定要删除这个仲魔吗？所有与它相关的特殊合成也会被删除。')) return;
+
+    const demonToDelete = getDemonById(demonId);
+    console.log(`--- ACTION: Deleting "${demonToDelete?.name}" (ID: ${demonId}) ---`);
+
+    const initialUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+    const initialTotalCount = db.demons.length;
+    console.log(`STEP 1: Before deletion, there were ${initialUnlockedCount} unlocked demons out of ${initialTotalCount} total.`);
+    
+    db.demons = db.demons.filter(d => d.id !== demonId);
+    db.specialFusions = db.specialFusions.filter(f => !f.ingredients.includes(demonId) && f.resultId !== demonId);
+    if(editState.type === 'demon' && editState.targetId === demonId) cancelEditMode();
+
+    const finalUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+    const finalTotalCount = db.demons.length;
+    console.log(`STEP 2: After deleting ONE demon, there are now ${finalUnlockedCount} unlocked demons out of ${finalTotalCount} total.`);
+    
+    dataChanged();
 }
 
 function addSpecialFusion() { 
@@ -788,11 +811,26 @@ function cancelEditMode() {
 }
 
 function toggleDemonLock(demonId) {
+    inspectState("toggleDemonLock - Start");
     const demon = getDemonById(demonId);
     if (demon) {
+        console.log(`--- ACTION: Locking/Unlocking "${demon.name}" (ID: ${demonId}) ---`);
+        
+        const initialUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+        console.log(`STEP 1: Before the change, there were ${initialUnlockedCount} unlocked demons.`);
+
         demon.unlocked = !(demon.unlocked !== false);
+        
+        const finalUnlockedCount = db.demons.filter(d => d.unlocked !== false).length;
+        console.log(`STEP 2: After changing ONE demon, there are now ${finalUnlockedCount} unlocked demons.`);
+        
+        if (initialUnlockedCount > 10 && finalUnlockedCount < 10) {
+            console.error("CRITICAL BUG DETECTED: The number of unlocked demons dropped unexpectedly!");
+            console.log("Current state of the entire db.demons array:", JSON.parse(JSON.stringify(db.demons)));
+        }
     }
     dataChanged();
+    inspectState("toggleDemonLock - End");
 }
 
 function initializeSpecialFusionUI() { 
@@ -826,53 +864,44 @@ function removeIngredientSlot() {
 }
 
 function renderAll() { 
+    inspectState("renderAll - Start");
     if (db.isExample) return; 
     const sortedDemons = [...db.demons].sort((a, b) => { if (a.level !== b.level) return a.level - b.level; 
         return a.name.localeCompare(b.name, 'zh-CN'); 
     }); 
     renderManagementLists(sortedDemons); 
     renderCalculatorSelects(sortedDemons); 
-    updateCalculatorResults(); 
+    inspectState("renderAll - End");
 }
 
-function renderManagementLists(sortedDemons) {
-    const demonListContainer = document.getElementById('demon-list');
-    demonListContainer.innerHTML = '<ul>' + sortedDemons.map(d => {
+function renderManagementLists(sortedDemons) { 
+    inspectState("renderManagementLists - Start");
+    document.getElementById('demon-list').innerHTML = '<ul>' + sortedDemons.map(d => {
         const isUnlocked = d.unlocked !== false;
         const lockButtonClass = isUnlocked ? 'btn-unlocked' : 'btn-locked';
         const lockButtonText = isUnlocked ? '已解锁' : '未解锁';
-        const disabledAttr = isCalculating ? 'disabled' : '';
-        const lockButton = `<button class="${lockButtonClass}" onclick="toggleDemonLock(${d.id})" ${disabledAttr}>${lockButtonText}</button>`;
+        const lockButton = `<button class="${lockButtonClass}" onclick="toggleDemonLock(${d.id})">${lockButtonText}</button>`;
         return `<li>
             <span>Lv${d.level} <strong>${d.name}</strong> (${d.race}) - <span style="color:var(--warn-color); font-weight:bold;">${getDemonCheapestPrice(d).toLocaleString()}</span> / ${getCompendiumPrice(d).toLocaleString()} M</span>
             <div style="display:flex; gap: 5px;">
-                ${lockButton}
-                <button class="btn-edit" onclick="startEditDemon(${d.id})" ${disabledAttr}>修改</button>
-                <button class="btn-delete" onclick="deleteDemon(${d.id})" ${disabledAttr}>删除</button>
+                ${lockButton} <button class="btn-edit" onclick="startEditDemon(${d.id})">修改</button>
+                <button class="btn-delete" onclick="deleteDemon(${d.id})">删除</button>
             </div>
         </li>`;
     }).join('') + '</ul>';
-
-    if (isCalculating) {
-        const statusP = document.createElement('p');
-        statusP.textContent = '正在重新计算最优价格...';
-        statusP.style.textAlign = 'center';
-        statusP.style.color = 'var(--warn-color)';
-        demonListContainer.prepend(statusP);
-    }
-
-    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join('');
-    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions;
-    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select');
-    ingredientSelects.forEach(select => {
-        const currentValue = select.value;
-        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue;
-    });
-    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => {
-        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + ');
-        const res = getDemonById(f.resultId);
-        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})" ${isCalculating ? 'disabled' : ''}>删除</button></li>` : '';
-    }).join('') + '</ul>';
+    const demonOptions = sortedDemons.map(d => `<option value="${d.id}">Lv${d.level} - ${d.name} (${d.race})</option>`).join(''); 
+    document.getElementById('special-result-select').innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; 
+    const ingredientSelects = document.querySelectorAll('#special-fusion-ingredients select'); 
+    ingredientSelects.forEach(select => { 
+        const currentValue = select.value; 
+        select.innerHTML = `<option value="">-- 选择仲魔 --</option>` + demonOptions; select.value = currentValue; 
+    }); 
+    document.getElementById('special-fusion-list').innerHTML = '<ul>' + db.specialFusions.map((f, i) => { 
+        const ingredientNames = f.ingredients.map(id => getDemonById(id)?.name || '?').join(' + '); 
+        const res = getDemonById(f.resultId); 
+        return (res) ? `<li><span>${ingredientNames} = <strong>${res.name}</strong></span><button class="btn-delete" onclick="deleteSpecialFusion(${i})">删除</button></li>` : ''; 
+    }).join('') + '</ul>'; 
+    inspectState("renderManagementLists - End");
 }
 
 function renderCalculatorSelects(sortedDemons) { 
